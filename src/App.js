@@ -5,6 +5,7 @@ import ShowColumns from "./components/column.component.js";
 import AddTaskModal from "./components/addtaskmodal.component";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
+import ListALL from './components/listall.component';
 
 //Main app function
 function App() {
@@ -13,6 +14,7 @@ function App() {
       <div className="App">
         {/* <AddTaskModal></AddTaskModal> */}
       <Route path="/tasks/add" exact component={AddTaskModal}/> 
+      <Route path="/showall" exact component={ListALL}/> 
         <div className="columnbox">
         <Route path="/" exact component={ShowColumns}/>
          {/* <ShowColumns></ShowColumns>  */}

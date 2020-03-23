@@ -101,7 +101,7 @@ export class List extends Component {
     }
 
     taksListing() {
-        return this.state.tasks.map(el => {
+        return this.state.tasks.map(el => { console.log(el);
                 return <Task task={el} deleteTask={this.deleteTask} key={el._id}/>;
         })
     }
@@ -161,10 +161,7 @@ export default class ShowColumns extends Component {
             return <Column column={el} deleteColumn={this.deleteColumn} key={el._id}/>;
         });
     }
-    getCols(){
-        return console.log(this.state.columns);
-    }
-
+   
     render() {
         return(
             <div style={columnboxStyle}>
