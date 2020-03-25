@@ -122,7 +122,6 @@ const Column = props => (
                 <h2 style={statusStyle}>{props.column.status}</h2>
                 <a href="/tasks/add" style={buttonStyle}>Add task</a>
             </div>
-            <List></List>
         </div>
 );
 // COLS ---------------------

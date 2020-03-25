@@ -8,7 +8,7 @@ var fullMap;
 
 
 const columnStyle = {
-    border: '5px solid orange',
+    // border: '5px solid orange',
     margin: '20px',
     padding: '5px',
     display: 'flex',
@@ -62,7 +62,7 @@ const taskStyle = {
 
 function renderTaskIfMatch(tsk,col) {
     return tsk.map(el=>{
-        return (el.status === col) ?  <Task task={el} key={el._id}/> : console.log("DUPA")
+        return (el.status === col) ?  <Task task={el} key={el._id}/> : console.log("task not equal column")
     })
 }
 
@@ -82,13 +82,15 @@ const Task = props => (
 // TASK
 
 const Column = props => (
-    <div>
-        <h2 style={statusStyle}>{props.column.status}</h2>
+    <div style={columnStyle}>
         <div>
-            {renderTaskIfMatch(resT,props.column.status)}
+            <h2 style={statusStyle}>{props.column.status}</h2>
+            <a href="/tasks/add" style={buttonStyle}>Add task</a>
         </div>
+        {renderTaskIfMatch(resT,props.column.status)}
     </div>
-)
+);
+
 // TASKS --------------
 export default class ListALL extends Component {
 
@@ -122,85 +124,85 @@ export default class ListALL extends Component {
         })
     }
 
-    log(){
-        if(this.state.columns.length !== 0) 
-        {
-            var tempT = this.state.tasks;
-            var tempC = this.state.columns;
-            resC = Array.from(new Set(tempC.map(el => el.status)))
-            .map(status => {
-                return {
-                    status: status,
-                };
-            });
+    // log(){
+    //     if(this.state.columns.length !== 0) 
+    //     {
+    //         var tempT = this.state.tasks;
+    //         var tempC = this.state.columns;
+    //         resC = Array.from(new Set(tempC.map(el => el.status)))
+    //         .map(status => {
+    //             return {
+    //                 status: status,
+    //             };
+    //         });
 
-            resT = tempT.filter( el =>{
-                return el.status;
-            });
+    //         resT = tempT.filter( el =>{
+    //             return el.status;
+    //         });
 
-            const map = resC.map(i => {
-               const temp = resT.map(j =>{
-                      const p = (i.status === j.status ? j : null );
-                      return p;
-                })
-                const r = temp.filter(el =>{
-                    return el != null;
-                })
-                return [i,r];
-            }) 
+    //         const map = resC.map(i => {
+    //            const temp = resT.map(j =>{
+    //                   const p = (i.status === j.status ? j : null );
+    //                   return p;
+    //             })
+    //             const r = temp.filter(el =>{
+    //                 return el != null;
+    //             })
+    //             return [i,r];
+    //         }) 
 
-            for(const i in map)
-            {
-                for(const j in map[i])
-                {
-                    for(const k in map[i][j])
-                    {
-                        // //console.log(i+' '+j+' '+k)
-                        // console.log(map[i][j].status);
-                        // console.log(map[i][j][k].name);
-                        // console.log(map[i][j][k].description);
-                        // console.log(map[i][j][k].user);
-                    }
-                }
-            }
+    //         for(const i in map)
+    //         {
+    //             for(const j in map[i])
+    //             {
+    //                 for(const k in map[i][j])
+    //                 {
+    //                     // //console.log(i+' '+j+' '+k)
+    //                     // console.log(map[i][j].status);
+    //                     // console.log(map[i][j][k].name);
+    //                     // console.log(map[i][j][k].description);
+    //                     // console.log(map[i][j][k].user);
+    //                 }
+    //             }
+    //         }
 
 
-            console.log("##########");
-            // console.log(map.length);
-            // console.log(map)
-            // console.log(map[0][0].status);
-            // console.log(map[1][0].status);
-            // console.log(map[2][0].status);
-            // console.log(map[3][0].status);
-            console.log(map[3][1][0].status);
-            // console.log(map[0][1][0].name);
-            // console.log(map[0][1].length);
-            // 1.[] column status name 2.[] tasks that equals column status 3.[] single task number
-            //[0-backlog, 1-todo, 2-inprogress, 3-done][0-task1, 1-tasks2][1][_id,name,description,status,user]
-            fullMap = map;
-            // console.log(fullMap);
-        };
-    }
-    testFun(callback){
-        console.log(callback);
-    }
-    renderALL()
-    {
-      return  this.state.columns.map(column => {
-          return (column === column
-           ? <Column column={column} col={column} key={column._id}>{console.log("true")}</Column>
-           : this.state.tasks.map(task => {
-               return (column.status === task.status)
-               ? React.createElement(
-                   {
+    //         console.log("##########");
+    //         // console.log(map.length);
+    //         // console.log(map)
+    //         // console.log(map[0][0].status);
+    //         // console.log(map[1][0].status);
+    //         // console.log(map[2][0].status);
+    //         // console.log(map[3][0].status);
+    //         console.log(map);
+    //         // console.log(map[0][1][0].name);
+    //         // console.log(map[0][1].length);
+    //         // 1.[] column status name 2.[] tasks that equals column status 3.[] single task number
+    //         //[0-backlog, 1-todo, 2-inprogress, 3-done][0-task1, 1-tasks2][1][_id,name,description,status,user]
+    //         // console.log(fullMap);
+    //     };
+    // }
+    // testFun(callback){
+    //     console.log(callback);
+    // }
+    // renderALL()
+    // {
+    //   return  this.state.columns.map(column => {
+    //       return (column === column
+    //        ? <Column column={column} col={column} key={column._id}>{console.log("true")}</Column>
+    //        : this.state.tasks.map(task => {
+    //            return (column.status === task.status)
+    //            ? React.createElement(
+    //                {
 
-                   }
-               )
-               : console.log("False");
-           })     
-        )}
-        )
-      }
+    //                }
+    //            )
+    //            : console.log("False");
+    //        })     
+    //     )}
+    //     )
+    //   }
+
       renderALLv2(){
           resT = this.state.tasks;
           return this.state.columns.map(col => {

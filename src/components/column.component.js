@@ -51,9 +51,6 @@ const Column = props => (
         </div>
 )
 
-
-
-
 export default class ShowColumns extends Component {
     constructor(props){
         super(props);
