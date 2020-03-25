@@ -162,6 +162,7 @@ export default class ShowColumns extends Component {
         });
     }
    
+
     render() {
         return(
             <div style={columnboxStyle}>
