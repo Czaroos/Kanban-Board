@@ -123,6 +123,4 @@ const ColumnList = ({ title, tasks, id,  index, dispatch }) => {
   );
 };
 
-
-
 export default connect()(ColumnList);

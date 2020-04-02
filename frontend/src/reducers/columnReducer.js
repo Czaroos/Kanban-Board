@@ -140,7 +140,7 @@ const columnReducer = (state = initialState, action) => {
     }
 
     case CONSTANTS.DELETE_COLUMN: {
-      const { columnID } = action.payload;
+      const columnID = action.payload;
       return state.filter(column => column.id !== columnID);
     }
 

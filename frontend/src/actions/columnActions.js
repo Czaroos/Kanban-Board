@@ -38,14 +38,14 @@ export const editColumnTitle = (columnID, newTitle) => {
     };
   };
 
-export const deleteColumn = columnID => {
-    return {
-        type: CONSTANTS.DELETE_COLUMN,
-        payload: {
-            columnID
-        }
-    };
-};
+// export const deleteColumn = columnID => {
+//     return {
+//         type: CONSTANTS.DELETE_COLUMN,
+//         payload: {
+//             columnID
+//         }
+//     };
+// };
 
 function fetchColumns() {
   return (dispatch) => {
@@ -58,21 +58,18 @@ function fetchColumns() {
   }
 }
 
-// function createPost(post) {
-//   return (dispatch) => {
-//     fetch('https://jsonplaceholder.typicode.com/posts', {
-//       method: 'POST',
-//       headers: {
-//         'content-type': 'application/json'
-//       },
-//       body: JSON.stringify(post)
-//     })
-//       .then(res => res.json())
-//       .then(data => dispatch({
-//         type: NEW_POST,
-//         payload: data
-//       }));
-//   }
-// }
+function deleteColumn(id) {
+  return (dispatch) => {
+    fetch('http://localhost:5000/columns/' + id, {
+      method: 'DELETE'
+    })
+      .then(res => res.json())
+      .then(deletedColumnId => dispatch({
+        type: CONSTANTS.DELETE_COLUMN,
+        payload: deletedColumnId
+      }));
+  }
+}
 
 export { fetchColumns };
+export { deleteColumn };
