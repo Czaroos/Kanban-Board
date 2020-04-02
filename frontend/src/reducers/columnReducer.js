@@ -1,12 +1,41 @@
 import { CONSTANTS } from "../actions";
 
-let columnID = 4;
+let columnId = 4;
 let taskID = 0;
 
-const initialState = [];
+const initialState = [
+  {
+    _id: "12312312312",
+    title: "Backlog",
+    tasks: [{
+      content: "dupa",
+      _id: "12312312"
+    }],
+    tasks: [{
+      content: "dupa",
+      _id: "12312312"
+    }]
+  },
+  {
+    id: `column-${1}`,
+    title: "To do",
+    tasks: []
+  },
+  {
+    id: `column-${2}`,
+    title: "In progress",
+    tasks: []
+  },
+  {
+    id: `column-${3}`,
+    title: "Done",
+    tasks: []
+  }
+];
 
 const columnReducer = (state = initialState, action) => {
   switch (action.type) {
+<<<<<<< HEAD
     case CONSTANTS.FETCH_COLUMNS:
       console.log(action.payload);
       let initialState = action.payload.map(column => {
@@ -24,25 +53,30 @@ const columnReducer = (state = initialState, action) => {
       });
 
       return initialState;
+=======
+    // case CONSTANTS.FETCH_COLUMNS:
+    //   let newState = action.payload;
+    //   return newState;
+>>>>>>> 7b7419db875098f78db4ec8783d92e76d8115adb
 
     case CONSTANTS.ADD_COLUMN:
       const newColumn = {
         title: action.payload,
         tasks: [],
-        id: `column-${columnID}`
+        _id: `column-${columnId}`
       };
-      columnID += 1;
+      columnId += 1;
       return [...state, newColumn];
 
     case CONSTANTS.ADD_TASK: {
       const newTask = {
         content: action.payload.content,
-        id: `task-${taskID}`
+        _id: `task-${taskID}`
       };
       taskID += 1;
 
       const newState = state.map(column => {
-        if (column.id === action.payload.columnID) {
+        if (column._id === action.payload.columnId) {
           return {
             ...column,
             tasks: [...column.tasks, newTask]
@@ -75,7 +109,7 @@ const columnReducer = (state = initialState, action) => {
       // destination: same column
 
       if (droppableIdStart === droppableIdEnd) {
-        const column = state.find(column => droppableIdStart === column.id);
+        const column = state.find(column => droppableIdStart === column._id);
         const task = column.tasks.splice(droppableIndexStart, 1);
         column.tasks.splice(droppableIndexEnd, 0, ...task);
       }
@@ -85,14 +119,14 @@ const columnReducer = (state = initialState, action) => {
       if (droppableIdStart !== droppableIdEnd) {
         // find the column where drag happened
         const columnStart = state.find(
-          column => droppableIdStart === column.id
+          column => droppableIdStart === column._id
         );
 
         // pull out the task from this column
         const task = columnStart.tasks.splice(droppableIndexStart, 1);
 
         // find the column where drag ended
-        const columnEnd = state.find(column => droppableIdEnd === column.id);
+        const columnEnd = state.find(column => droppableIdEnd === column._id);
 
         // put the task into a new column
         columnEnd.tasks.splice(droppableIndexEnd, 0, ...task);
@@ -101,11 +135,11 @@ const columnReducer = (state = initialState, action) => {
       return newState;
 
     case CONSTANTS.EDIT_TASK: {
-      const { id, columnID, newContent } = action.payload;
+      const { _id, columnId, newContent } = action.payload;
       return state.map(column => {
-        if (column.id === columnID) {
+        if (column._id === columnId) {
           const newTasks = column.tasks.map(task => {
-            if (task.id === id) {
+            if (task._id === _id) {
               task.content = newContent;
               return task;
             }
@@ -118,10 +152,10 @@ const columnReducer = (state = initialState, action) => {
     }
 
     case CONSTANTS.DELETE_TASK: {
-      const { id, columnID } = action.payload;
+      const { _id, columnId } = action.payload;
       return state.map(column => {
-        if (column.id === columnID) {
-          const newTasks = column.tasks.filter(task => task.id !== id);
+        if (column._id === columnId) {
+          const newTasks = column.tasks.filter(task => task._id !== _id);
           return { ...column, tasks: newTasks };
         } else {
           return column;
@@ -130,9 +164,9 @@ const columnReducer = (state = initialState, action) => {
     }
 
     case CONSTANTS.EDIT_COLUMN_TITLE: {
-      const { columnID, newTitle } = action.payload;
+      const { columnId, newTitle } = action.payload;
       return state.map(column => {
-        if (column.id === columnID) {
+        if (column._id === columnId) {
           column.title = newTitle;
           return column;
         } else {
@@ -142,8 +176,14 @@ const columnReducer = (state = initialState, action) => {
     }
 
     case CONSTANTS.DELETE_COLUMN: {
+<<<<<<< HEAD
       const { columnID } = action.payload;
       return state.filter(column => column.id !== columnID);
+=======
+      const { columnId } = action.payload;
+      return state.filter(column =>
+        column._id !== columnId);
+>>>>>>> 7b7419db875098f78db4ec8783d92e76d8115adb
     }
 
     default:
