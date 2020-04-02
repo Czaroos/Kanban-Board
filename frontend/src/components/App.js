@@ -5,6 +5,7 @@ import Create from "./Create";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { sort } from "../actions";
 import styled from "styled-components";
+import { fetchColumns } from '../actions/columnActions';
 
 const ColumnsContainer = styled.div`
   display: flex;
@@ -12,6 +13,10 @@ const ColumnsContainer = styled.div`
 `;
 
 class App extends PureComponent {
+  componentDidMount() {
+    this.props.fetchColumns();
+  }
+
   onDragEnd = result => {
     const { destination, source, draggableId, type } = result;
 
@@ -68,4 +73,6 @@ const mapStateToProps = state => ({
   columns: state.columns
 });
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = {fetchColumns}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

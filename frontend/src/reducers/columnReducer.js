@@ -3,31 +3,14 @@ import { CONSTANTS } from "../actions";
 let columnID = 4;
 let taskID = 0;
 
-const initialState = [
-  {
-    id: `column-${0}`,
-    title: "Backlog",
-    tasks: []
-  },
-  {
-    id: `column-${1}`,
-    title: "To do",
-    tasks: []
-  },
-  {
-    id: `column-${2}`,
-    title: "In progress",
-    tasks: []
-  },
-  {
-    id: `column-${3}`,
-    title: "Done",
-    tasks: []
-  }
-];
+const initialState = [];
 
 const columnReducer = (state = initialState, action) => {
   switch (action.type) {
+    case CONSTANTS.FETCH_COLUMNS:
+      const newState = action.payload;
+      return [newState];
+
     case CONSTANTS.ADD_COLUMN:
       const newColumn = {
         title: action.payload,
@@ -66,7 +49,7 @@ const columnReducer = (state = initialState, action) => {
         droppableIndexEnd,
         type
       } = action.payload;
-      const newState = [...state];
+      const newState2 = [...state];
 
       // dragging columns around
       if (type === "column") {

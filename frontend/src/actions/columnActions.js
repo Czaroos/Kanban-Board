@@ -46,3 +46,33 @@ export const deleteColumn = columnID => {
         }
     };
 };
+
+function fetchColumns() {
+  return (dispatch) => {
+    fetch('https://localhost:5000/columns')
+      .then(res => res.json())
+      .then(columns => dispatch({
+        type: CONSTANTS.FETCH_COLUMNS,
+        payload: {columns}
+      }));
+  }
+}
+
+// function createPost(post) {
+//   return (dispatch) => {
+//     fetch('https://jsonplaceholder.typicode.com/posts', {
+//       method: 'POST',
+//       headers: {
+//         'content-type': 'application/json'
+//       },
+//       body: JSON.stringify(post)
+//     })
+//       .then(res => res.json())
+//       .then(data => dispatch({
+//         type: NEW_POST,
+//         payload: data
+//       }));
+//   }
+// }
+
+export { fetchColumns };
