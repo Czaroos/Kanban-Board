@@ -100,6 +100,7 @@ const ColumnList = ({ title, tasks, id,  index, dispatch }) => {
                 {isEditing ? 
                 renderEditInput() : 
                 (<TitleContainer>
+                  <Limit columns={columnTitle} tasks={tasks}/>
                   <ColumnTitle onClick={() => setIsEditing(true)}>{columnTitle}</ColumnTitle>
                   <DeleteButton onClick={handleDeleteColumn}>delete</DeleteButton>
                   </TitleContainer>)}
