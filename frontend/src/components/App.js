@@ -13,7 +13,7 @@ const ColumnsContainer = styled.div`
 `;
 
 class App extends PureComponent {
-  componentDidMount() {
+  componentWillMount() {
     this.props.fetchColumns();
   }
 
@@ -24,7 +24,7 @@ class App extends PureComponent {
       return;
     }
 
-    this.props.dispatch(
+    this.props.dispatch = () => {
       sort(
         source.droppableId,
         destination.droppableId,
@@ -33,7 +33,7 @@ class App extends PureComponent {
         draggableId,
         type
       )
-    );
+      };
   };
 
   render() {
@@ -51,8 +51,8 @@ class App extends PureComponent {
               <ColumnsContainer {...provided.droppableProps} ref={provided.innerRef}>
                 {columns.map((column, index) => (
                   <Column
-                    columnID={column.id}
-                    key={column.id}
+                    _id={column._id}
+                    key={column._id}
                     title={column.title}
                     tasks={column.tasks}
                     index={index}
@@ -70,7 +70,8 @@ class App extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-  columns: state.columns
+  columns: state.columns,
+  tasks: state.tasks
 });
 
 const mapDispatchToProps = {fetchColumns}

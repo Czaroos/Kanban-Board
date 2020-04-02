@@ -9,7 +9,8 @@ const columnReducer = (state = initialState, action) => {
   switch (action.type) {
     case CONSTANTS.FETCH_COLUMNS:
       const newState = action.payload;
-      return [newState];
+      console.log(newState)
+      return newState;
 
     case CONSTANTS.ADD_COLUMN:
       const newColumn = {
@@ -49,7 +50,8 @@ const columnReducer = (state = initialState, action) => {
         droppableIndexEnd,
         type
       } = action.payload;
-      const newState2 = [...state];
+      newState = [...state];
+      console.log(newState);
 
       // dragging columns around
       if (type === "column") {
@@ -61,7 +63,7 @@ const columnReducer = (state = initialState, action) => {
       // destination: same column
 
       if (droppableIdStart === droppableIdEnd) {
-        const column = state.find(column => droppableIdStart === column.id);
+        const column = state.find(column => droppableIdStart === column._id);
         const task = column.tasks.splice(droppableIndexStart, 1);
         column.tasks.splice(droppableIndexEnd, 0, ...task);
       }
@@ -71,14 +73,14 @@ const columnReducer = (state = initialState, action) => {
       if (droppableIdStart !== droppableIdEnd) {
         // find the column where drag happened
         const columnStart = state.find(
-          column => droppableIdStart === column.id
+          column => droppableIdStart === column._id
         );
 
         // pull out the task from this column
         const task = columnStart.tasks.splice(droppableIndexStart, 1);
 
         // find the column where drag ended
-        const columnEnd = state.find(column => droppableIdEnd === column.id);
+        const columnEnd = state.find(column => droppableIdEnd === column._id);
 
         // put the task into a new column
         columnEnd.tasks.splice(droppableIndexEnd, 0, ...task);

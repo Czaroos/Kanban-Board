@@ -49,7 +49,7 @@ cursor: text;
 `;
 
 
-const ColumnList = ({ title, tasks, columnID, index, dispatch }) => {
+const ColumnList = ({ title, tasks, _id, index, dispatch }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [columnTitle, setColumnTitle] = useState(title);
 
@@ -79,23 +79,22 @@ const ColumnList = ({ title, tasks, columnID, index, dispatch }) => {
 
   const handleFinishEditing = e => {
     setIsEditing(false);
-    dispatch(editColumnTitle(columnID, columnTitle));
+    dispatch(editColumnTitle(_id, columnTitle));
   };
 
   const handleDeleteColumn = () => {
-    dispatch(deleteColumn(columnID))
+    dispatch(deleteColumn(_id))
   };
 
-
   return (
-    <Draggable draggableId={String(columnID)} index={index}>
+    <Draggable draggableId={_id} index={index}>
       {provided => (
         <ColumnContainer
           {...provided.draggableProps}
           ref={provided.innerRef}
           {...provided.dragHandleProps}
         >
-          <Droppable droppableId={String(columnID)}>
+          <Droppable droppableId={_id}>
             {provided => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
                 {isEditing ? 
@@ -106,15 +105,16 @@ const ColumnList = ({ title, tasks, columnID, index, dispatch }) => {
                   </TitleContainer>)}
                 {tasks.map((task, index) => (
                   <Task
-                    id={task.id}
+                    _id={task._id}
                     index={index}
-                    key={task.id}
+                    key={task._id}
                     content={task.content}
-                    columnID={columnID}
+                    columnID
+                    ={_id}
                   />
                 ))}
                 {provided.placeholder}
-                <Create columnID={columnID} />
+                <Create columnID={_id} />
               </div>
             )}
           </Droppable>
@@ -123,5 +123,7 @@ const ColumnList = ({ title, tasks, columnID, index, dispatch }) => {
     </Draggable>
   );
 };
+
+
 
 export default connect()(ColumnList);
