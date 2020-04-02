@@ -1,11 +1,11 @@
 import { CONSTANTS } from "../actions";
 
-export const addTask = (columnID, content) => {
-  return {
-    type: CONSTANTS.ADD_TASK,
-    payload: { content, columnID }
-  };
-};
+// export const addTask = (columnID, content) => {
+//   return {
+//     type: CONSTANTS.ADD_TASK,
+//     payload: { content, columnID }
+//   };
+// };
 
 export const editTask = (id, columnID, newContent) => {
   return {
@@ -20,3 +20,22 @@ export const deleteTask = (id, columnID) => {
     payload: { id, columnID }
   };
 };
+
+function addTask(task) {
+  return (dispatch) => {
+    fetch('http://localhost:5000/columns/addTask/' + task.columnID, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(task)
+    })
+      .then(res => res.json())
+      .then(data => dispatch({
+        type: CONSTANTS.ADD_TASK,
+        payload: data
+      }));
+  }
+}
+
+export { addTask };

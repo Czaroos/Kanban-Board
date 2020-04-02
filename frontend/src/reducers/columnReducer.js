@@ -1,14 +1,12 @@
 import { CONSTANTS } from "../actions";
 
 let columnID = 4;
-let taskID = 0;
 
 const initialState = []
 
 const columnReducer = (state = initialState, action) => {
   switch (action.type) {
     case CONSTANTS.FETCH_COLUMNS:
-      console.log(action.payload);
       let initialState = action.payload.map(column => {
         let tasks = column.tasks.map(task => {
           return {
@@ -35,24 +33,24 @@ const columnReducer = (state = initialState, action) => {
       return [...state, newColumn];
 
     case CONSTANTS.ADD_TASK: {
-      const newTask = {
-        content: action.payload.content,
-        id: `task-${taskID}`
-      };
-      taskID += 1;
+      let task = action.payload.tasks[action.payload.tasks.length - 1]
 
-      const newState = state.map(column => {
-        if (column.id === action.payload.columnID) {
+      let newTask = {
+        id: task._id,
+        content: task.content,
+        columnID: task.columnId
+      }
+        
+      const addTaskState = state.map(col => {
+        if (col.id === newTask.columnID)
           return {
-            ...column,
-            tasks: [...column.tasks, newTask]
-          };
-        } else {
-          return column;
-        }
-      });
+            ...col,
+            tasks: [...col.tasks, newTask]
+          }
+        else return col;
+      })
 
-      return newState;
+      return addTaskState;
     }
 
     case CONSTANTS.DRAG_HAPPENED:

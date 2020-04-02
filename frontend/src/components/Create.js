@@ -7,6 +7,21 @@ import styled from "styled-components";
 import Form from "./Form";
 import OpenForm from "./OpenForm";
 
+const OpenFormButton = styled.div`
+display: flex;
+align-items: center;
+cursor: pointer;
+border-radius: 3px;
+height: 36px;
+margin-left: 8px;
+width: 300px;
+padding-left: 10px;
+padding-right: 10px;
+opacity: 0.8;
+color: white;
+background-color: inherit;
+`;
+
 class Create extends React.PureComponent {
   state = {
     formOpen: false,
@@ -46,39 +61,25 @@ class Create extends React.PureComponent {
   };
 
   handleAddTask = () => {
-    const { dispatch, columnId } = this.props;
+    const { columnID } = this.props;
     const { content } = this.state;
 
     if (content) {
       this.setState({
         content: ""
       });
-      dispatch(addTask(columnId, content));
+      const task = {
+        content: content,
+        columnID: columnID
+      }
+      
+      this.props.addTask(task);
     }
   };
 
   renderOpenForm = () => {
     const { addColumn } = this.props;
-
     const buttonText = addColumn ? "Add a column" : "Add a task";
-    const textColor = addColumn ? "white" : "inherit";
-    const buttonOpacity = addColumn ? 1 : 0.5;
-    const buttonBackground = addColumn ? "rgba(0,0,0,.15)" : "inherit";
-
-    const OpenFormButton = styled.div`
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      border-radius: 3px;
-      height: 36px;
-      margin-left: 8px;
-      width: 300px;
-      padding-left: 10px;
-      padding-right: 10px;
-      opacity: ${buttonOpacity};
-      color: ${textColor};
-      background-color: ${buttonBackground};
-    `;
 
     return (
       <OpenFormButton onClick={this.openForm}>
@@ -94,6 +95,7 @@ class Create extends React.PureComponent {
     const placeholder = addColumn
     ? "Enter a column name..."
     : "Enter a task description...";
+
     return this.state.formOpen ? (
       <Form
         content={content}
@@ -106,11 +108,19 @@ class Create extends React.PureComponent {
         </Button>
       </Form>
     ) : (
-      <OpenForm addColumn={addColumn} onClick={this.openForm}>
+      <OpenForm onClick={this.openForm}>
         {addColumn ? "Add another column" : "Add another task"}
       </OpenForm>
     );
   }
 }
 
-export default connect()(Create);
+// const mapStateToProps = state => ({
+//   post: state.posts.item
+// });
+
+const mapDispatchToProps = {
+  addTask
+};
+
+export default connect(null, mapDispatchToProps)(Create);
