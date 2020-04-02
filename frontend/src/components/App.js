@@ -13,6 +13,7 @@ const ColumnsContainer = styled.div`
 `;
 
 class App extends PureComponent {
+
   componentDidMount() {
     this.props.fetchColumns();
   }
@@ -49,7 +50,7 @@ class App extends PureComponent {
               <ColumnsContainer {...provided.droppableProps} ref={provided.innerRef}>
                 {columns.map((column, index) => (
                   <Column
-                    columnID={column.id}
+                    id={column.id}
                     key={column.id}
                     title={column.title}
                     tasks={column.tasks}
@@ -68,7 +69,8 @@ class App extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-  columns: state.columns
+  columns: state.columns,
+  tasks: state.tasks
 });
 
 const mapDispatchToProps = {fetchColumns, sort}

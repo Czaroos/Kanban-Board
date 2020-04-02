@@ -49,7 +49,7 @@ cursor: text;
 `;
 
 
-const ColumnList = ({ title, tasks, _id,  index, dispatch }) => {
+const ColumnList = ({ title, tasks, id,  index, dispatch }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [columnTitle, setColumnTitle] = useState(title);
 
@@ -79,22 +79,22 @@ const ColumnList = ({ title, tasks, _id,  index, dispatch }) => {
 
   const handleFinishEditing = e => {
     setIsEditing(false);
-    dispatch(editColumnTitle(_id, columnTitle));
+    dispatch(editColumnTitle(id, columnTitle));
   };
 
   const handleDeleteColumn = () => {
-    dispatch(deleteColumn(_id))
+    dispatch(deleteColumn(id))
   };
 
   return (
-    <Draggable key={_id} draggableId={_id} index={index}>
+    <Draggable key={id} draggableId={id} index={index}>
       {provided => (
         <ColumnContainer
           {...provided.draggableProps}
           ref={provided.innerRef}
           {...provided.dragHandleProps}
         >
-          <Droppable droppableId={_id}>
+          <Droppable droppableId={id}>
             {provided => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
                 {isEditing ? 
@@ -105,15 +105,15 @@ const ColumnList = ({ title, tasks, _id,  index, dispatch }) => {
                   </TitleContainer>)}
                 {tasks.map((task, index) => (
                   <Task
-                    _id={task._id}
+                    id={task.id}
                     index={index}
-                    key={task._id}
+                    key={task.id}
                     content={task.content}
-                    columnId={task.columnId}
+                    columnID={task.columnID}
                   />
                 ))}
                 {provided.placeholder}
-                <Create columnID={_id} />
+                <Create columnID={id} />
               </div>
             )}
           </Droppable>

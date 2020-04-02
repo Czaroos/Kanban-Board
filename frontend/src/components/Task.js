@@ -48,7 +48,7 @@ import { useSpring, animated } from 'react-spring';
     }
   `;
 
-  const Task = React.memo(({ content, _id, columnId, index, dispatch }) => {
+  const Task = React.memo(({ content, id, columnId, index, dispatch }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [taskContent, setTaskContent] = useState(content);
 
@@ -69,12 +69,12 @@ import { useSpring, animated } from 'react-spring';
 
   const saveTask = e => {
     e.preventDefault();
-    dispatch(editTask(_id, columnId, taskContent));
+    dispatch(editTask(id, columnId, taskContent));
     setIsEditing(false);
   };
 
   const handleDeleteTask = e => {
-    dispatch(deleteTask(_id, columnId));
+    dispatch(deleteTask(id, columnId));
   };
 
   const renderEditForm = () => {
@@ -88,7 +88,7 @@ import { useSpring, animated } from 'react-spring';
   const renderTask = () => {
     return (
       <animated.div style={props}>
-      <Draggable draggableId={_id} index={index}>
+      <Draggable draggableId={id} index={index}>
         {provided => (
           <TaskContainer
             {...provided.draggableProps}
