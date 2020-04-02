@@ -46,14 +46,14 @@ class Create extends React.PureComponent {
   };
 
   handleAddTask = () => {
-    const { dispatch, columnID } = this.props;
+    const { dispatch, columnId } = this.props;
     const { content } = this.state;
 
     if (content) {
       this.setState({
         content: ""
       });
-      dispatch(addTask(columnID, content));
+      dispatch(addTask(columnId, content));
     }
   };
 

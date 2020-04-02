@@ -49,7 +49,7 @@ cursor: text;
 `;
 
 
-const ColumnList = ({ title, tasks, _id, index, dispatch }) => {
+const ColumnList = ({ title, tasks, _id,  index, dispatch }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [columnTitle, setColumnTitle] = useState(title);
 
@@ -87,7 +87,7 @@ const ColumnList = ({ title, tasks, _id, index, dispatch }) => {
   };
 
   return (
-    <Draggable draggableId={_id} index={index}>
+    <Draggable key={_id} draggableId={_id} index={index}>
       {provided => (
         <ColumnContainer
           {...provided.draggableProps}
@@ -109,8 +109,7 @@ const ColumnList = ({ title, tasks, _id, index, dispatch }) => {
                     index={index}
                     key={task._id}
                     content={task.content}
-                    columnID
-                    ={_id}
+                    columnId={task.columnId}
                   />
                 ))}
                 {provided.placeholder}

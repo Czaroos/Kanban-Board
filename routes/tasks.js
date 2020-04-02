@@ -1,6 +1,6 @@
 
 const router = require('express').Router();
-let Task = require('../models/models');
+let Column = require('../models/models');
 
 // Find task
 
@@ -13,7 +13,7 @@ router.route('/').get((req, res) => {
 //Add task
 router.route('/add').post((req, res) => {
   const content = req.body.content;
-  
+  const columnId = Column
   const newTask = new Task({
     content,
   });

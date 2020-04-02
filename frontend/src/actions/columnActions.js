@@ -47,16 +47,16 @@ export const deleteColumn = columnID => {
     };
 };
 
-function fetchColumns() {
-  return (dispatch) => {
-    fetch('http://localhost:5000/columns')
-      .then(res => res.json())
-      .then(res => dispatch({
-        type: CONSTANTS.FETCH_COLUMNS,
-        payload: res
-      }))   
-  }
-}
+// function fetchColumns() {
+//   return (dispatch) => {
+//     fetch('http://localhost:5000/columns')
+//       .then(res => res.json())
+//       .then(res => dispatch({
+//         type: CONSTANTS.FETCH_COLUMNS,
+//         payload: res
+//       }))   
+//   }
+// }
 
 // function createPost(post) {
 //   return (dispatch) => {
@@ -75,4 +75,4 @@ function fetchColumns() {
 //   }
 // }
 
-export { fetchColumns };
+// export { fetchColumns };
