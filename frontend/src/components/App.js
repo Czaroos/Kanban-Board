@@ -24,8 +24,7 @@ class App extends PureComponent {
       return;
     }
 
-    this.props.dispatch(
-      sort(
+    this.props.sort(
         source.droppableId,
         destination.droppableId,
         source.index,
@@ -33,7 +32,6 @@ class App extends PureComponent {
         draggableId,
         type
       )
-    );
   };
 
   render() {
@@ -73,6 +71,6 @@ const mapStateToProps = state => ({
   columns: state.columns
 });
 
-const mapDispatchToProps = {fetchColumns}
+const mapDispatchToProps = {fetchColumns, sort}
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

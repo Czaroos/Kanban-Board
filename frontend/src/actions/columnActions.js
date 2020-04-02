@@ -49,11 +49,11 @@ export const deleteColumn = columnID => {
 
 function fetchColumns() {
   return (dispatch) => {
-    fetch('https://localhost:5000/columns')
+    fetch('http://localhost:5000/columns')
       .then(res => res.json())
       .then(columns => dispatch({
         type: CONSTANTS.FETCH_COLUMNS,
-        payload: {columns}
+        payload: columns
       }));
   }
 }

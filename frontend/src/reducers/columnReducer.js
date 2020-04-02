@@ -8,8 +8,22 @@ const initialState = [];
 const columnReducer = (state = initialState, action) => {
   switch (action.type) {
     case CONSTANTS.FETCH_COLUMNS:
-      const newState = action.payload;
-      return [newState];
+      console.log(action.payload);
+      let initialState = action.payload.map(column => {
+        let tasks = column.tasks.map(task => {
+          return {
+            id: task._id,
+            content: task.content
+          };
+        });
+        return {
+          id: column._id,
+          title: column.title,
+          tasks: tasks
+        };
+      });
+
+      return initialState;
 
     case CONSTANTS.ADD_COLUMN:
       const newColumn = {
@@ -49,7 +63,7 @@ const columnReducer = (state = initialState, action) => {
         droppableIndexEnd,
         type
       } = action.payload;
-      const newState2 = [...state];
+      const newState = [...state];
 
       // dragging columns around
       if (type === "column") {
@@ -129,8 +143,7 @@ const columnReducer = (state = initialState, action) => {
 
     case CONSTANTS.DELETE_COLUMN: {
       const { columnID } = action.payload;
-      return state.filter(column =>
-        column.id !== columnID);
+      return state.filter(column => column.id !== columnID);
     }
 
     default:
