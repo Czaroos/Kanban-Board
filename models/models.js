@@ -1,30 +1,28 @@
 const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-const taskSchema = Schema({
-  _id: mongoose.ObjectId,
-  content: String,
-  // title: String,
-  // user: { type: Schema.Types.ObjectId, ref: 'User' },
-});
-
-const columnSchema = Schema({
-  // _id: Schema.Types.ObjectId,
-  title: String,
-  limit: Number,
-  tasks: [{ 
-    type: Schema.Types.Mixed,
-    ref: 'Tasks' 
-  }]
-});
-
 const userSchema = ({
   name: String,
 });
 
-const Column = mongoose.model('Columns', columnSchema, 'columns');
-const Task = mongoose.model('Tasks', taskSchema, 'tasks');
-const User = mongoose.model('Users', userSchema);
+const taskSchema = Schema({
+  content: String,
+  columnId: { type: Schema.Types.ObjectId, ref: 'Column' },
+  // user: { type: Schema.Types.ObjectId, ref: 'User' }
+});
+
+const columnSchema = Schema({
+  _id: Schema.Types.ObjectId,
+  title: { type: String },
+  limit: { type: Number },
+  tasks: [taskSchema]
+});
+
+
+
+const Column = mongoose.model('Column', columnSchema);
+const Task = mongoose.model('Task', taskSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;
 module.exports = Task;

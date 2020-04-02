@@ -1,5 +1,8 @@
 const router = require('express').Router();
-let Column = require('../models/models');
+const Column = require('../models/models');
+const Task = require('../models/models');
+const User = require('../models/models');
+const mongoose = require('mongoose');
 // Find column
 router.route('/').get((req, res) => {
   Column.find()
@@ -8,20 +11,29 @@ router.route('/').get((req, res) => {
 });
 //Add column
 router.route('/add').post((req, res) => {
-  const title = req.body.title;
-  const limit = req.body.limit;
-  const tasks = [{
-    content: req.body.tasks[0].content,
-    // user: {name: req.body.tasks[0].user.name}
-  }];
-  
-  const newColumn = new Column({
-    title,
-    limit,
-    tasks,
+  newColumn = new Column({
+    _id: mongoose.Types.ObjectId(),
+    title: req.body.title,
+    limit: req.body.limit,
+    tasks: [],
   });
   newColumn.save()
   .then(() => res.json('Column added!'))
+  .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/addTask/:id').post((req, res) => {
+  task = {
+    content: req.body.content,
+    columnId: req.params.id
+  };
+
+  Column.findById(req.params.id)
+  .then(col => {
+    col.tasks.push(task);
+    col.save()
+  })
+  .then(() => res.json())
   .catch(err => res.status(400).json('Error: ' + err));
 });
 //Find column by ID
