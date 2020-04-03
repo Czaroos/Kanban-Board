@@ -1,5 +1,16 @@
 import {CONSTANTS} from '../actions'
 
+export function fetchColumns() {
+  return (dispatch) => {
+    fetch('http://localhost:5000/')
+      .then(res => res.json())
+      .then(columns => dispatch({
+        type: CONSTANTS.FETCH_COLUMNS,
+        payload: columns
+      }));
+  }
+}
+
 export function addColumn(column) {
   return (dispatch) => {
     fetch('http://localhost:5000/columns/add/', {
@@ -48,16 +59,7 @@ export const editColumnTitle = (columnID, newTitle) => {
     };
   };
 
-export function fetchColumns() {
-  return (dispatch) => {
-    fetch('http://localhost:5000/columns')
-      .then(res => res.json())
-      .then(columns => dispatch({
-        type: CONSTANTS.FETCH_COLUMNS,
-        payload: columns
-      }));
-  }
-}
+
 
 export function deleteColumn(id) {
   return (dispatch) => {

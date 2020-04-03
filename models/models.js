@@ -2,19 +2,21 @@ const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 const userSchema = ({
-  name: String,
+  _id: Schema.Types.ObjectId,
+  name: String
 });
 
 const taskSchema = Schema({
   content: String,
   columnId: { type: Schema.Types.ObjectId, ref: 'Column' },
-  // user: { type: Schema.Types.ObjectId, ref: 'User' }
+  userId: { type: Schema.Types.ObjectId, ref: 'User' },
+  priority: { type: String, enum: ['low', 'medium', 'high'], default: 'medium'}
 });
 
 const columnSchema = Schema({
   _id: Schema.Types.ObjectId,
-  title: { type: String },
-  limit: { type: Number },
+  title: String,
+  limit: Number,
   tasks: [taskSchema]
 });
 

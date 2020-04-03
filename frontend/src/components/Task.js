@@ -73,8 +73,8 @@ import { useSpring, animated } from 'react-spring';
     setIsEditing(false);
   };
 
-  const handleDeleteTask = e => {
-    dispatch(deleteTask(id, columnID));
+  const handleDeleteTask = () => {
+    dispatch(deleteTask({id, columnID}));
   };
 
   const renderEditForm = () => {

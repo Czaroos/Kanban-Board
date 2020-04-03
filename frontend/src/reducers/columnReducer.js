@@ -9,12 +9,15 @@ const columnReducer = (state = initialState, action) => {
         let tasks = column.tasks.map(task => {
           return {
             id: task._id,
-            content: task.content
+            content: task.content,
+            columnID: task.columnId,
+            priority: task.priority
           };
         });
         return {
           id: column._id,
           title: column.title,
+          limit: column.limit,
           tasks: tasks
         };
       });
