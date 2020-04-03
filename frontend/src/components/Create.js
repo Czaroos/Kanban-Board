@@ -59,8 +59,8 @@ class Create extends React.PureComponent {
       });
 
       const newTask = {
-        content: content,
-        columnID: columnID
+        content,
+        columnID
       };
 
       this.props.addTask(newTask);

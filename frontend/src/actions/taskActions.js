@@ -34,9 +34,9 @@ export function deleteTask(task) {
       body: JSON.stringify(task)
     })
       .then(res => res.json())
-      .then(newColumn => dispatch({
+      .then(deletedTask => dispatch({
         type: CONSTANTS.DELETE_TASK,
-        payload: newColumn
+        payload: deletedTask
       }));
   }
 }

@@ -26,13 +26,6 @@ router.route('/columns/add').post((req, res) => {
   .catch(err => res.status(400).json('Error: ' + err));
 });
 
-// //Find column by ID
-// router.route('/:id').get((req, res) => {
-//   Column.findById(req.params.id)
-//     .then(task => res.json(task))
-//     .catch(err => res.status(400).json('Error: ' + err));
-// });
-
 //Delete column by ID
 router.route('/columns/:id').delete((req, res) => {
   Column.findByIdAndDelete(req.params.id)
