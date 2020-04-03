@@ -25,9 +25,10 @@ const Breathe = styled.div`
 `;
 
 
-const Limit = ({columnsLimit, tasks}) => {
+const Limit = ({tasks}) => {
     let limit = 3; // In future change to columnLimit parameter
     limit -= tasks.length;
-return limit <= 0 ? <Breathe>TASK OVERFLOW</Breathe> : <div>{limit}</div>;
+    console.log(limit)
+return limit < 0 ? <Breathe>TASK OVERFLOW</Breathe> : limit;
 } 
 export default Limit;

@@ -39,8 +39,6 @@ class App extends PureComponent {
     const { columns } = this.props;
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <div>
-          <h2>Hello world</h2>
           <Droppable
             droppableId="all-columns"
             direction="horizontal"
@@ -58,11 +56,10 @@ class App extends PureComponent {
                   />
                 ))}
                 {provided.placeholder}
-                <Create addColumn />
+                <Create isColumn/>
               </ColumnsContainer>
             )}
           </Droppable>
-        </div>
       </DragDropContext>
     );
   }

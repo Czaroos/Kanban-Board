@@ -3,9 +3,10 @@ import Task from "./Task";
 import Create from "./Create";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { connect } from 'react-redux';
-import { editColumnTitle, deleteColumn } from '../actions';
-import Icon from '@material-ui/core/Icon';
+import { connect } from "react-redux";
+import { editColumnTitle, deleteColumn } from "../actions";
+import Icon from "@material-ui/core/Icon";
+import Limit from "./Limit";
 
 const ColumnContainer = styled.div`
   background-color: #ff8948;
@@ -17,12 +18,12 @@ const ColumnContainer = styled.div`
 `;
 
 const StyledInput = styled.input`
-width: 96%;
-border: none;
-outline-color: #ff8948;
-border-radius: 3px;
-margin-bottom: 3px;
-padding: 5px;
+  width: 96%;
+  border: none;
+  outline-color: #ff8948;
+  border-radius: 3px;
+  margin-bottom: 3px;
+  padding: 5px;
 `;
 
 const TitleContainer = styled.div`
@@ -42,14 +43,14 @@ const DeleteButton = styled(Icon)`
 `;
 
 const ColumnTitle = styled.h4`
-cursor: text;
+  cursor: text;
+  text-transform: uppercase;
   &:hover {
     opacity: 0.5;
   }
 `;
 
-
-const ColumnList = ({ title, tasks, id,  index, dispatch }) => {
+const ColumnList = ({ title, tasks, id, index, dispatch }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [columnTitle, setColumnTitle] = useState(title);
 
@@ -57,13 +58,13 @@ const ColumnList = ({ title, tasks, id,  index, dispatch }) => {
     return (
       <form onSubmit={handleFinishEditing}>
         <StyledInput
-        type="text"
-        value={columnTitle}
-        onChange={handleChange}
-        autoFocus
-        onFocus={handleFocus}
-        onBlur={handleFinishEditing}
-      />
+          type="text"
+          value={columnTitle}
+          onChange={handleChange}
+          autoFocus
+          onFocus={handleFocus}
+          onBlur={handleFinishEditing}
+        />
       </form>
     );
   };
@@ -83,7 +84,7 @@ const ColumnList = ({ title, tasks, id,  index, dispatch }) => {
   };
 
   const handleDeleteColumn = () => {
-    dispatch(deleteColumn(id))
+    dispatch(deleteColumn(id));
   };
 
   return (
@@ -94,16 +95,20 @@ const ColumnList = ({ title, tasks, id,  index, dispatch }) => {
           ref={provided.innerRef}
           {...provided.dragHandleProps}
         >
+          <Limit tasks={tasks} />
+          {isEditing ? (
+            renderEditInput()
+          ) : (
+            <TitleContainer>
+              <ColumnTitle onClick={() => setIsEditing(true)}>
+                {columnTitle}
+              </ColumnTitle>
+              <DeleteButton onClick={handleDeleteColumn}>delete</DeleteButton>
+            </TitleContainer>
+          )}
           <Droppable droppableId={id}>
             {provided => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
-                {isEditing ? 
-                renderEditInput() : 
-                (<TitleContainer>
-                  <Limit columns={columnTitle} tasks={tasks}/>
-                  <ColumnTitle onClick={() => setIsEditing(true)}>{columnTitle}</ColumnTitle>
-                  <DeleteButton onClick={handleDeleteColumn}>delete</DeleteButton>
-                  </TitleContainer>)}
                 {tasks.map((task, index) => (
                   <Task
                     id={task.id}

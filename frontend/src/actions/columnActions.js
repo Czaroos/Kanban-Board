@@ -1,10 +1,20 @@
 import {CONSTANTS} from '../actions'
 
-export const addColumn = (title) => {
-    return {
+export function addColumn(column) {
+  return (dispatch) => {
+    fetch('http://localhost:5000/columns/add/', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(column)
+    })
+      .then(res => res.json())
+      .then(newColumn => dispatch({
         type: CONSTANTS.ADD_COLUMN,
-        payload: title
-    }
+        payload: newColumn
+      }));
+  }
 }
 
 export const sort = (
@@ -38,16 +48,7 @@ export const editColumnTitle = (columnID, newTitle) => {
     };
   };
 
-// export const deleteColumn = columnID => {
-//     return {
-//         type: CONSTANTS.DELETE_COLUMN,
-//         payload: {
-//             columnID
-//         }
-//     };
-// };
-
-function fetchColumns() {
+export function fetchColumns() {
   return (dispatch) => {
     fetch('http://localhost:5000/columns')
       .then(res => res.json())
@@ -58,7 +59,7 @@ function fetchColumns() {
   }
 }
 
-function deleteColumn(id) {
+export function deleteColumn(id) {
   return (dispatch) => {
     fetch('http://localhost:5000/columns/' + id, {
       method: 'DELETE'
@@ -70,6 +71,3 @@ function deleteColumn(id) {
       }));
   }
 }
-
-export { fetchColumns };
-export { deleteColumn };

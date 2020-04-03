@@ -1,7 +1,5 @@
 import { CONSTANTS } from "../actions";
 
-let columnID = 4;
-
 const initialState = []
 
 const columnReducer = (state = initialState, action) => {
@@ -25,11 +23,11 @@ const columnReducer = (state = initialState, action) => {
 
     case CONSTANTS.ADD_COLUMN:
       const newColumn = {
-        title: action.payload,
-        tasks: [],
-        id: `column-${columnID}`
+        id: action.payload._id,
+        title: action.payload.title,
+        limit: action.payload.limit,
+        tasks: []
       };
-      columnID += 1;
       return [...state, newColumn];
 
     case CONSTANTS.ADD_TASK: {

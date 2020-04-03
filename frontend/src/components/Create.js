@@ -3,29 +3,14 @@ import Icon from "@material-ui/core/Icon";
 import Button from "./Button";
 import { connect } from "react-redux";
 import { addColumn, addTask } from "../actions";
-import styled from "styled-components";
 import Form from "./Form";
 import OpenForm from "./OpenForm";
-
-const OpenFormButton = styled.div`
-display: flex;
-align-items: center;
-cursor: pointer;
-border-radius: 3px;
-height: 36px;
-margin-left: 8px;
-width: 300px;
-padding-left: 10px;
-padding-right: 10px;
-opacity: 0.8;
-color: white;
-background-color: inherit;
-`;
 
 class Create extends React.PureComponent {
   state = {
     formOpen: false,
-    content: ""
+    content: "",
+    columnLimitInput: ""
   };
 
   openForm = () => {
@@ -47,17 +32,21 @@ class Create extends React.PureComponent {
   };
 
   handleAddColumn = () => {
-    const { dispatch } = this.props;
-    const { content } = this.state;
+    const { content, columnLimitInput } = this.state;
 
     if (content) {
       this.setState({
-        content: ""
+        content: "",
+        columnLimitInput: ""
       });
-      dispatch(addColumn(content));
-    }
 
-    return;
+      const newColumn = {
+        title: content,
+        limit: Number(columnLimitInput.replace(/\s/g, ""))
+      };
+
+      this.props.addColumn(newColumn);
+    }
   };
 
   handleAddTask = () => {
@@ -68,33 +57,35 @@ class Create extends React.PureComponent {
       this.setState({
         content: ""
       });
-      const task = {
+
+      const newTask = {
         content: content,
         columnID: columnID
-      }
-      
-      this.props.addTask(task);
+      };
+
+      this.props.addTask(newTask);
     }
   };
 
   renderOpenForm = () => {
-    const { addColumn } = this.props;
-    const buttonText = addColumn ? "Add a column" : "Add a task";
+    const { isColumn } = this.props;
+    const buttonText = isColumn ? "Add a column" : "Add a task";
 
     return (
-      <OpenFormButton onClick={this.openForm}>
+      <OpenForm onClick={this.openForm}>
         <Icon>add</Icon>
         <p style={{ flexShrink: 0 }}>{buttonText}</p>
-      </OpenFormButton>
+      </OpenForm>
     );
   };
 
   render() {
     const { content } = this.state;
-    const { addColumn } = this.props;
-    const placeholder = addColumn
-    ? "Enter a column name..."
-    : "Enter a task description...";
+    const { isColumn } = this.props;
+
+    const placeholder = isColumn
+      ? "Enter a column name..."
+      : "Enter a task description...";
 
     return this.state.formOpen ? (
       <Form
@@ -103,24 +94,21 @@ class Create extends React.PureComponent {
         onChange={this.handleInputChange}
         closeForm={this.closeForm}
       >
-        <Button onClick={addColumn ? this.handleAddColumn : this.handleAddTask}>
-          {addColumn ? "Add a column" : "Add a task"}
+        <Button onClick={isColumn ? this.handleAddColumn : this.handleAddTask}>
+          {isColumn ? "Add a column" : "Add a task"}
         </Button>
       </Form>
     ) : (
       <OpenForm onClick={this.openForm}>
-        {addColumn ? "Add another column" : "Add another task"}
+        {isColumn ? "Add another column" : "Add another task"}
       </OpenForm>
     );
   }
 }
 
-// const mapStateToProps = state => ({
-//   post: state.posts.item
-// });
-
 const mapDispatchToProps = {
-  addTask
+  addTask,
+  addColumn
 };
 
 export default connect(null, mapDispatchToProps)(Create);

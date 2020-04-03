@@ -3,12 +3,14 @@ const Column = require('../models/models');
 const Task = require('../models/models');
 const User = require('../models/models');
 const mongoose = require('mongoose');
+
 // Find column
 router.route('/').get((req, res) => {
   Column.find()
     .then(columns => res.json(columns))
     .catch(err => res.status(400).json('Error: ' + err));
 });
+
 //Add column
 router.route('/add').post((req, res) => {
   newColumn = new Column({
@@ -18,10 +20,11 @@ router.route('/add').post((req, res) => {
     tasks: [],
   });
   newColumn.save()
-  .then(() => res.json('Column added!'))
+  .then(newColumn => res.json(newColumn))
   .catch(err => res.status(400).json('Error: ' + err));
 });
 
+//Add task to column
 router.route('/addTask/:id').post((req, res) => {
   let task = {
     content: req.body.content,
