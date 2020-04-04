@@ -16,7 +16,6 @@ class App extends PureComponent {
 
   componentDidMount() {
     this.props.fetchColumns();
-    console.log(this.props)
   }
 
   onDragEnd = result => {

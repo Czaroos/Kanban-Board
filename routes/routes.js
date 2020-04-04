@@ -2,7 +2,6 @@ const router = require("express").Router();
 const Column = require("../models/models");
 const mongoose = require("mongoose");
 
-
 // ------------------------------- / -------------------------------
 
 // Get columns
@@ -14,46 +13,49 @@ router.route("/").get((req, res) => {
 
 // Save columns
 router.route("/").post((req, res) => {
-  Column.deleteMany({}).then(() =>
-    newState = req.body.map((column) => {
-      let tasks = column.tasks.map((task) => {
-        return (newTask = {
-          _id: task.id,
-          content: task.content,
-          priority: task.priority,
-          columnId: task.columnID,
-        });
-      });
-       newColumn = new Column({
-        _id: column.id,
-        title: column.title,
-        limit: column.limit,
-        tasks: tasks,
-      })
-      newColumn.save().then({});
-      return newColumn;
-    })
-  ).then(() => res.json(newState))
+  Column.deleteMany({})
+    .then(
+      () =>
+        (newState = req.body.map((column) => {
+          let tasks = column.tasks.map((task) => {
+            return (newTask = {
+              _id: task.id,
+              content: task.content,
+              priority: task.priority,
+              columnId: task.columnID,
+            });
+          });
+          newColumn = new Column({
+            _id: column.id,
+            title: column.title,
+            limit: column.limit,
+            tasks: tasks,
+            index: column.index
+          });
+          newColumn.save().then({});
+          return newColumn;
+        }))
+    )
+    .then(() => res.json(newState));
 });
 
 // ------------------------------- /COLUMNS -------------------------------
 
 //Add column
 router.route("/columns/add").post((req, res) => {
-  Column.countDocuments({}).then(count => {
+  Column.countDocuments({}).then((count) => {
     newColumn = new Column({
       _id: mongoose.Types.ObjectId(),
       title: req.body.title,
       limit: req.body.limit,
       tasks: [],
-      index: count
-  });
+      index: count,
+    });
     newColumn
       .save()
       .then((newColumn) => res.json(newColumn))
       .catch((err) => res.status(400).json("Error: " + err));
-  })
-
+  });
 });
 
 //Delete column by ID
