@@ -49,6 +49,23 @@ export const sort = (
     }
 }
 
+export function dragStateSave(columns) {
+  return (dispatch) => {
+    fetch('http://localhost:5000/', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(columns)
+    })
+      .then(res => res.json())
+      .then(newState => dispatch({
+        type: CONSTANTS.FETCH_COLUMNS,
+        payload: newState
+      }));
+  }
+}
+
 export const editColumnTitle = (columnID, newTitle) => {
     return {
       type: CONSTANTS.EDIT_COLUMN_TITLE,

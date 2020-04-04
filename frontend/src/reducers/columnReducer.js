@@ -18,7 +18,8 @@ const columnReducer = (state = initialState, action) => {
           id: column._id,
           title: column.title,
           limit: column.limit,
-          tasks: tasks
+          tasks: tasks,
+          index: column.index
         };
       });
 
@@ -29,7 +30,8 @@ const columnReducer = (state = initialState, action) => {
         id: action.payload._id,
         title: action.payload.title,
         limit: action.payload.limit,
-        tasks: []
+        tasks: [],
+        index: action.payload.index
       };
       return [...state, newColumn];
 
@@ -87,12 +89,14 @@ const columnReducer = (state = initialState, action) => {
         const columnStart = state.find(
           column => droppableIdStart === column.id
         );
+        columnStart.limit++;
 
         // pull out the task from this column
         const task = columnStart.tasks.splice(droppableIndexStart, 1);
-
+        task.columnID = droppableIdEnd
         // find the column where drag ended
         const columnEnd = state.find(column => droppableIdEnd === column.id);
+        columnEnd.limit--;
 
         // put the task into a new column
         columnEnd.tasks.splice(droppableIndexEnd, 0, ...task);

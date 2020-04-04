@@ -10,7 +10,7 @@ class Create extends React.PureComponent {
   state = {
     formOpen: false,
     content: "",
-    columnLimitInput: ""
+    // columnLimitInput: ""
   };
 
   openForm = () => {
@@ -32,17 +32,17 @@ class Create extends React.PureComponent {
   };
 
   handleAddColumn = () => {
-    const { content, columnLimitInput } = this.state;
+    const { content } = this.state;
 
     if (content) {
       this.setState({
         content: "",
-        columnLimitInput: ""
+        // columnLimitInput: ""
       });
 
       const newColumn = {
         title: content,
-        limit: Number(columnLimitInput.replace(/\s/g, ""))
+        // limit: Number(columnLimitInput.replace(/\s/g, ""))
       };
 
       this.props.addColumn(newColumn);
