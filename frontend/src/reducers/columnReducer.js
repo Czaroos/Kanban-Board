@@ -23,17 +23,10 @@ const columnReducer = (state = initialState, action) => {
         };
       });
 
-      // return initialState.sort((a, b) => {
-      //   if(a.index > b.index) return 1
-      //   else return -1
-      // });
-      console.log(
-        initialState.sort((a, b) => {
-          if (a.index > b.index) return 1;
-          else return -1;
-        })
-      );
-      return initialState;
+      return initialState.sort((a, b) => {
+        if (a.index > b.index) return 1;
+        else return -1;
+      });
 
     case CONSTANTS.ADD_COLUMN:
       const newColumn = {
@@ -79,7 +72,7 @@ const columnReducer = (state = initialState, action) => {
 
       // dragging columns around (index swap)
       if (type === "column") {
-        return state.map((col) => {
+        newState.map((col) => {
           if (col.index === droppableIndexStart) {
             col.index = droppableIndexEnd;
             return col;
@@ -89,6 +82,9 @@ const columnReducer = (state = initialState, action) => {
             return col;
           } else return col;
         });
+        const column = newState.splice(droppableIndexStart, 1);
+        newState.splice(droppableIndexEnd, 0, ...column);
+        return newState;
       }
 
       // destination: same column
