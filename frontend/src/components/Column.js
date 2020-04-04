@@ -6,7 +6,6 @@ import styled from "styled-components";
 import { connect } from "react-redux";
 import { editColumnTitle, deleteColumn } from "../actions";
 import Icon from "@material-ui/core/Icon";
-import Limit from "./Limit";
 
 const ColumnContainer = styled.div`
   background-color: #ff8948;
@@ -50,7 +49,7 @@ const ColumnTitle = styled.h4`
   }
 `;
 
-const ColumnList = ({ title, tasks, id, index, dispatch }) => {
+const ColumnList = ({ title, tasks, limit, id, index, dispatch }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [columnTitle, setColumnTitle] = useState(title);
 
@@ -95,11 +94,11 @@ const ColumnList = ({ title, tasks, id, index, dispatch }) => {
           ref={provided.innerRef}
           {...provided.dragHandleProps}
         >
-          <Limit tasks={tasks} />
           {isEditing ? (
             renderEditInput()
           ) : (
             <TitleContainer>
+              {limit >= 0 ? limit : "LIMIT REACHED"}
               <ColumnTitle onClick={() => setIsEditing(true)}>
                 {columnTitle}
               </ColumnTitle>

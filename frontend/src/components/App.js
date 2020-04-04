@@ -53,6 +53,7 @@ class App extends PureComponent {
                     title={column.title}
                     tasks={column.tasks}
                     index={index}
+                    limit={column.limit}
                   />
                 ))}
                 {provided.placeholder}

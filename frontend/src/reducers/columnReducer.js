@@ -1,6 +1,6 @@
 import { CONSTANTS } from "../actions";
 
-const initialState = []
+const initialState = [];
 
 const columnReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -34,22 +34,23 @@ const columnReducer = (state = initialState, action) => {
       return [...state, newColumn];
 
     case CONSTANTS.ADD_TASK: {
-      let task = action.payload.tasks[action.payload.tasks.length - 1]
+      let task = action.payload.tasks[action.payload.tasks.length - 1];
 
       let newTask = {
         id: task._id,
         content: task.content,
         columnID: task.columnId
-      }
-        
+      };
+
       const addTaskState = state.map(col => {
-        if (col.id === newTask.columnID)
+        if (col.id === newTask.columnID) {
+          col.limit--;
           return {
             ...col,
             tasks: [...col.tasks, newTask]
-          }
-        else return col;
-      })
+          };
+        } else return col;
+      });
 
       return addTaskState;
     }
@@ -120,6 +121,7 @@ const columnReducer = (state = initialState, action) => {
       const { id, columnID } = action.payload;
       return state.map(column => {
         if (column.id === columnID) {
+          column.limit++;
           const newTasks = column.tasks.filter(task => task.id !== id);
           return { ...column, tasks: newTasks };
         } else {
