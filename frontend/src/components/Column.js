@@ -4,7 +4,7 @@ import Create from "./Create";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { editColumnTitle, deleteColumn, dragStateSave } from "../actions";
+import { editColumn, deleteColumn, dragStateSave } from "../actions";
 import Icon from "@material-ui/core/Icon";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -82,9 +82,16 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
     setColumnTitle(e.target.value);
   };
 
-  const handleFinishEditing = e => {
+  const handleFinishEditing = () => {
     setIsEditing(false);
-    dispatch(editColumnTitle(id, columnTitle));
+    const column = {
+      id,
+      title,
+      limit,
+      tasks,
+      index
+    }
+    dispatch(editColumn(column));
   };
 
     const handleDeleteColumn = () => {
@@ -140,6 +147,8 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
                     key={task.id}
                     content={task.content}
                     columnID={task.columnID}
+                    userID={task.userID}
+                    priority={task.priority}
                   />
                 ))}
                 {provided.placeholder}

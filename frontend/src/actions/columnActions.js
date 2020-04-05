@@ -66,15 +66,22 @@ export function dragStateSave(columns) {
   }
 }
 
-export const editColumnTitle = (columnID, newTitle) => {
-    return {
-      type: CONSTANTS.EDIT_COLUMN_TITLE,
-      payload: {
-        columnID,
-        newTitle
-      }
-    };
-  };
+export function editColumn(column) {
+  return (dispatch) => {
+    fetch('http://localhost:5000/columns/' + column.id, {
+      method: 'PUT',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(column)
+    })
+      .then(res => res.json())
+      .then(editedColumn => dispatch({
+        type: CONSTANTS.EDIT_COLUMN,
+        payload: editedColumn
+      }));
+  }
+}
 
 
 

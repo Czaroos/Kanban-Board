@@ -17,12 +17,22 @@ export function addTask(task) {
   }
 }
 
-export const editTask = (id, columnID, newContent) => {
-  return {
-    type: CONSTANTS.EDIT_TASK,
-    payload: { id, columnID, newContent }
-  };
-};
+export function editTask(task) {
+  return (dispatch) => {
+    fetch('http://localhost:5000/tasks/' + task.id, {
+      method: 'PUT',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(task)
+    })
+      .then(res => res.json())
+      .then(editedTask => dispatch({
+        type: CONSTANTS.EDIT_COLUMN,
+        payload: editedTask
+      }));
+  }
+}
 
 export function deleteTask(task) {
   return (dispatch) => {

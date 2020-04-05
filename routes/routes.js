@@ -65,17 +65,18 @@ router.route("/columns/:id").delete((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
-// //Update column by ID
-// router.route('/update/:id').post((req, res) => {
-//   Column.findById(req.params.id)
-//     .then(col => {
-//         col.status = req.body.status;
-//         col.save()
-//         .then(() => res.json('Column updated!'))
-//         .catch(err => res.status(400).json('Error: ' + err));
-//     })
-//     .catch(err => res.status(400).json('Error: ' + err));
-// });
+// Update column by ID
+router.route('/columns/:id').put((req, res) => {
+  Column.findById(req.params.id)
+    .then(col => {
+        col.title = req.body.title;
+        col.limit = req.body.limit;
+        col.save()
+        .then(col => res.json(col))
+        .catch(err => res.status(400).json('Error: ' + err));
+    })
+    .catch(err => res.status(400).json('Error: ' + err));
+});
 
 // ------------------------------- /TASKS -------------------------------
 
@@ -100,7 +101,7 @@ router.route("/tasks/add").post((req, res) => {
 // Delete task
 router.route("/tasks/delete/:id").post((req, res) => {
   deletedTask = {
-    id: req.params.id,
+    _id: req.params.id,
     columnID: req.body.columnID,
   };
 
@@ -111,6 +112,25 @@ router.route("/tasks/delete/:id").post((req, res) => {
       col.save().then(() => res.json(deletedTask));
     })
     .catch((err) => res.status(400).json("Error: " + err));
+});
+
+// Update task by ID
+router.route('/tasks/:id').put((req, res) => {
+  changedTask = {
+    _id: req.params.id,
+    content: req.body.content,
+    userId: req.body.userID,
+    priority: req.body.priority,
+    columnId: req.body.columnID
+  }
+
+  Column.findById(req.body.columnID)
+    .then(col => {
+      col.tasks.id(req.params.id).set(changedTask)
+      return col.save()
+    })
+    .then(() => res.json(changedTask))
+    .catch(err => res.status(400).json('Error: ' + err));
 });
 
 module.exports = router;

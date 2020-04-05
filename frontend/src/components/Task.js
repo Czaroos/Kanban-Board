@@ -56,7 +56,7 @@ import { useSpring, animated } from 'react-spring';
     }
   `;
 
-  const Task = React.memo(({ content, id, columnID, index, dispatch }) => {
+  const Task = React.memo(({ content, id, columnID, userID, priority, index, dispatch }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [taskContent, setTaskContent] = useState(content);
 
@@ -77,7 +77,14 @@ import { useSpring, animated } from 'react-spring';
 
   const saveTask = e => {
     e.preventDefault();
-    dispatch(editTask(id, columnID, taskContent));
+    const task = {
+      id,
+      content,
+      columnID,
+      userID,
+      priority
+    }
+    dispatch(editTask(task));
     setIsEditing(false);
   };
 
