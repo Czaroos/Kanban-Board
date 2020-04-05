@@ -72,18 +72,12 @@ const columnReducer = (state = initialState, action) => {
 
       // dragging columns around (index swap)
       if (type === "column") {
-        newState.map((col) => {
-          if (col.index === droppableIndexStart) {
-            col.index = droppableIndexEnd;
-            return col;
-          }
-          if (col.index === droppableIndexEnd) {
-            col.index = droppableIndexStart;
-            return col;
-          } else return col;
-        });
         const column = newState.splice(droppableIndexStart, 1);
         newState.splice(droppableIndexEnd, 0, ...column);
+        newState.map((col, index) => {
+          col.index = index;
+          return col
+        });
         return newState;
       }
 
