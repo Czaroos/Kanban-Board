@@ -154,8 +154,13 @@ const columnReducer = (state = initialState, action) => {
     }
 
     case CONSTANTS.DELETE_COLUMN: {
+      const newStateDelete = [...state]
       const columnID = action.payload;
-      return state.filter((column) => column.id !== columnID);
+      const filtered = newStateDelete.filter((column) => column.id !== columnID);
+      return filtered.map((col, index) => {
+        col.index = index;
+        return col
+      });
     }
 
     default:

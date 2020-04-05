@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
 import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import Icon from "@material-ui/core/Icon";

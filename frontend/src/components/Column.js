@@ -4,7 +4,7 @@ import Create from "./Create";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { editColumnTitle, deleteColumn } from "../actions";
+import { editColumnTitle, deleteColumn, dragStateSave } from "../actions";
 import Icon from "@material-ui/core/Icon";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -54,7 +54,7 @@ const ColumnTitle = styled.h4`
   }
 `;
 
-const ColumnList = ({ title, tasks, limit, id, index, dispatch }) => {
+const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [columnTitle, setColumnTitle] = useState(title);
 
@@ -87,8 +87,10 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch }) => {
     dispatch(editColumnTitle(id, columnTitle));
   };
 
-  const handleDeleteColumn = () => {
+    const handleDeleteColumn = () => {
     dispatch(deleteColumn(id));
+    const filteredColumns = columns.filter(column => column.id !== id)
+    dispatch(dragStateSave(filteredColumns))
   };
   const submit = id => {
     confirmAlert({
@@ -97,7 +99,7 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch }) => {
       buttons: [
         {
           label: 'Yes',
-          onClick: () => handleDeleteColumn(id)
+          onClick: () => handleDeleteColumn()
         },
         {
           label: 'No',
@@ -151,4 +153,8 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch }) => {
   );
 };
 
-export default connect()(ColumnList);
+const mapStateToProps = state => ({
+  columns: state.columns
+})
+
+export default connect(mapStateToProps)(ColumnList);
