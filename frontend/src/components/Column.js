@@ -6,14 +6,17 @@ import styled from "styled-components";
 import { connect } from "react-redux";
 import { editColumnTitle, deleteColumn } from "../actions";
 import Icon from "@material-ui/core/Icon";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const ColumnContainer = styled.div`
-  background-color: #ff8948;
+  border: 2px solid orange;
   border-radius: 3px;
+  background-color: #282c34;
   width: 300px;
-  padding: 8px;
   height: 100%;
-  margin-right: 8px;
+  padding: 8px;
+  margin: 5px 20px 15px 0px;
 `;
 
 const StyledInput = styled.input`
@@ -26,6 +29,7 @@ const StyledInput = styled.input`
 `;
 
 const TitleContainer = styled.div`
+  color: #FFFFFF;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -42,6 +46,7 @@ const DeleteButton = styled(Icon)`
 `;
 
 const ColumnTitle = styled.h4`
+  font-size: 150%;
   cursor: text;
   text-transform: uppercase;
   &:hover {
@@ -85,6 +90,24 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch }) => {
   const handleDeleteColumn = () => {
     dispatch(deleteColumn(id));
   };
+  const submit = id => {
+    confirmAlert({
+      title: 'Alert!',
+      message: 'Are you sure you want to delete this column ?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => handleDeleteColumn(id)
+        },
+        {
+          label: 'No',
+          onClick: () => {return null}
+        }
+      ],
+      closeOnEscape: true,
+      closeOnClickOutside: true,
+    });
+  };
 
   return (
     <Draggable key={id} draggableId={id} index={index}>
@@ -102,7 +125,7 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch }) => {
               <ColumnTitle onClick={() => setIsEditing(true)}>
                 {columnTitle}
               </ColumnTitle>
-              <DeleteButton onClick={handleDeleteColumn}>delete</DeleteButton>
+              <DeleteButton onClick={submit}>delete</DeleteButton>
             </TitleContainer>
           )}
           <Droppable droppableId={id}>

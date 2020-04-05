@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { Draggable } from "react-beautiful-dnd";
@@ -9,6 +8,8 @@ import Form from "./Form";
 import { editTask, deleteTask } from "../actions";
 import { connect } from "react-redux";
 import Button from "./Button";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 import { useSpring, animated } from 'react-spring';
 
   const TaskContainer = styled.div`
@@ -17,15 +18,29 @@ import { useSpring, animated } from 'react-spring';
     max-width: 100%;
     word-wrap: break-word;
   `;
-
+  const TaskCard = styled.div`
+    color: #FFFFFF;
+    background-color: #1B1E23;
+    border: 1px solid darkorange;
+    border-radius: 3px;
+    width: 90%;
+    margin: 5px 0px 8px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  `;
+  const TaskContent = styled.div`
+    align-self: center;
+  `;
+  const ButtonsContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px;
+  `;
   const EditButton = styled(Icon)`
-    position: absolute;
-    display: none;
-    right: 5px;
-    top: 5px;
     opacity: 0.5;
     ${TaskContainer}:hover & {
-      display: block;
       cursor: pointer;
     }
     &:hover {
@@ -34,13 +49,8 @@ import { useSpring, animated } from 'react-spring';
   `;
 
   const DeleteButton = styled(Icon)`
-    position: absolute;
-    display: none;
-    right: 5px;
-    bottom: 5px;
     opacity: 0.5;
     ${TaskContainer}:hover & {
-      display: block;
       cursor: pointer;
     }
     &:hover {
@@ -77,6 +87,25 @@ import { useSpring, animated } from 'react-spring';
     dispatch(deleteTask({id, columnID}));
   };
 
+  const submit = id => {
+    confirmAlert({
+      title: 'Alert!',
+      message: 'Are you sure you want to delete this task ?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => handleDeleteTask(id)
+        },
+        {
+          label: 'No',
+          onClick: () => {return null}
+        }
+      ],
+      closeOnEscape: true,
+      closeOnClickOutside: true,
+    });
+  };
+
   const renderEditForm = () => {
     return (
       <Form content={taskContent} onChange={handleChange} closeForm={closeForm}>
@@ -96,20 +125,22 @@ import { useSpring, animated } from 'react-spring';
             ref={provided.innerRef}
             onDoubleClick={() => setIsEditing(true)}
           >
-            <Card>
-              <EditButton
-                fontSize="small"
-                onMouseDown={() => setIsEditing(true)}
-              >
-                edit
-              </EditButton>
-              <DeleteButton fontSize="small" onMouseDown={handleDeleteTask}>
-                delete
-              </DeleteButton>
-              <CardContent>
-                <Typography>{content}</Typography>
-              </CardContent>
-            </Card>
+            <TaskCard>
+              <TaskContent>
+                <h3>{content}</h3>
+              </TaskContent>
+                <ButtonsContainer>
+                <EditButton
+                  fontSize="small"
+                  onMouseDown={() => setIsEditing(true)}
+                >
+                  edit
+                </EditButton>
+                <DeleteButton fontSize="small" onMouseDown={submit}>
+                  delete
+                </DeleteButton>
+              </ButtonsContainer>
+            </TaskCard>
           </TaskContainer>
         )}
       </Draggable>
