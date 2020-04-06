@@ -44,6 +44,7 @@ const StyledInput = styled.input`
   border-radius: 3px;
   margin-bottom: 3px;
   padding: 5px;
+  color: white;
 `;
 
 const TitleContainer = styled.div`
@@ -107,7 +108,6 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
         <form onSubmit={handleFinishEditing}>
           <StyledInput
             type="text"
-            value={columnLimit}
             onChange={handleChange}
             autoFocus
             onFocus={handleFocus}
@@ -128,26 +128,38 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
   };
 
   const handleFinishEditing = () => {
+    let validatedColumnLimit = columnLimit;
+    if (/\D/.test(validatedColumnLimit)) {
+      validatedColumnLimit = -99999
+    }
+
     setIsEditingTitle(false);
     setIsEditingLimit(false);
-    const column = {
-      id,
-      title: columnTitle,
-      limit: columnLimit,
-      tasks,
-      index,
-    };
-    dispatch(editColumn(column));
+
+    if (columnTitle.trim().length !== 0) {
+      const column = {
+        id,
+        title: columnTitle,
+        limit: validatedColumnLimit,
+        tasks,
+        index,
+      };
+      dispatch(editColumn(column));
+    }
   };
 
   const handleDeleteColumn = () => {
     dispatch(deleteColumn(id));
     const filteredColumns = columns.filter((column) => column.id !== id);
-    
-    dispatch(dragStateSave(filteredColumns.map((col, index) => {
-      col.index = index;
-      return col
-    })));
+
+    dispatch(
+      dragStateSave(
+        filteredColumns.map((col, index) => {
+          col.index = index;
+          return col;
+        })
+      )
+    );
   };
 
   const submitColumnDelete = () => {
@@ -193,7 +205,7 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
                 )}
               </Limit>
               <ColumnTitle onClick={() => setIsEditingTitle(true)}>
-                {columnTitle}
+                {title}
               </ColumnTitle>
               <DeleteButton onClick={submitColumnDelete}>delete</DeleteButton>
             </TitleContainer>

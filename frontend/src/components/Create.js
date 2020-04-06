@@ -40,12 +40,14 @@ class Create extends React.PureComponent {
         // columnLimitInput: ""
       });
 
-      const newColumn = {
-        title: content,
-        // limit: Number(columnLimitInput.replace(/\s/g, ""))
-      };
-
-      this.props.addColumn(newColumn);
+      if (content.trim().length !== 0) {
+        const newColumn = {
+          title: content,
+          // limit: Number(columnLimitInput.replace(/\s/g, ""))
+        };
+  
+        this.props.addColumn(newColumn);
+      }
     }
   };
 
@@ -58,12 +60,14 @@ class Create extends React.PureComponent {
         content: ""
       });
 
-      const newTask = {
-        content,
-        columnID
-      };
-
-      this.props.addTask(newTask);
+      if (content.trim().length !== 0) {
+        const newTask = {
+          content,
+          columnID
+        };
+  
+        this.props.addTask(newTask);
+      }
     }
   };
 
