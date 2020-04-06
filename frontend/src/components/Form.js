@@ -1,56 +1,47 @@
 import React from "react";
 import styled from "styled-components";
-import Icon from "@material-ui/core/Icon";
-import Textarea from "react-textarea-autosize";
-import Card from "@material-ui/core/Card";
+import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 
 const Container = styled.div`
-  width: 300px;
-  margin-bottom: 8px;
+display: flex;
+flex-direction: column;
 `;
 
-const StyledCard = styled(Card)`
-  min-height: 85px;
-  padding: 6px 8px 2px;
-`;
-
-const StyledTextArea = styled(Textarea)`
+const StyledTextArea = styled(TextareaAutosize)`
+  border-radius: 3px;
+  width: 295px;
+  color: #eee;
   resize: none;
-  width: 100%;
   overflow: hidden;
   outline: none;
-  border: none;
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(1, 11, 15);
+
+
+  ::placeholder {
+    color: #eee;
+  }
 `;
 
 const ButtonContainer = styled.div`
-  margin-top: 8px;
-  display: flex;
-  align-items: center;
-  margin-left: 8px;
-`;
-
-const StyledIcon = styled(Icon)`
-  margin-left: 8px;
-  cursor: pointer;
+  margin-top: 6px;
+  margin-bottom: 6px;
 `;
 
 const Form = React.memo(
   ({ placeholder, content = "", onChange, closeForm, children }) => {
-
     return (
       <Container>
-        <StyledCard>
-          <StyledTextArea
-            autoFocus
-            placeholder={placeholder}
-            value={content}
-            onChange={e => onChange(e)}
-            onBlur={closeForm}
-          />
-        </StyledCard>
+        <StyledTextArea
+          rowsMin={2}
+          autoFocus
+          placeholder={placeholder}
+          value={content}
+          onChange={(e) => onChange(e)}
+          onBlur={closeForm}
+        />
         <ButtonContainer>
           {children}
-          <StyledIcon onMouseDown={closeForm}>close</StyledIcon>
         </ButtonContainer>
       </Container>
     );

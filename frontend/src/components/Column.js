@@ -6,21 +6,39 @@ import styled from "styled-components";
 import { connect } from "react-redux";
 import { editColumn, deleteColumn, dragStateSave } from "../actions";
 import Icon from "@material-ui/core/Icon";
-import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
+import AllInclusiveIcon from "@material-ui/icons/AllInclusive";
 
 const ColumnContainer = styled.div`
-  border: 2px solid orange;
+  color: white;
+  border: 1px solid rgba(1, 11, 15, 0.3);
+  -webkit-box-shadow: 1px 1px 3px 1px rgba(1, 11, 15, 0.3);
+  -moz-box-shadow: 1px 1px 3px 1px rgba(1, 11, 15, 0.3);
+  box-shadow: 1px 1px 3px 1px rgba(1, 11, 15, 0.3);
   border-radius: 3px;
-  background-color: #282c34;
+  background-color: rgba(0,0,0,0.1);
   width: 300px;
   height: 100%;
+  margin-right: 12px;
   padding: 8px;
-  margin: 5px 20px 15px 0px;
+
+  &:active {
+    border: 1px solid rgba(0, 0, 0);
+    background-color: rgba(0,0,0,0.3)
+    }
+
+  &:hover {
+    border: 1px solid rgba(0, 0, 0);
+    background-color: rgba(0,0,0,0.2)
+    }
+
+  .
 `;
 
 const StyledInput = styled.input`
-  width: 96%;
+  width: 50%;
+  background-color: inherit;
   border: none;
   outline-color: #ff8948;
   border-radius: 3px;
@@ -29,7 +47,6 @@ const StyledInput = styled.input`
 `;
 
 const TitleContainer = styled.div`
-  color: #FFFFFF;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -38,15 +55,25 @@ const TitleContainer = styled.div`
 
 const DeleteButton = styled(Icon)`
   cursor: pointer;
-  margin-left: 5px;
+  margin-left: 10px;
   opacity: 0.5;
   &:hover {
     opacity: 0.8;
   }
 `;
 
-const ColumnTitle = styled.h4`
-  font-size: 150%;
+const ColumnTitle = styled.h3`
+  cursor: text;
+  text-transform: uppercase;
+  &:hover {
+    opacity: 0.5;
+  }
+`;
+
+const Limit = styled.h3`
+  margin-left: 10px;
+  min-width: 24px;
+  min-height: 28.8px;
   cursor: text;
   text-transform: uppercase;
   &:hover {
@@ -55,63 +82,88 @@ const ColumnTitle = styled.h4`
 `;
 
 const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [isEditingLimit, setIsEditingLimit] = useState(false);
   const [columnTitle, setColumnTitle] = useState(title);
+  const [columnLimit, setColumnLimit] = useState(limit);
 
   const renderEditInput = () => {
-    return (
-      <form onSubmit={handleFinishEditing}>
-        <StyledInput
-          type="text"
-          value={columnTitle}
-          onChange={handleChange}
-          autoFocus
-          onFocus={handleFocus}
-          onBlur={handleFinishEditing}
-        />
-      </form>
-    );
+    if (isEditingTitle)
+      return (
+        <form onSubmit={handleFinishEditing}>
+          <StyledInput
+            type="text"
+            value={columnTitle}
+            onChange={handleChange}
+            autoFocus
+            onFocus={handleFocus}
+            onBlur={handleFinishEditing}
+          />
+        </form>
+      );
+    if (isEditingLimit)
+      return (
+        <form onSubmit={handleFinishEditing}>
+          <StyledInput
+            type="text"
+            value={columnLimit}
+            onChange={handleChange}
+            autoFocus
+            onFocus={handleFocus}
+            onBlur={handleFinishEditing}
+          />
+        </form>
+      );
   };
 
-  const handleFocus = e => {
+  const handleFocus = (e) => {
     e.target.select();
   };
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     e.preventDefault();
-    setColumnTitle(e.target.value);
+    if (isEditingTitle) setColumnTitle(e.target.value);
+    if (isEditingLimit) setColumnLimit(e.target.value);
   };
 
   const handleFinishEditing = () => {
-    setIsEditing(false);
+    setIsEditingTitle(false);
+    setIsEditingLimit(false);
     const column = {
       id,
-      title,
-      limit,
+      title: columnTitle,
+      limit: columnLimit,
       tasks,
-      index
-    }
+      index,
+    };
     dispatch(editColumn(column));
   };
 
-    const handleDeleteColumn = () => {
+  const handleDeleteColumn = () => {
     dispatch(deleteColumn(id));
-    const filteredColumns = columns.filter(column => column.id !== id)
-    dispatch(dragStateSave(filteredColumns))
+    const filteredColumns = columns.filter((column) => column.id !== id);
+    
+    dispatch(dragStateSave(filteredColumns.map((col, index) => {
+      col.index = index;
+      return col
+    })));
   };
-  const submit = id => {
+
+  const submitColumnDelete = () => {
     confirmAlert({
-      title: 'Alert!',
-      message: 'Are you sure you want to delete this column ?',
+      title: "Alert!",
+      message: "Are you sure you want to delete this column ?",
       buttons: [
         {
-          label: 'Yes',
-          onClick: () => handleDeleteColumn()
+          label: "Yes",
+          onClick: () => handleDeleteColumn(),
         },
         {
-          label: 'No',
-          onClick: () => {return null}
-        }
+          label: "No",
+          onClick: () => {
+            return null;
+          },
+        },
       ],
       closeOnEscape: true,
       closeOnClickOutside: true,
@@ -120,25 +172,33 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
 
   return (
     <Draggable key={id} draggableId={id} index={index}>
-      {provided => (
+      {(provided) => (
         <ColumnContainer
           {...provided.draggableProps}
           ref={provided.innerRef}
           {...provided.dragHandleProps}
         >
-          {isEditing ? (
+          {isEditingTitle || isEditingLimit ? (
             renderEditInput()
           ) : (
             <TitleContainer>
-              {limit >= 0 ? limit : "LIMIT REACHED"}
-              <ColumnTitle onClick={() => setIsEditing(true)}>
+              <Limit onClick={() => setIsEditingLimit(true)}>
+                {limit <= -9999 ? (
+                  <AllInclusiveIcon />
+                ) : limit === 0 ? (
+                  "MAX"
+                ) : (
+                  limit
+                )}
+              </Limit>
+              <ColumnTitle onClick={() => setIsEditingTitle(true)}>
                 {columnTitle}
               </ColumnTitle>
-              <DeleteButton onClick={submit}>delete</DeleteButton>
+              <DeleteButton onClick={submitColumnDelete}>delete</DeleteButton>
             </TitleContainer>
           )}
           <Droppable droppableId={id}>
-            {provided => (
+            {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
                 {tasks.map((task, index) => (
                   <Task
@@ -162,8 +222,8 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  columns: state.columns
-})
+const mapStateToProps = (state) => ({
+  columns: state.columns,
+});
 
 export default connect(mapStateToProps)(ColumnList);

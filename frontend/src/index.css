@@ -1,6 +1,12 @@
 html {
     box-sizing: border-box;
-    background-color: #282c34;
+    background: #0F2027;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, rgb(15, 32, 39), rgb(32, 58, 67), rgb(44, 83, 100)) no-repeat center center fixed;  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, rgb(15, 32, 39), rgb(32, 58, 67), rgb(44, 83, 100)) no-repeat center center fixed; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
     word-break: break-word;
     transition: all 0.5s ease-in;
   }
@@ -8,6 +14,7 @@ html {
 #columnContainer {
   display: flex;
 }
+
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     margin-top: 0.75rem;
