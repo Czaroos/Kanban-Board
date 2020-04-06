@@ -10,6 +10,7 @@ import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { useSpring, animated } from "react-spring";
 import { CardContent, Typography, Card } from "@material-ui/core";
+import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 
 const TaskContainer = styled.div`
   margin: 0 0 8px 0;
@@ -41,6 +42,7 @@ const StyledTask = styled(Card)`
     -moz-box-shadow: 1px 1px 3px 1px rgba(255, 255, 255, 0.1);
     box-shadow: 1px 1px 3px 1px rgba(255, 255, 255, 0.1);
     color: white;
+    padding-right: 16px;
     
     &:active {
       border: 1px solid rgba(1, 11, 15);
@@ -68,6 +70,18 @@ const DeleteButton = styled(Icon)`
     opacity: 0.8;
   }
 `;
+
+const HighPriorityIcon = styled(PriorityHighIcon)`
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  color: red;
+
+
+  ${TaskContainer}:hover & {
+    opacity: 0;
+  }
+`
 
 const Task = React.memo(
   ({ content, id, columnID, userID, priority, index, dispatch }) => {
@@ -151,6 +165,8 @@ const Task = React.memo(
                 onDoubleClick={() => setIsEditing(true)}
               >
                 <StyledTask>
+                  {priority === "high" ? <HighPriorityIcon
+                  fontSize="small"/> : null}
                   <EditButton
                     fontSize="small"
                     onMouseDown={() => setIsEditing(true)}

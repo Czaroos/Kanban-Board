@@ -186,7 +186,7 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
               <Limit onClick={() => setIsEditingLimit(true)}>
                 {limit <= -9999 ? (
                   <AllInclusiveIcon />
-                ) : limit === 0 ? (
+                ) : limit <= 0 ? (
                   "MAX"
                 ) : (
                   limit
