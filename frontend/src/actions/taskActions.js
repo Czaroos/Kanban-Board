@@ -28,7 +28,7 @@ export function editTask(task) {
     })
       .then(res => res.json())
       .then(editedTask => dispatch({
-        type: CONSTANTS.EDIT_COLUMN,
+        type: CONSTANTS.EDIT_TASK,
         payload: editedTask
       }));
   }

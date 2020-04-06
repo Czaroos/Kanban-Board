@@ -76,7 +76,7 @@ const columnReducer = (state = initialState, action) => {
         newState.splice(droppableIndexEnd, 0, ...column);
         newState.map((col, index) => {
           col.index = index;
-          return col
+          return col;
         });
         return newState;
       }
@@ -100,7 +100,7 @@ const columnReducer = (state = initialState, action) => {
 
         // pull out the task from this column
         const task = columnStart.tasks.splice(droppableIndexStart, 1);
-        const newTask = task.map(task => {
+        const newTask = task.map((task) => {
           task.columnID = droppableIdEnd;
           return task;
         });
@@ -115,20 +115,19 @@ const columnReducer = (state = initialState, action) => {
       return newState;
 
     case CONSTANTS.EDIT_TASK: {
+      const { _id, content, userId, priority, columnId } = action.payload;
       return state.map((column) => {
-        if (column.id === action.payload._id) {
+        if (column.id === columnId) {
           const newTasks = column.tasks.map((task) => {
-            if (task.id === action.payload.task._id) {
-              task.content = action.payload.task.content;
-              task.userID = action.payload.task.userId;
-              task.priority = action.payload.task.priority;
+            if (task.id === _id) {
+              task.content = content;
+              task.priority = priority;
+              task.userID = userId;
               return task;
-            }
-            return task;
+            } else return task;
           });
           return { ...column, tasks: newTasks };
-        }
-        return column;
+        } else return column;
       });
     }
 
@@ -150,7 +149,7 @@ const columnReducer = (state = initialState, action) => {
       return state.map((column) => {
         if (column.id === _id) {
           column.title = title;
-          column.limit = limit
+          column.limit = limit;
           return column;
         } else {
           return column;
@@ -159,12 +158,14 @@ const columnReducer = (state = initialState, action) => {
     }
 
     case CONSTANTS.DELETE_COLUMN: {
-      const newStateDelete = [...state]
+      const newStateDelete = [...state];
       const columnID = action.payload;
-      const filtered = newStateDelete.filter((column) => column.id !== columnID);
+      const filtered = newStateDelete.filter(
+        (column) => column.id !== columnID
+      );
       return filtered.map((col, index) => {
         col.index = index;
-        return col
+        return col;
       });
     }
 

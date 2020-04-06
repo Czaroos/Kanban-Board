@@ -107,7 +107,7 @@ const Task = React.memo(
       e.preventDefault();
       const task = {
         id,
-        content,
+        content: taskContent,
         columnID,
         userID,
         priority,
