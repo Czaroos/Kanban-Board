@@ -86,35 +86,26 @@ const Limit = styled.h3`
 const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingLimit, setIsEditingLimit] = useState(false);
-  const [columnTitle, setColumnTitle] = useState(title);
-  const [columnLimit, setColumnLimit] = useState(limit);
 
-  const renderEditInput = () => {
-    if (isEditingTitle)
-      return (
-        <form onSubmit={handleFinishEditing}>
-          <StyledInput
-            type="text"
-            value={columnTitle}
-            onChange={handleChange}
-            autoFocus
-            onFocus={handleFocus}
-            onBlur={handleFinishEditing}
-          />
-        </form>
-      );
-    if (isEditingLimit)
+  const renderEditInput = (value) => {
+    if (isEditingTitle || isEditingLimit)
       return (
         <form onSubmit={handleFinishEditing}>
           <StyledInput
             type="text"
             onChange={handleChange}
+            value={value}
             autoFocus
             onFocus={handleFocus}
-            onBlur={handleFinishEditing}
+            onBlur={closeForm}
           />
         </form>
       );
+  };
+
+  const closeForm = () => {
+    setIsEditingTitle(false);
+    setIsEditingLimit(false);
   };
 
   const handleFocus = (e) => {
@@ -123,12 +114,13 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
 
   const handleChange = (e) => {
     e.preventDefault();
-    if (isEditingTitle) setColumnTitle(e.target.value);
-    if (isEditingLimit) setColumnLimit(e.target.value);
+    if (isEditingTitle) title = e.target.value;
+    if (isEditingLimit) limit = e.target.value;
   };
 
   const handleFinishEditing = () => {
-    let validatedColumnLimit = columnLimit;
+    let validatedColumnLimit = limit;
+
     if (/\D/.test(validatedColumnLimit)) {
       validatedColumnLimit = -99999
     }
@@ -136,10 +128,10 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
     setIsEditingTitle(false);
     setIsEditingLimit(false);
 
-    if (columnTitle.trim().length !== 0) {
+    if (title.trim().length !== 0) {
       const column = {
         id,
-        title: columnTitle,
+        title: title,
         limit: validatedColumnLimit,
         tasks,
         index,
@@ -195,7 +187,7 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
             renderEditInput()
           ) : (
             <TitleContainer>
-              <Limit onClick={() => setIsEditingLimit(true)}>
+              <Limit onClick={() => setIsEditingLimit(limit)}>
                 {limit <= -9999 ? (
                   <AllInclusiveIcon />
                 ) : limit <= 0 ? (
@@ -204,7 +196,7 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
                   limit
                 )}
               </Limit>
-              <ColumnTitle onClick={() => setIsEditingTitle(true)}>
+              <ColumnTitle onClick={() => setIsEditingTitle(title)}>
                 {title}
               </ColumnTitle>
               <DeleteButton onClick={submitColumnDelete}>delete</DeleteButton>

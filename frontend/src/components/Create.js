@@ -55,10 +55,10 @@ class Create extends React.PureComponent {
     const { columnID } = this.props;
     const { content } = this.state;
 
-    if (content) {
-      this.setState({
-        content: ""
-      });
+      if (content) {
+        this.setState({
+          content: ""
+        });
 
       if (content.trim().length !== 0) {
         const newTask = {

@@ -95,7 +95,6 @@ const Task = React.memo(
     });
 
     const closeForm = (e) => {
-      console.log("clicked");
       setIsEditing(false);
     };
 
@@ -105,14 +104,16 @@ const Task = React.memo(
 
     const saveTask = (e) => {
       e.preventDefault();
-      const task = {
-        id,
-        content: taskContent,
-        columnID,
-        userID,
-        priority,
-      };
-      dispatch(editTask(task));
+      if (taskContent.trim().length !== 0) {
+        const task = {
+          id,
+          content: taskContent,
+          columnID,
+          userID,
+          priority,
+        };
+        dispatch(editTask(task));
+      }
       setIsEditing(false);
     };
 
