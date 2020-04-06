@@ -74,6 +74,7 @@ const Limit = styled.h3`
   margin-left: 10px;
   min-width: 24px;
   min-height: 28.8px;
+  margin-bottom: 5px;
   cursor: text;
   text-transform: uppercase;
   &:hover {
