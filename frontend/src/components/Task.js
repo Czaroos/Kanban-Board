@@ -43,7 +43,7 @@ const StyledTask = styled(Card)`
     box-shadow: 1px 1px 3px 1px rgba(255, 255, 255, 0.1);
     color: white;
     padding-right: 16px;
-    
+        
     &:active {
       border: 1px solid rgba(1, 11, 15);
       background-color: rgba(0, 0, 0, 0.3);

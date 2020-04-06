@@ -9,6 +9,7 @@ import Icon from "@material-ui/core/Icon";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import AllInclusiveIcon from "@material-ui/icons/AllInclusive";
+import LimitError from "./LimitError";
 
 const ColumnContainer = styled.div`
   color: white;
@@ -36,13 +37,30 @@ const ColumnContainer = styled.div`
   .
 `;
 
-const StyledInput = styled.input`
-  width: 50%;
+const StyledInputTitle = styled.input`
+  width: 80%;
   background-color: inherit;
   border: none;
-  outline-color: #ff8948;
-  border-radius: 3px;
-  margin-bottom: 3px;
+  outline: none;
+  border-bottom: 2px solid #03a8f45e;
+  margin-bottom: 5px;
+  margin-left: 23px;
+  font-size: 1.4rem;
+  text-align: center;
+  padding: 5px;
+  color: white;
+`;
+
+const StyledInputLimit = styled.input`
+  width: 8%;
+  background-color: inherit;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid #03a8f45e;
+  margin-bottom: 5px;
+  margin-left: 0px;
+  text-size: 1.4rem;
+  text-align: center;
   padding: 5px;
   color: white;
 `;
@@ -76,6 +94,7 @@ const Limit = styled.h3`
   min-width: 24px;
   min-height: 28.8px;
   margin-bottom: 5px;
+  margin-right: 10px;
   cursor: text;
   text-transform: uppercase;
   &:hover {
@@ -88,19 +107,29 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
   const [isEditingLimit, setIsEditingLimit] = useState(false);
 
   const renderEditInput = (value) => {
-    if (isEditingTitle || isEditingLimit)
-      return (
-        <form onSubmit={handleFinishEditing}>
-          <StyledInput
-            type="text"
-            onChange={handleChange}
-            value={value}
-            autoFocus
-            onFocus={handleFocus}
-            onBlur={closeForm}
-          />
-        </form>
-      );
+    return isEditingTitle ? (
+      <form onSubmit={handleFinishEditing}>
+        <StyledInputTitle
+          type="text"
+          onChange={handleChange}
+          value={value}
+          autoFocus
+          onFocus={handleFocus}
+          onBlur={closeForm}
+        />
+      </form>
+    ) : (
+      <form onSubmit={handleFinishEditing}>
+        <StyledInputLimit
+          type="text"
+          onChange={handleChange}
+          value={value}
+          autoFocus
+          onFocus={handleFocus}
+          onBlur={closeForm}
+        />
+      </form>
+    );
   };
 
   const closeForm = () => {
@@ -121,8 +150,8 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
   const handleFinishEditing = () => {
     let validatedColumnLimit = limit;
 
-    if (/\D/.test(validatedColumnLimit)) {
-      validatedColumnLimit = -99999
+    if (!/[0-9]/.test(validatedColumnLimit)) {
+      validatedColumnLimit = -99999;
     }
 
     setIsEditingTitle(false);
@@ -187,16 +216,16 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
             renderEditInput()
           ) : (
             <TitleContainer>
-              <Limit onClick={() => setIsEditingLimit(limit)}>
+              <Limit onClick={() => setIsEditingLimit(true)}>
                 {limit <= -9999 ? (
                   <AllInclusiveIcon />
                 ) : limit <= 0 ? (
-                  "MAX"
+                  <LimitError/>
                 ) : (
                   limit
                 )}
               </Limit>
-              <ColumnTitle onClick={() => setIsEditingTitle(title)}>
+              <ColumnTitle onClick={() => setIsEditingTitle(true)}>
                 {title}
               </ColumnTitle>
               <DeleteButton onClick={submitColumnDelete}>delete</DeleteButton>
