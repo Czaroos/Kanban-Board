@@ -2,7 +2,7 @@ import {CONSTANTS} from '../actions'
 
 export function fetchColumns() {
   return (dispatch) => {
-    fetch('http://localhost:5000/all')
+    fetch('/all')
       .then(res => res.json())
       .then(columns => dispatch({
         type: CONSTANTS.FETCH_COLUMNS,
@@ -13,7 +13,7 @@ export function fetchColumns() {
 
 export function addColumn(column) {
   return (dispatch) => {
-    fetch('http://localhost:5000/columns/add/', {
+    fetch('/columns/add/', {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
@@ -51,7 +51,7 @@ export const sort = (
 
 export function dragStateSave(columns) {
   return (dispatch) => {
-    fetch('http://localhost:5000/all', {
+    fetch('/all', {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
@@ -68,7 +68,7 @@ export function dragStateSave(columns) {
 
 export function editColumn(column) {
   return (dispatch) => {
-    fetch('http://localhost:5000/columns/' + column.id, {
+    fetch('/columns/' + column.id, {
       method: 'PUT',
       headers: {
         'content-type': 'application/json'
@@ -87,7 +87,7 @@ export function editColumn(column) {
 
 export function deleteColumn(id) {
   return (dispatch) => {
-    fetch('http://localhost:5000/columns/' + id, {
+    fetch('/columns/' + id, {
       method: 'DELETE'
     })
       .then(res => res.json())

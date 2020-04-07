@@ -2,7 +2,7 @@ import { CONSTANTS } from "../actions";
 
 export function addTask(task) {
   return (dispatch) => {
-    fetch('http://localhost:5000/tasks/add', {
+    fetch('/tasks/add', {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
@@ -19,7 +19,7 @@ export function addTask(task) {
 
 export function editTask(task) {
   return (dispatch) => {
-    fetch('http://localhost:5000/tasks/' + task.id, {
+    fetch('/tasks/' + task.id, {
       method: 'PUT',
       headers: {
         'content-type': 'application/json'
@@ -36,7 +36,7 @@ export function editTask(task) {
 
 export function deleteTask(task) {
   return (dispatch) => {
-    fetch('http://localhost:5000/tasks/delete/' + task.id, {
+    fetch('/tasks/delete/' + task.id, {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
