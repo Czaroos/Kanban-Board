@@ -5,14 +5,14 @@ const mongoose = require("mongoose");
 // ------------------------------- / -------------------------------
 
 // Get columns
-router.route("/").get((req, res) => {
+router.route("/all").get((req, res) => {
   Column.find()
     .then((columns) => res.json(columns))
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
 // Save columns
-router.route("/").post((req, res) => {
+router.route("/all").post((req, res) => {
   Column.deleteMany({})
     .then(
       () =>

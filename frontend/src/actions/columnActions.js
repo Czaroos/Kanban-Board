@@ -2,7 +2,7 @@ import {CONSTANTS} from '../actions'
 
 export function fetchColumns() {
   return (dispatch) => {
-    fetch('http://localhost:5000/')
+    fetch('http://localhost:5000/all')
       .then(res => res.json())
       .then(columns => dispatch({
         type: CONSTANTS.FETCH_COLUMNS,
@@ -51,7 +51,7 @@ export const sort = (
 
 export function dragStateSave(columns) {
   return (dispatch) => {
-    fetch('http://localhost:5000/', {
+    fetch('http://localhost:5000/all', {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
