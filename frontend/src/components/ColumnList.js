@@ -3,11 +3,19 @@ import Column from './Column';
 import Create from './Create';
 import { connect } from 'react-redux';
 import styled from "styled-components";
+var randomColor = require('randomcolor');
 
 const ColumnsContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+const Line = styled.div`
+    margin-bottom: 30px;
+    height: 5px;
+    width: 318px;
+    background-color: ${randomColor()};
+`
 
 
 const ColumnList = ({columns, indexX}) => {
@@ -20,6 +28,7 @@ const ColumnList = ({columns, indexX}) => {
     return (
         <ColumnsContainer>
         {sortedColumns.map((column) => (
+            <div>
           <Column
             id={column.id}
             key={column.id}
@@ -28,8 +37,10 @@ const ColumnList = ({columns, indexX}) => {
             index={column.index}
             limit={column.limit}
           />
+          <Line/>
+          </div>
         ))}
-        <Create isColumn/>  
+        <Create type={'isSwimlane'}/>  
       </ColumnsContainer>
     )
 }

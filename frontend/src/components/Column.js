@@ -10,6 +10,8 @@ import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import AllInclusiveIcon from "@material-ui/icons/AllInclusive";
 import LimitError from "./LimitError";
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 const ColumnContainer = styled.div`
   color: white;
@@ -105,6 +107,7 @@ const Limit = styled.h3`
 const Column = ({ title, tasks, limit, id, index, indexX, indexY, dispatch, columns }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingLimit, setIsEditingLimit] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   const renderEditInput = (value) => {
     return isEditingTitle ? (
@@ -204,6 +207,11 @@ const Column = ({ title, tasks, limit, id, index, indexX, indexY, dispatch, colu
     });
   };
 
+  const handleIsVisible = () => {
+    if(isVisible) setIsVisible(false);
+    if(!isVisible) setIsVisible(true);
+  }
+
   return (
         <ColumnContainer
         >
@@ -224,9 +232,12 @@ const Column = ({ title, tasks, limit, id, index, indexX, indexY, dispatch, colu
                 {title}
               </ColumnTitle>
               <DeleteButton onClick={submitColumnDelete}>delete</DeleteButton>
+              <div onClick={handleIsVisible}>
+              {isVisible ? <VisibilityIcon/> : <VisibilityOffIcon/>}
+              </div>
             </TitleContainer>
           )}
-          <Droppable droppableId={id}>
+          {isVisible ? <Droppable droppableId={id}>
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
                 {tasks.map((task, index) => (
@@ -244,7 +255,8 @@ const Column = ({ title, tasks, limit, id, index, indexX, indexY, dispatch, colu
                 <Create columnID={id} />
               </div>
             )}
-          </Droppable>
+          </Droppable> : null}
+          
         </ColumnContainer>
   );
 };

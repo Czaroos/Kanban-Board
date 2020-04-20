@@ -72,8 +72,20 @@ class Create extends React.PureComponent {
   };
 
   renderOpenForm = () => {
-    const { isColumn } = this.props;
-    const buttonText = isColumn ? "Add a column" : "Add a task";
+    const { type } = this.props;
+    let buttonText = ""
+    switch(type){
+      case 'isColumn':
+        buttonText = "Add a column"
+        break;
+      
+      case 'isSwimlane':
+        buttonText = "Add a swimlane"
+        break;
+
+      default:
+        buttonText = "Add a task"
+    }
 
     return (
       <OpenForm onClick={this.openForm}>
@@ -85,11 +97,21 @@ class Create extends React.PureComponent {
 
   render() {
     const { content } = this.state;
-    const { isColumn } = this.props;
+    const { type } = this.props;
 
-    const placeholder = isColumn
-      ? "Enter a column name..."
-      : "Enter a task description...";
+    let placeholder = ""
+    switch(type){
+      case 'isColumn':
+        placeholder = "Add a column..."
+        break;
+      
+      case 'isSwimlane':
+        placeholder = "Add a swimlane..."
+        break;
+
+      default:
+        placeholder = "Add a task..."
+    }
 
     return this.state.formOpen ? (
       <Form
@@ -98,13 +120,13 @@ class Create extends React.PureComponent {
         onChange={this.handleInputChange}
         closeForm={this.closeForm}
       >
-        <Button onClick={isColumn ? this.handleAddColumn : this.handleAddTask}>
-          {isColumn ? "Add a column" : "Add a task"}
+        <Button onClick={type === 'isColumn' ? this.handleAddColumn : type === 'isSwimlane' ? this.handleAddSwimlane : this.handleAddTask}>
+          {type === 'isColumn' ? "Add a column" : type === 'isSwimlane' ? "Add a swimlane" : "Add a task"}
         </Button>
       </Form>
     ) : (
       <OpenForm onClick={this.openForm}>
-        {isColumn ? "Add another column" : "Add another task"}
+          {type === 'isColumn' ? "Add a column" : type === 'isSwimlane' ? "Add a swimlane" : "Add a task"}
       </OpenForm>
     );
   }

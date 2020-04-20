@@ -54,6 +54,7 @@ class App extends PureComponent {
           {this.getIndecesX().map(indexX => (
           <ColumnList indexX={indexX} key={indexX}/>
           ))}
+          <Create type={'isColumn'}/>
         </ColumnsContainerRow>
       </DragDropContext>
     );
