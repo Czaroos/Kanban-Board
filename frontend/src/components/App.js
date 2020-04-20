@@ -1,5 +1,4 @@
 import React, { PureComponent } from "react";
-import Column from "./Column";
 import { connect } from "react-redux";
 import Create from "./Create";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";

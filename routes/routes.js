@@ -46,7 +46,6 @@ router.route("/all").post((req, res) => {
 //Add column
 router.route("/columns/add").post((req, res) => {
   Column.countDocuments({}).then((count) => {
-    Column.map()
     newColumn = new Column({
       _id: mongoose.Types.ObjectId(),
       title: req.body.title,
