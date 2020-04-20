@@ -6,12 +6,11 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { sort } from "../actions";
 import styled from "styled-components";
 import { fetchColumns, dragStateSave } from "../actions/columnActions";
-import ColumnList from "./ColumnList";
+import Swimlane from "./Swimlane";
 
 const ColumnsContainerRow = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
+  flex-direction: column;
 `;
 
 class App extends PureComponent {
@@ -39,22 +38,26 @@ class App extends PureComponent {
     this.props.dragStateSave(columns);
   };
 
-  getIndecesX = () => {
+  getIndecesY = () => {
     const { columns } = this.props;
-    let indecesX = new Set();
-    columns.forEach(column => indecesX.add(column.indexX))
+    let indecesY = new Set();
+    columns.forEach((column) => indecesY.add(column.indexY));
 
-    return Array.from(indecesX);
+    return Array.from(indecesY);
   };
 
   render() {
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <ColumnsContainerRow>
-          {this.getIndecesX().map(indexX => (
-          <ColumnList indexX={indexX} key={indexX}/>
-          ))}
-          <Create type={'isColumn'}/>
+          {this.getIndecesY().map((indexY, index) =>
+            index === 0 ? (
+              <Swimlane indexY={indexY} key={indexY} createColumn />
+            ) : (
+              <Swimlane indexY={indexY} key={indexY} />
+            )
+          )}
+          <Create type={"isSwimlane"} />
         </ColumnsContainerRow>
       </DragDropContext>
     );

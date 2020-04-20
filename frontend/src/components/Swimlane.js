@@ -7,7 +7,8 @@ var randomColor = require('randomcolor');
 
 const ColumnsContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: flex-start;
 `;
 
 const Line = styled.div`
@@ -18,10 +19,10 @@ const Line = styled.div`
 `
 
 
-const ColumnList = ({columns, indexX}) => {
-    const filteredColumns = columns.filter(column => column.indexX === indexX)
+const Swimlane = ({columns, indexY, createColumn}) => {
+    const filteredColumns = columns.filter(column => column.indexY === indexY)
     const sortedColumns = filteredColumns.sort((colA, colB) => {
-        if(colA.indexY > colB.indexY) return 1
+        if(colA.indexX > colB.indexX) return 1
         else return -1
     })
 
@@ -40,7 +41,7 @@ const ColumnList = ({columns, indexX}) => {
           <Line/>
           </div>
         ))}
-        <Create type={'isSwimlane'}/>  
+        {createColumn ? <Create type={'isColumn'}/> : null}
       </ColumnsContainer>
     )
 }
@@ -49,4 +50,4 @@ const mapStateToProps = state => ({
     columns: state.columns
   });
 
-  export default connect(mapStateToProps)(ColumnList)
+  export default connect(mapStateToProps)(Swimlane)

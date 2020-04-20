@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Task from "./Task";
 import Create from "./Create";
-import { Droppable, Draggable } from "react-beautiful-dnd";
+import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { editColumn, deleteColumn, dragStateSave } from "../actions";
