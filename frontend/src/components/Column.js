@@ -102,7 +102,7 @@ const Limit = styled.h3`
   }
 `;
 
-const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
+const Column = ({ title, tasks, limit, id, index, indexX, indexY, dispatch, columns }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingLimit, setIsEditingLimit] = useState(false);
 
@@ -205,12 +205,7 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
   };
 
   return (
-    <Draggable key={id} draggableId={id} index={index}>
-      {(provided) => (
         <ColumnContainer
-          {...provided.draggableProps}
-          ref={provided.innerRef}
-          {...provided.dragHandleProps}
         >
           {isEditingTitle || isEditingLimit ? (
             renderEditInput()
@@ -251,8 +246,6 @@ const ColumnList = ({ title, tasks, limit, id, index, dispatch, columns }) => {
             )}
           </Droppable>
         </ColumnContainer>
-      )}
-    </Draggable>
   );
 };
 
@@ -260,4 +253,4 @@ const mapStateToProps = (state) => ({
   columns: state.columns,
 });
 
-export default connect(mapStateToProps)(ColumnList);
+export default connect(mapStateToProps)(Column);

@@ -5,74 +5,65 @@ import Create from "./Create";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { sort } from "../actions";
 import styled from "styled-components";
-import { fetchColumns, dragStateSave } from '../actions/columnActions';
+import { fetchColumns, dragStateSave } from "../actions/columnActions";
+import ColumnList from "./ColumnList";
 
-const ColumnsContainer = styled.div`
+const ColumnsContainerRow = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
 `;
 
 class App extends PureComponent {
-
   componentDidMount() {
     this.props.fetchColumns();
   }
 
-  onDragEnd = result => {
+  onDragEnd = (result) => {
     const { destination, source, draggableId, type } = result;
-    const { columns } = this.props
+    const { columns } = this.props;
 
     if (!destination) {
       return;
     }
 
     this.props.sort(
-        source.droppableId,
-        destination.droppableId,
-        source.index,
-        destination.index,
-        draggableId,
-        type
-      )
+      source.droppableId,
+      destination.droppableId,
+      source.index,
+      destination.index,
+      draggableId,
+      type
+    );
 
-    this.props.dragStateSave(columns)
+    this.props.dragStateSave(columns);
+  };
+
+  getIndecesX = () => {
+    const { columns } = this.props;
+    let indecesX = new Set();
+    columns.forEach(column => indecesX.add(column.indexX))
+
+    return Array.from(indecesX);
   };
 
   render() {
-    const { columns } = this.props;
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-          <Droppable
-            droppableId="all-columns"
-            direction="horizontal"
-            type="column"
-          >
-            {provided => (
-              <ColumnsContainer {...provided.droppableProps} ref={provided.innerRef}>
-                {columns.map((column) => (
-                  <Column
-                    id={column.id}
-                    key={column.id}
-                    title={column.title}
-                    tasks={column.tasks}
-                    index={column.index}
-                    limit={column.limit}
-                  />
-                ))}
-                {provided.placeholder}
-                <Create isColumn/>
-              </ColumnsContainer>
-            )}
-          </Droppable>
+        <ColumnsContainerRow>
+          {this.getIndecesX().map(indexX => (
+          <ColumnList indexX={indexX} key={indexX}/>
+          ))}
+        </ColumnsContainerRow>
       </DragDropContext>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  columns: state.columns
+const mapStateToProps = (state) => ({
+  columns: state.columns,
 });
 
-const mapDispatchToProps = {fetchColumns, sort, dragStateSave}
+const mapDispatchToProps = { fetchColumns, sort, dragStateSave };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

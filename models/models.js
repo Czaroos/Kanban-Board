@@ -16,6 +16,8 @@ const taskSchema = Schema({
 const columnSchema = Schema({
   _id: Schema.Types.ObjectId,
   index: { type: Number, default: 1 },
+  indexX: { type: Number, default: 0 },
+  indexY: { type: Number, default: 0 },
   title: String,
   limit: { type: Number, default: -99999 },
   tasks: [taskSchema]

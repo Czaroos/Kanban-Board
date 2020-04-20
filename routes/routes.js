@@ -30,7 +30,9 @@ router.route("/all").post((req, res) => {
             title: column.title,
             limit: column.limit,
             tasks: tasks,
-            index: column.index
+            index: column.index,
+            indexX: column.indexX,
+            indexY: column.indexY
           });
           newColumn.save().then({});
           return newColumn;
@@ -50,6 +52,8 @@ router.route("/columns/add").post((req, res) => {
       limit: req.body.limit,
       tasks: [],
       index: count,
+      indexX: req.body.indexX,
+      indexY: req.body.indexY
     });
     newColumn
       .save()

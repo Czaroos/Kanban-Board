@@ -20,6 +20,8 @@ const columnReducer = (state = initialState, action) => {
           limit: column.limit,
           tasks: tasks,
           index: column.index,
+          indexX: column.indexX,
+          indexY: column.indexY
         };
       });
 
