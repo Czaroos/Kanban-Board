@@ -15,24 +15,25 @@ class Create extends React.PureComponent {
 
   openForm = () => {
     this.setState({
-      formOpen: true
+      formOpen: true,
     });
   };
 
-  closeForm = e => {
+  closeForm = (e) => {
     this.setState({
-      formOpen: false
+      formOpen: false,
     });
   };
 
-  handleInputChange = e => {
+  handleInputChange = (e) => {
     this.setState({
-      content: e.target.value
+      content: e.target.value,
     });
   };
 
   handleAddColumn = () => {
     const { content } = this.state;
+    const { indexX, swimlanesNames, noColumns } = this.props;
 
     if (content) {
       this.setState({
@@ -43,10 +44,46 @@ class Create extends React.PureComponent {
       if (content.trim().length !== 0) {
         const newColumn = {
           title: content,
+          indexY: 0,
+          indexX: indexX,
           // limit: Number(columnLimitInput.replace(/\s/g, ""))
         };
-  
         this.props.addColumn(newColumn);
+
+        if (!noColumns) {
+          swimlanesNames.forEach((swimlane, index) => {
+            const newColumn = {
+              title: swimlane,
+              indexY: index + 1,
+              indexX: indexX,
+            };
+            this.props.addColumn(newColumn);
+          });
+        }
+      }
+    }
+  };
+
+  handleAddSwimlane = () => {
+    const { content } = this.state;
+    const { indexX, indexY } = this.props;
+
+    if (content) {
+      this.setState({
+        content: "",
+        // columnLimitInput: ""
+      });
+
+      if (content.trim().length !== 0) {
+        console.log(content, indexX, indexY);
+        for (var i = 0; i < indexX; i++) {
+          const newColumn = {
+            title: content,
+            indexY: indexY,
+            indexX: i,
+          };
+          this.props.addColumn(newColumn);
+        }
       }
     }
   };
@@ -55,17 +92,17 @@ class Create extends React.PureComponent {
     const { columnID } = this.props;
     const { content } = this.state;
 
-      if (content) {
-        this.setState({
-          content: ""
-        });
+    if (content) {
+      this.setState({
+        content: "",
+      });
 
       if (content.trim().length !== 0) {
         const newTask = {
           content,
-          columnID
+          columnID,
         };
-  
+
         this.props.addTask(newTask);
       }
     }
@@ -73,18 +110,18 @@ class Create extends React.PureComponent {
 
   renderOpenForm = () => {
     const { type } = this.props;
-    let buttonText = ""
-    switch(type){
-      case 'isColumn':
-        buttonText = "Add a column"
+    let buttonText = "";
+    switch (type) {
+      case "isColumn":
+        buttonText = "Add a column";
         break;
-      
-      case 'isSwimlane':
-        buttonText = "Add a swimlane"
+
+      case "isSwimlane":
+        buttonText = "Add a swimlane";
         break;
 
       default:
-        buttonText = "Add a task"
+        buttonText = "Add a task";
     }
 
     return (
@@ -99,18 +136,18 @@ class Create extends React.PureComponent {
     const { content } = this.state;
     const { type } = this.props;
 
-    let placeholder = ""
-    switch(type){
-      case 'isColumn':
-        placeholder = "Add a column..."
+    let placeholder = "";
+    switch (type) {
+      case "isColumn":
+        placeholder = "Add a column...";
         break;
-      
-      case 'isSwimlane':
-        placeholder = "Add a swimlane..."
+
+      case "isSwimlane":
+        placeholder = "Add a swimlane...";
         break;
 
       default:
-        placeholder = "Add a task..."
+        placeholder = "Add a task...";
     }
 
     return this.state.formOpen ? (
@@ -120,13 +157,29 @@ class Create extends React.PureComponent {
         onChange={this.handleInputChange}
         closeForm={this.closeForm}
       >
-        <Button onClick={type === 'isColumn' ? this.handleAddColumn : type === 'isSwimlane' ? this.handleAddSwimlane : this.handleAddTask}>
-          {type === 'isColumn' ? "Add a column" : type === 'isSwimlane' ? "Add a swimlane" : "Add a task"}
+        <Button
+          onClick={
+            type === "isColumn"
+              ? this.handleAddColumn
+              : type === "isSwimlane"
+              ? this.handleAddSwimlane
+              : this.handleAddTask
+          }
+        >
+          {type === "isColumn"
+            ? "Add a column"
+            : type === "isSwimlane"
+            ? "Add a swimlane"
+            : "Add a task"}
         </Button>
       </Form>
     ) : (
       <OpenForm onClick={this.openForm}>
-          {type === 'isColumn' ? "Add a column" : type === 'isSwimlane' ? "Add a swimlane" : "Add a task"}
+        {type === "isColumn"
+          ? "Add a column"
+          : type === "isSwimlane"
+          ? "Add a swimlane"
+          : "Add a task"}
       </OpenForm>
     );
   }
@@ -134,7 +187,7 @@ class Create extends React.PureComponent {
 
 const mapDispatchToProps = {
   addTask,
-  addColumn
+  addColumn,
 };
 
 export default connect(null, mapDispatchToProps)(Create);

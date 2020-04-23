@@ -37,6 +37,8 @@ const columnReducer = (state = initialState, action) => {
         limit: action.payload.limit,
         tasks: [],
         index: action.payload.index,
+        indexX: action.payload.indexX,
+        indexY: action.payload.indexY
       };
       return [...state, newColumn];
 

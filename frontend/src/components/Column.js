@@ -4,14 +4,14 @@ import Create from "./Create";
 import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { editColumn, deleteColumn, dragStateSave } from "../actions";
+import { editColumn, deleteColumn } from "../actions";
 import Icon from "@material-ui/core/Icon";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import AllInclusiveIcon from "@material-ui/icons/AllInclusive";
 import LimitError from "./LimitError";
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
 const ColumnContainer = styled.div`
   color: white;
@@ -24,6 +24,7 @@ const ColumnContainer = styled.div`
   width: 300px;
   height: 100%;
   margin-right: 12px;
+  margin-bottom: 30px;
   padding: 8px;
 
   &:active {
@@ -104,7 +105,17 @@ const Limit = styled.h3`
   }
 `;
 
-const Column = ({ title, tasks, limit, id, index, indexX, indexY, dispatch, columns }) => {
+const Column = ({
+  title,
+  tasks,
+  limit,
+  id,
+  index,
+  indexX,
+  indexY,
+  dispatch,
+  columns,
+}) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingLimit, setIsEditingLimit] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -173,17 +184,21 @@ const Column = ({ title, tasks, limit, id, index, indexX, indexY, dispatch, colu
   };
 
   const handleDeleteColumn = () => {
-    dispatch(deleteColumn(id));
-    const filteredColumns = columns.filter((column) => column.id !== id);
-
-    dispatch(
-      dragStateSave(
-        filteredColumns.map((col, index) => {
-          col.index = index;
-          return col;
-        })
-      )
+    const swimlanesOfColumn = columns.filter(
+      (column) => column.indexX === indexX
     );
+    swimlanesOfColumn.forEach((column) => {
+      dispatch(deleteColumn(column.id));
+    });
+  };
+
+  const handleDeleteSwimlane = () => {
+    const columnsOfSwimlane = columns.filter(
+      (column) => column.indexY === indexY
+    );
+    columnsOfSwimlane.forEach((column) => {
+      dispatch(deleteColumn(column.id));
+    });
   };
 
   const submitColumnDelete = () => {
@@ -207,57 +222,86 @@ const Column = ({ title, tasks, limit, id, index, indexX, indexY, dispatch, colu
     });
   };
 
+  const submitSwimlaneDelete = () => {
+    confirmAlert({
+      title: "Alert!",
+      message: "Are you sure you want to delete this swimlane ?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => handleDeleteSwimlane(),
+        },
+        {
+          label: "No",
+          onClick: () => {
+            return null;
+          },
+        },
+      ],
+      closeOnEscape: true,
+      closeOnClickOutside: true,
+    });
+  };
+
   const handleIsVisible = () => {
-    if(isVisible) setIsVisible(false);
-    if(!isVisible) setIsVisible(true);
-  }
+    if (isVisible) setIsVisible(false);
+    if (!isVisible) setIsVisible(true);
+  };
 
   return (
-        <ColumnContainer
-        >
-          {isEditingTitle || isEditingLimit ? (
-            renderEditInput()
-          ) : (
-            <TitleContainer>
-              <Limit onClick={() => setIsEditingLimit(true)}>
-                {limit <= -9999 ? (
-                  <AllInclusiveIcon />
-                ) : limit <= 0 ? (
-                  <LimitError/>
-                ) : (
-                  limit
-                )}
-              </Limit>
-              <ColumnTitle onClick={() => setIsEditingTitle(true)}>
-                {title}
-              </ColumnTitle>
-              <DeleteButton onClick={submitColumnDelete}>delete</DeleteButton>
-              <div onClick={handleIsVisible}>
-              {isVisible ? <VisibilityIcon/> : <VisibilityOffIcon/>}
-              </div>
-            </TitleContainer>
-          )}
-          {isVisible ? <Droppable droppableId={id}>
-            {(provided) => (
-              <div {...provided.droppableProps} ref={provided.innerRef}>
-                {tasks.map((task, index) => (
-                  <Task
-                    id={task.id}
-                    index={index}
-                    key={task.id}
-                    content={task.content}
-                    columnID={task.columnID}
-                    userID={task.userID}
-                    priority={task.priority}
-                  />
-                ))}
-                {provided.placeholder}
-                <Create columnID={id} />
-              </div>
+    <ColumnContainer>
+      {isEditingTitle || isEditingLimit ? (
+        renderEditInput()
+      ) : (
+        <TitleContainer>
+          <Limit onClick={() => setIsEditingLimit(true)}>
+            {limit <= -9999 ? (
+              <AllInclusiveIcon />
+            ) : limit <= 0 ? (
+              <LimitError />
+            ) : (
+              limit
             )}
-          </Droppable> : null}
-          
-        </ColumnContainer>
+          </Limit>
+          {indexY > 0 && indexX > 0 ? null : (
+            <ColumnTitle onClick={() => setIsEditingTitle(true)}>
+              {title}
+            </ColumnTitle>
+          )}
+          {indexY > 0 && indexX > 0 ? null : indexY === 0 ? (
+            <DeleteButton onClick={submitColumnDelete}>delete</DeleteButton>
+          ) : (
+            <DeleteButton onClick={submitSwimlaneDelete}>delete</DeleteButton>
+          )}
+          {isVisible ? (
+            <VisibilityIcon onClick={handleIsVisible} />
+          ) : (
+            <VisibilityOffIcon onClick={handleIsVisible} />
+          )}
+        </TitleContainer>
+      )}
+      {isVisible ? (
+        <Droppable droppableId={id}>
+          {(provided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef}>
+              {tasks.map((task, index) => (
+                <Task
+                  id={task.id}
+                  index={index}
+                  key={task.id}
+                  content={task.content}
+                  columnID={task.columnID}
+                  userID={task.userID}
+                  priority={task.priority}
+                />
+              ))}
+              {provided.placeholder}
+              <Create columnID={id} />
+            </div>
+          )}
+        </Droppable>
+      ) : null}
+    </ColumnContainer>
   );
 };
 

@@ -1,9 +1,8 @@
-import React from 'react';
-import Column from './Column';
-import Create from './Create';
-import { connect } from 'react-redux';
+import React from "react";
+import Column from "./Column";
+import Create from "./Create";
+import { connect } from "react-redux";
 import styled from "styled-components";
-var randomColor = require('randomcolor');
 
 const ColumnsContainer = styled.div`
   display: flex;
@@ -12,24 +11,42 @@ const ColumnsContainer = styled.div`
 `;
 
 const Line = styled.div`
-    margin-bottom: 30px;
-    height: 5px;
-    width: 318px;
-    background-color: ${randomColor()};
-`
+  align-self: flex-start;
+  width: 96%;
+  height: 1px;
+`;
 
+const getHighestIndexX = (columns) => {
+  let indecesX = new Set();
+  columns.forEach((column) => indecesX.add(column.indexX));
+  let indecesXArr = Array.from(indecesX).sort().reverse(); // first element must be highest value
 
-const Swimlane = ({columns, indexY, createColumn}) => {
-    const filteredColumns = columns.filter(column => column.indexY === indexY)
-    const sortedColumns = filteredColumns.sort((colA, colB) => {
-        if(colA.indexX > colB.indexX) return 1
-        else return -1
-    })
+  return indecesXArr[0] + 1;
+};
 
-    return (
-        <ColumnsContainer>
-        {sortedColumns.map((column) => (
-            <div>
+const getSwimlanesNames = (columns) => {
+  let swimlaneNames = [];
+  columns.forEach((column) =>
+    column.indexY > 0 && column.indexX === 0
+      ? swimlaneNames.push(column.title)
+      : null
+  );
+
+  return swimlaneNames.sort((a, b) => (a.indexY > b.indexY ? 1 : 0));
+};
+
+const Swimlane = ({ columns, indexY, createColumn, color }) => {
+  const filteredColumns = columns.filter((column) => column.indexY === indexY);
+  const sortedColumns = filteredColumns.sort((colA, colB) => {
+    if (colA.indexX > colB.indexX) return 1;
+    else return -1;
+  });
+
+  return (
+    <ColumnsContainer>
+      {sortedColumns.map((column) => (
+        <div>
+          <Line style={{ backgroundColor: color }} />
           <Column
             id={column.id}
             key={column.id}
@@ -37,17 +54,24 @@ const Swimlane = ({columns, indexY, createColumn}) => {
             tasks={column.tasks}
             index={column.index}
             limit={column.limit}
+            indexX={column.indexX}
+            indexY={column.indexY}
           />
-          <Line/>
-          </div>
-        ))}
-        {createColumn ? <Create type={'isColumn'}/> : null}
-      </ColumnsContainer>
-    )
-}
+        </div>
+      ))}
+      {createColumn ? (
+        <Create
+          type={"isColumn"}
+          indexX={getHighestIndexX(columns)}
+          swimlanesNames={getSwimlanesNames(columns)}
+        />
+      ) : null}
+    </ColumnsContainer>
+  );
+};
 
-const mapStateToProps = state => ({
-    columns: state.columns
-  });
+const mapStateToProps = (state) => ({
+  columns: state.columns,
+});
 
-  export default connect(mapStateToProps)(Swimlane)
+export default connect(mapStateToProps)(Swimlane);

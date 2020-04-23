@@ -1,11 +1,12 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import Create from "./Create";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { DragDropContext } from "react-beautiful-dnd";
 import { sort } from "../actions";
 import styled from "styled-components";
 import { fetchColumns, dragStateSave } from "../actions/columnActions";
 import Swimlane from "./Swimlane";
+var randomColor = require("randomcolor");
 
 const ColumnsContainerRow = styled.div`
   display: flex;
@@ -45,18 +46,57 @@ class App extends PureComponent {
     return Array.from(indecesY);
   };
 
+  getHighestIndexY = () => {
+    const { columns } = this.props;
+    const indecesY = new Set();
+    columns.forEach((column) => indecesY.add(column.indexY));
+    const indecesYArr = Array.from(indecesY).sort().reverse(); // first element must be highest value
+
+    return indecesYArr[0] + 1;
+  };
+
+  getHighestIndexX = () => {
+    const { columns } = this.props;
+    const indecesX = new Set();
+    columns.forEach((column) => indecesX.add(column.indexX));
+    const indecesXArr = Array.from(indecesX).sort().reverse(); // first element must be highest value
+
+    return indecesXArr[0] + 1;
+  };
+
   render() {
+    const { columns } = this.props;
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <ColumnsContainerRow>
-          {this.getIndecesY().map((indexY, index) =>
-            index === 0 ? (
-              <Swimlane indexY={indexY} key={indexY} createColumn />
-            ) : (
-              <Swimlane indexY={indexY} key={indexY} />
-            )
+          {columns.length !== 0 ? (
+            <div>
+              {this.getIndecesY().map((indexY, index) =>
+                index === 0 ? (
+                  <Swimlane
+                    indexY={indexY}
+                    key={indexY}
+                    color={randomColor()}
+                    createColumn
+                  />
+                ) : (
+                  <Swimlane
+                    indexY={indexY}
+                    key={indexY}
+                    color={randomColor()}
+                  />
+                )
+              )}
+              <Create
+                type={"isSwimlane"}
+                indexY={this.getHighestIndexY()}
+                indexX={this.getHighestIndexX()}
+              />
+            </div>
+          ) : (
+            <Create type={"isColumn"} indexX={0} noColumns />
           )}
-          <Create type={"isSwimlane"} />
+          {}
         </ColumnsContainerRow>
       </DragDropContext>
     );
