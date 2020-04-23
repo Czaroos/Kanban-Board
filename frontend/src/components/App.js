@@ -14,8 +14,22 @@ const ColumnsContainerRow = styled.div`
 `;
 
 class App extends PureComponent {
+  state = {
+    colors: []
+  }
+
   componentDidMount() {
     this.props.fetchColumns();
+
+    var colors = [];
+    for(var i = 0; i < 20; i++) {
+      var color = randomColor();
+      colors.push(color);
+    }
+    
+    this.setState({
+      colors: colors
+    })
   }
 
   onDragEnd = (result) => {
@@ -76,14 +90,14 @@ class App extends PureComponent {
                   <Swimlane
                     indexY={indexY}
                     key={indexY}
-                    color={randomColor()}
+                    color={this.state.colors[index]}
                     createColumn
                   />
                 ) : (
                   <Swimlane
                     indexY={indexY}
                     key={indexY}
-                    color={randomColor()}
+                    color={this.state.colors[index]}
                   />
                 )
               )}

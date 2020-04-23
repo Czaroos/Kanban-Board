@@ -254,33 +254,38 @@ const Column = ({
         renderEditInput()
       ) : (
         <TitleContainer>
-          <Limit onClick={() => setIsEditingLimit(true)}>
-            {limit <= -9999 ? (
-              <AllInclusiveIcon />
-            ) : limit <= 0 ? (
-              <LimitError />
-            ) : (
-              limit
-            )}
-          </Limit>
+          {indexY === 0 || indexX === 0 ? null : (
+            <Limit onClick={() => setIsEditingLimit(true)}>
+              {limit <= -9999 ? (
+                <AllInclusiveIcon />
+              ) : limit <= 0 ? (
+                <LimitError />
+              ) : (
+                limit
+              )}
+            </Limit>
+          )}
+
           {indexY > 0 && indexX > 0 ? null : (
             <ColumnTitle onClick={() => setIsEditingTitle(true)}>
               {title}
             </ColumnTitle>
           )}
+
           {indexY > 0 && indexX > 0 ? null : indexY === 0 ? (
             <DeleteButton onClick={submitColumnDelete}>delete</DeleteButton>
           ) : (
             <DeleteButton onClick={submitSwimlaneDelete}>delete</DeleteButton>
           )}
-          {isVisible ? (
+
+          {indexY === 0 || indexX === 0 ? null : isVisible ? (
             <VisibilityIcon onClick={handleIsVisible} />
           ) : (
             <VisibilityOffIcon onClick={handleIsVisible} />
           )}
         </TitleContainer>
       )}
-      {isVisible ? (
+      {indexY === 0 || indexX === 0 ? null : isVisible ? (
         <Droppable droppableId={id}>
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>

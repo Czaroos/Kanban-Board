@@ -11,7 +11,6 @@ const ColumnsContainer = styled.div`
 `;
 
 const Line = styled.div`
-  align-self: flex-start;
   width: 96%;
   height: 1px;
 `;
@@ -44,9 +43,9 @@ const Swimlane = ({ columns, indexY, createColumn, color }) => {
 
   return (
     <ColumnsContainer>
-      {sortedColumns.map((column) => (
+      {sortedColumns.map((column, index) => (
         <div>
-          <Line style={{ backgroundColor: color }} />
+          <Line key={index} style={{ backgroundColor: color }} />
           <Column
             id={column.id}
             key={column.id}
