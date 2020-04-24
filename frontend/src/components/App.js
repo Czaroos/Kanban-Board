@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import Create from "./Create";
-import { DragDropContext } from "react-beautiful-dnd";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { sort } from "../actions";
 import styled from "styled-components";
 import { fetchColumns, dragStateSave } from "../actions/columnActions";
@@ -82,7 +82,11 @@ class App extends PureComponent {
     const { columns } = this.props;
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <ColumnsContainerRow>
+        <Droppable
+        droppableId="swimlanes"
+        type="swimlane">
+          {provided => (
+        <ColumnsContainerRow {...provided.droppableProps} ref={provided.innerRef}>
           {columns.length !== 0 ? (
             <div>
               {this.getIndecesY().map((indexY, index) =>
@@ -101,6 +105,7 @@ class App extends PureComponent {
                   />
                 )
               )}
+              {provided.placeholder}
               <Create
                 type={"isSwimlane"}
                 indexY={this.getHighestIndexY()}
@@ -110,8 +115,10 @@ class App extends PureComponent {
           ) : (
             <Create type={"isColumn"} indexX={0} noColumns />
           )}
-          {}
         </ColumnsContainerRow>
+
+          )}
+        </Droppable>
       </DragDropContext>
     );
   }

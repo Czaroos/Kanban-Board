@@ -21,14 +21,22 @@ const columnReducer = (state = initialState, action) => {
           tasks: tasks,
           index: column.index,
           indexX: column.indexX,
-          indexY: column.indexY
+          indexY: column.indexY,
         };
       });
 
-      return initialState.sort((a, b) => {
-        if (a.index > b.index) return 1;
-        else return -1;
-      });
+        const indecesY = new Set();
+        initialState.forEach((column) => indecesY.add(column.indexY));
+        const indecesYArr = Array.from(indecesY).sort().reverse(); // first element must be highest value
+        
+        let sortedInitialState = [];
+        for (let i = 0; i <= indecesYArr[0]; i++) {
+          initialState.forEach(column => {
+            if (column.indexY === i) sortedInitialState.push(column)
+          })
+        }
+
+      return sortedInitialState;
 
     case CONSTANTS.ADD_COLUMN:
       const newColumn = {
@@ -38,7 +46,7 @@ const columnReducer = (state = initialState, action) => {
         tasks: [],
         index: action.payload.index,
         indexX: action.payload.indexX,
-        indexY: action.payload.indexY
+        indexY: action.payload.indexY,
       };
       return [...state, newColumn];
 
@@ -74,19 +82,22 @@ const columnReducer = (state = initialState, action) => {
       } = action.payload;
       const newState = [...state];
 
-      // dragging columns around (index swap)
-      if (type === "column") {
-        const column = newState.splice(droppableIndexStart, 1);
-        newState.splice(droppableIndexEnd, 0, ...column);
-        newState.map((col, index) => {
-          col.index = index;
-          return col;
+      // dragging swimlanes around (index swap)
+      if (type === "swimlane") {
+        newState.map((column) => {
+          if (column.indexY === droppableIndexStart) {
+            column.indexY = droppableIndexEnd;
+            return column;
+          } else if (column.indexY === droppableIndexEnd) {
+            column.indexY = droppableIndexStart;
+            return column;
+          } else return column;
         });
+
         return newState;
       }
 
       // destination: same column
-
       if (droppableIdStart === droppableIdEnd) {
         const column = state.find((column) => droppableIdStart === column.id);
         const task = column.tasks.splice(droppableIndexStart, 1);

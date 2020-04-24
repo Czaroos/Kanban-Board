@@ -3,6 +3,7 @@ import Column from "./Column";
 import Create from "./Create";
 import { connect } from "react-redux";
 import styled from "styled-components";
+import { Draggable } from 'react-beautiful-dnd';
 
 const ColumnsContainer = styled.div`
   display: flex;
@@ -42,10 +43,12 @@ const Swimlane = ({ columns, indexY, createColumn, color }) => {
   });
 
   return (
-    <ColumnsContainer>
+    <Draggable key={indexY} draggableId={String(indexY)} index={indexY}>
+      {provided => (
+    <ColumnsContainer {...provided.draggableProps} ref={provided.innerRef}>
       {sortedColumns.map((column, index) => (
-        <div>
-          <Line key={index} style={{ backgroundColor: color }} />
+        <div {...provided.dragHandleProps} key={index}>
+          <Line style={{ backgroundColor: color }} />
           <Column
             id={column.id}
             key={column.id}
@@ -66,6 +69,9 @@ const Swimlane = ({ columns, indexY, createColumn, color }) => {
         />
       ) : null}
     </ColumnsContainer>
+
+      )}
+    </Draggable>
   );
 };
 
