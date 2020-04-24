@@ -1,11 +1,10 @@
 import React from "react";
 import Column from "./Column";
-import Create from "./Create";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { Draggable } from 'react-beautiful-dnd';
+import { Draggable } from "react-beautiful-dnd";
 
-const ColumnsContainer = styled.div`
+const ColumnsContainerRow = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -16,60 +15,52 @@ const Line = styled.div`
   height: 1px;
 `;
 
-const getHighestIndexX = (columns) => {
-  let indecesX = new Set();
-  columns.forEach((column) => indecesX.add(column.indexX));
-  let indecesXArr = Array.from(indecesX).sort().reverse(); // first element must be highest value
-
-  return indecesXArr[0] + 1;
-};
-
-const getSwimlanesNames = (columns) => {
-  let swimlaneNames = [];
-  columns.forEach((column) =>
-    column.indexY > 0 && column.indexX === 0
-      ? swimlaneNames.push(column.title)
-      : null
-  );
-
-  return swimlaneNames.sort((a, b) => (a.indexY > b.indexY ? 1 : 0));
-};
-
-const Swimlane = ({ columns, indexY, createColumn, color }) => {
+const Swimlane = ({ columns, indexY, color }) => {
   const filteredColumns = columns.filter((column) => column.indexY === indexY);
   const sortedColumns = filteredColumns.sort((colA, colB) => {
     if (colA.indexX > colB.indexX) return 1;
     else return -1;
   });
-
+  
   return (
     <Draggable key={indexY} draggableId={String(indexY)} index={indexY}>
-      {provided => (
-    <ColumnsContainer {...provided.draggableProps} ref={provided.innerRef}>
-      {sortedColumns.map((column, index) => (
-        <div {...provided.dragHandleProps} key={index}>
-          <Line style={{ backgroundColor: color }} />
-          <Column
-            id={column.id}
-            key={column.id}
-            title={column.title}
-            tasks={column.tasks}
-            index={column.index}
-            limit={column.limit}
-            indexX={column.indexX}
-            indexY={column.indexY}
-          />
-        </div>
-      ))}
-      {createColumn ? (
-        <Create
-          type={"isColumn"}
-          indexX={getHighestIndexX(columns)}
-          swimlanesNames={getSwimlanesNames(columns)}
-        />
-      ) : null}
-    </ColumnsContainer>
-
+      {(provided) => (
+        <ColumnsContainerRow
+          {...provided.draggableProps}
+          ref={provided.innerRef}
+        >
+          {sortedColumns.map((column, index) =>
+            column.indexY > 0 ? (
+              <div {...provided.dragHandleProps} key={index}>
+                <Line style={{ backgroundColor: color }} />
+                <Column
+                  id={column.id}
+                  key={column.id}
+                  title={column.title}
+                  tasks={column.tasks}
+                  index={column.index}
+                  limit={column.limit}
+                  indexX={column.indexX}
+                  indexY={column.indexY}
+                />
+              </div>
+            ) : (
+              <div>
+                <Line style={{ backgroundColor: color }} />
+                <Column
+                  id={column.id}
+                  key={column.id}
+                  title={column.title}
+                  tasks={column.tasks}
+                  index={column.index}
+                  limit={column.limit}
+                  indexX={column.indexX}
+                  indexY={column.indexY}
+                />
+              </div>
+            )
+          )}
+        </ColumnsContainerRow>
       )}
     </Draggable>
   );

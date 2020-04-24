@@ -8,28 +8,19 @@ import { fetchColumns, dragStateSave } from "../actions/columnActions";
 import Swimlane from "./Swimlane";
 var randomColor = require("randomcolor");
 
-const ColumnsContainerRow = styled.div`
+const ColumnsContainerColumn = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-class App extends PureComponent {
-  state = {
-    colors: []
-  }
+const FirstRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`
 
+class App extends PureComponent {
   componentDidMount() {
     this.props.fetchColumns();
-
-    var colors = [];
-    for(var i = 0; i < 20; i++) {
-      var color = randomColor();
-      colors.push(color);
-    }
-    
-    this.setState({
-      colors: colors
-    })
   }
 
   onDragEnd = (result) => {
@@ -78,45 +69,65 @@ class App extends PureComponent {
     return indecesXArr[0] + 1;
   };
 
+  getSwimlanesNames = () => {
+    const { columns } = this.props;
+    let swimlaneNames = [];
+    columns.forEach((column) =>
+      column.indexY > 0 && column.indexX === 0
+        ? swimlaneNames.push(column.title)
+        : null
+    );
+
+    return swimlaneNames.sort((a, b) => (a.indexY > b.indexY ? 1 : 0));
+  };
+//todo: pierwszy swimlane nie jest droppable
+//todo: kolor zapisuje sie do bazy
   render() {
     const { columns } = this.props;
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <Droppable
-        droppableId="swimlanes"
-        type="swimlane">
-          {provided => (
-        <ColumnsContainerRow {...provided.droppableProps} ref={provided.innerRef}>
-          {columns.length !== 0 ? (
-            <div>
-              {this.getIndecesY().map((indexY, index) =>
-                index === 0 ? (
-                  <Swimlane
-                    indexY={indexY}
-                    key={indexY}
-                    color={this.state.colors[index]}
-                    createColumn
+        <Droppable droppableId="swimlanes" type="swimlane">
+          {(provided) => (
+            <ColumnsContainerColumn
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {columns.length !== 0 ? (
+                <div>
+                  {this.getIndecesY().map((indexY, index) =>
+                    index === 0 ? (
+                      <FirstRow key={index}>
+                        <Swimlane
+                          indexY={indexY}
+                          key={indexY}
+                          color={randomColor()}
+                          
+                        />
+                        <Create
+                          type={"isColumn"}
+                          indexX={this.getHighestIndexX()}
+                          swimlanesNames={this.getSwimlanesNames()}
+                        />
+                      </FirstRow>
+                    ) : (
+                      <Swimlane
+                        indexY={indexY}
+                        key={indexY}
+                        color={randomColor()}
+                      />
+                    )
+                  )}
+                  {provided.placeholder}
+                  <Create
+                    type={"isSwimlane"}
+                    indexY={this.getHighestIndexY()}
+                    indexX={this.getHighestIndexX()}
                   />
-                ) : (
-                  <Swimlane
-                    indexY={indexY}
-                    key={indexY}
-                    color={this.state.colors[index]}
-                  />
-                )
+                </div>
+              ) : (
+                <Create type={"isColumn"} indexX={0} noColumns />
               )}
-              {provided.placeholder}
-              <Create
-                type={"isSwimlane"}
-                indexY={this.getHighestIndexY()}
-                indexX={this.getHighestIndexX()}
-              />
-            </div>
-          ) : (
-            <Create type={"isColumn"} indexX={0} noColumns />
-          )}
-        </ColumnsContainerRow>
-
+            </ColumnsContainerColumn>
           )}
         </Droppable>
       </DragDropContext>
