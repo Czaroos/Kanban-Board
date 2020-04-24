@@ -86,20 +86,10 @@ class App extends PureComponent {
     const { columns } = this.props;
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <Droppable droppableId="swimlanes" type="swimlane">
-          {(provided) => (
-            <ColumnsContainerColumn
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {columns.length !== 0 ? (
-                <div>
-                  {this.getIndecesY().map((indexY, index) =>
-                    index === 0 ? (
-                      <FirstRow key={index}>
+                      <FirstRow key={0}>
                         <Swimlane
-                          indexY={indexY}
-                          key={indexY}
+                          indexY={0}
+                          key={0}
                           color={randomColor()}
                           
                         />
@@ -109,7 +99,17 @@ class App extends PureComponent {
                           swimlanesNames={this.getSwimlanesNames()}
                         />
                       </FirstRow>
-                    ) : (
+        <Droppable droppableId="swimlanes" type="swimlane">
+          {(provided) => (
+            <ColumnsContainerColumn
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {columns.length !== 0 ? (
+                <div>
+                  {this.getIndecesY().map((indexY, index) =>
+                    index === 0 ? null
+                     : (
                       <Swimlane
                         indexY={indexY}
                         key={indexY}

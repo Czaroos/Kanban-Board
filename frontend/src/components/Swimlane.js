@@ -21,8 +21,26 @@ const Swimlane = ({ columns, indexY, color }) => {
     if (colA.indexX > colB.indexX) return 1;
     else return -1;
   });
-  
-  return (
+
+  return indexY === 0 ? (
+    <ColumnsContainerRow>
+      {sortedColumns.map((column, index) => (
+        <div>
+          <Line style={{ backgroundColor: color }} />
+          <Column
+            id={column.id}
+            key={column.id}
+            title={column.title}
+            tasks={column.tasks}
+            index={column.index}
+            limit={column.limit}
+            indexX={column.indexX}
+            indexY={column.indexY}
+          />
+        </div>
+      ))}
+    </ColumnsContainerRow>
+  ) : (
     <Draggable key={indexY} draggableId={String(indexY)} index={indexY}>
       {(provided) => (
         <ColumnsContainerRow
@@ -44,21 +62,7 @@ const Swimlane = ({ columns, indexY, color }) => {
                   indexY={column.indexY}
                 />
               </div>
-            ) : (
-              <div>
-                <Line style={{ backgroundColor: color }} />
-                <Column
-                  id={column.id}
-                  key={column.id}
-                  title={column.title}
-                  tasks={column.tasks}
-                  index={column.index}
-                  limit={column.limit}
-                  indexX={column.indexX}
-                  indexY={column.indexY}
-                />
-              </div>
-            )
+            ) : null
           )}
         </ColumnsContainerRow>
       )}
