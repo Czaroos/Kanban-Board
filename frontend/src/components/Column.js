@@ -4,7 +4,7 @@ import Create from "./Create";
 import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { editColumn, deleteColumn } from "../actions";
+import { editColumn, deleteColumn, fetchColumns } from "../actions";
 import Icon from "@material-ui/core/Icon";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
@@ -190,6 +190,7 @@ const Column = ({
     );
     swimlanesOfColumn.forEach((column) => {
       dispatch(deleteColumn(column.id));
+      dispatch(fetchColumns())
     });
   };
 
@@ -199,6 +200,7 @@ const Column = ({
     );
     columnsOfSwimlane.forEach((column) => {
       dispatch(deleteColumn(column.id));
+      dispatch(fetchColumns())
     });
   };
 

@@ -2,7 +2,7 @@ import React from "react";
 import Icon from "@material-ui/core/Icon";
 import Button from "./Button";
 import { connect } from "react-redux";
-import { addColumn, addTask } from "../actions";
+import { addColumn, addTask, fetchColumns } from "../actions";
 import Form from "./Form";
 import OpenForm from "./OpenForm";
 
@@ -58,6 +58,7 @@ class Create extends React.PureComponent {
               indexX: indexX,
             };
             this.props.addColumn(newColumn);
+            this.props.fetchColumns();
           });
         }
       }
@@ -75,7 +76,6 @@ class Create extends React.PureComponent {
       });
 
       if (content.trim().length !== 0) {
-        console.log(content, indexX, indexY);
         for (var i = 0; i < indexX; i++) {
           const newColumn = {
             title: content,
@@ -83,6 +83,7 @@ class Create extends React.PureComponent {
             indexX: i,
           };
           this.props.addColumn(newColumn);
+          this.props.fetchColumns();
         }
       }
     }
@@ -188,6 +189,7 @@ class Create extends React.PureComponent {
 const mapDispatchToProps = {
   addTask,
   addColumn,
+  fetchColumns,
 };
 
 export default connect(null, mapDispatchToProps)(Create);
