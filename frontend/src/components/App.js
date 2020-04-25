@@ -16,7 +16,7 @@ const ColumnsContainerColumn = styled.div`
 const FirstRow = styled.div`
   display: flex;
   flex-direction: row;
-`
+`;
 
 class App extends PureComponent {
   componentDidMount() {
@@ -80,25 +80,20 @@ class App extends PureComponent {
 
     return swimlaneNames.sort((a, b) => (a.indexY > b.indexY ? 1 : 0));
   };
-//todo: pierwszy swimlane nie jest droppable
-//todo: kolor zapisuje sie do bazy
+
+  //todo: kolor zapisuje sie do bazy ????
   render() {
     const { columns } = this.props;
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-                      <FirstRow key={0}>
-                        <Swimlane
-                          indexY={0}
-                          key={0}
-                          color={randomColor()}
-                          
-                        />
-                        <Create
-                          type={"isColumn"}
-                          indexX={this.getHighestIndexX()}
-                          swimlanesNames={this.getSwimlanesNames()}
-                        />
-                      </FirstRow>
+        <FirstRow key={0}>
+          <Swimlane indexY={0} key={0} color={randomColor()} />
+          <Create
+            type={"isColumn"}
+            indexX={this.getHighestIndexX()}
+            swimlanesNames={this.getSwimlanesNames()}
+          />
+        </FirstRow>
         <Droppable droppableId="swimlanes" type="swimlane">
           {(provided) => (
             <ColumnsContainerColumn
@@ -108,8 +103,7 @@ class App extends PureComponent {
               {columns.length !== 0 ? (
                 <div>
                   {this.getIndecesY().map((indexY, index) =>
-                    index === 0 ? null
-                     : (
+                    index === 0 ? null : (
                       <Swimlane
                         indexY={indexY}
                         key={indexY}

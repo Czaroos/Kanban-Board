@@ -8,6 +8,7 @@ const ColumnsContainerRow = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  margin-bottom: 30px;
 `;
 
 const Line = styled.div`
@@ -25,7 +26,7 @@ const Swimlane = ({ columns, indexY, color }) => {
   return indexY === 0 ? (
     <ColumnsContainerRow>
       {sortedColumns.map((column, index) => (
-        <div>
+        <div key={index}>
           <Line style={{ backgroundColor: color }} />
           <Column
             id={column.id}

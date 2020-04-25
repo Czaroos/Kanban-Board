@@ -24,7 +24,6 @@ const ColumnContainer = styled.div`
   width: 300px;
   height: 100%;
   margin-right: 12px;
-  margin-bottom: 30px;
   padding: 8px;
 
   &:active {
