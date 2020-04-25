@@ -275,16 +275,16 @@ const Column = ({
             </ColumnTitle>
           )}
 
-          {indexY > 0 && indexX > 0 ? null : indexY === 0 ? (
+          {(indexY > 0 && indexX > 0) || (indexX === 0 && indexY === 0) ? null : indexY === 0 ? (
             <DeleteButton onClick={submitColumnDelete}>delete</DeleteButton>
           ) : (
             <DeleteButton onClick={submitSwimlaneDelete}>delete</DeleteButton>
           )}
 
           {indexY === 0 || indexX === 0 ? null : isVisible ? (
-            <VisibilityIcon onClick={handleIsVisible} />
+            <VisibilityIcon style={{cursor: "pointer"}} onClick={handleIsVisible} />
           ) : (
-            <VisibilityOffIcon onClick={handleIsVisible} />
+            <VisibilityOffIcon style={{cursor: "pointer"}} onClick={handleIsVisible} />
           )}
         </TitleContainer>
       )}
