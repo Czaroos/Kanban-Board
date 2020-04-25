@@ -25,16 +25,16 @@ const columnReducer = (state = initialState, action) => {
         };
       });
 
-        const indecesY = new Set();
-        initialState.forEach((column) => indecesY.add(column.indexY));
-        const indecesYArr = Array.from(indecesY).sort().reverse(); // first element must be highest value
-        
-        let sortedInitialState = [];
-        for (let i = 0; i <= indecesYArr[0]; i++) {
-          initialState.forEach(column => {
-            if (column.indexY === i) sortedInitialState.push(column)
-          })
-        }
+      const indecesY = new Set();
+      initialState.forEach((column) => indecesY.add(column.indexY));
+      const indecesYArr = Array.from(indecesY).sort().reverse(); // first element must be highest value
+
+      let sortedInitialState = [];
+      for (let i = 0; i <= indecesYArr[0]; i++) {
+        initialState.forEach((column) => {
+          if (column.indexY === i) sortedInitialState.push(column);
+        });
+      }
 
       return sortedInitialState;
 
@@ -93,8 +93,16 @@ const columnReducer = (state = initialState, action) => {
             return column;
           } else return column;
         });
+        const highestIndexY =
+          newState.filter((column) => column.indexX === 0).length - 1;
 
-        return newState;
+        let sortedSwapState = [];
+        for (let i = 0; i <= highestIndexY; i++) {
+          newState.forEach((column) => {
+            if (column.indexY === i) sortedSwapState.push(column);
+          });
+        }
+        return sortedSwapState;
       }
 
       // destination: same column

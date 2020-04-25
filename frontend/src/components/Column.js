@@ -177,6 +177,8 @@ const Column = ({
         limit: validatedColumnLimit,
         tasks,
         index,
+        indexX,
+        indexY
       };
       dispatch(editColumn(column));
     }

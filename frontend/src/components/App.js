@@ -88,11 +88,15 @@ class App extends PureComponent {
       <DragDropContext onDragEnd={this.onDragEnd}>
         <FirstRow key={0}>
           <Swimlane indexY={0} key={0} color={randomColor()} />
-          <Create
-            type={"isColumn"}
-            indexX={this.getHighestIndexX()}
-            swimlanesNames={this.getSwimlanesNames()}
-          />
+          {columns.length > 0 ? (
+            <Create
+              type={"isColumn"}
+              indexX={this.getHighestIndexX()}
+              swimlanesNames={this.getSwimlanesNames()}
+            />
+          ) : (
+            <Create type={"isColumn"} indexX={0} noColumns />
+          )}
         </FirstRow>
         <Droppable droppableId="swimlanes" type="swimlane">
           {(provided) => (
@@ -100,27 +104,25 @@ class App extends PureComponent {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {columns.length !== 0 ? (
-                <div>
-                  {this.getIndecesY().map((indexY, index) =>
-                    index === 0 ? null : (
-                      <Swimlane
-                        indexY={indexY}
-                        key={indexY}
-                        color={randomColor()}
-                      />
-                    )
-                  )}
-                  {provided.placeholder}
+              <div>
+                {this.getIndecesY().map((indexY, index) =>
+                  index === 0 ? null : (
+                    <Swimlane
+                      indexY={indexY}
+                      key={indexY}
+                      color={randomColor()}
+                    />
+                  )
+                )}
+                {provided.placeholder}
+                {columns.length > 0 ? (
                   <Create
                     type={"isSwimlane"}
                     indexY={this.getHighestIndexY()}
                     indexX={this.getHighestIndexX()}
                   />
-                </div>
-              ) : (
-                <Create type={"isColumn"} indexX={0} noColumns />
-              )}
+                ) : null}
+              </div>
             </ColumnsContainerColumn>
           )}
         </Droppable>
