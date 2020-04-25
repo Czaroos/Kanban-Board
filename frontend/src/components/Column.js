@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { editColumn, deleteColumn, fetchColumns } from "../actions";
 import Icon from "@material-ui/core/Icon";
 import { confirmAlert } from "react-confirm-alert";
-import "react-confirm-alert/src/react-confirm-alert.css";
+import "./styles/react-confirm-alert.css";
 import AllInclusiveIcon from "@material-ui/icons/AllInclusive";
 import LimitError from "./LimitError";
 import VisibilityIcon from "@material-ui/icons/Visibility";

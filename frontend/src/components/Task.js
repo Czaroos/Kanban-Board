@@ -7,7 +7,7 @@ import { editTask, deleteTask } from "../actions";
 import { connect } from "react-redux";
 import Button from "./Button";
 import { confirmAlert } from "react-confirm-alert";
-import "react-confirm-alert/src/react-confirm-alert.css";
+import "./styles/react-confirm-alert.css";
 import { useSpring, animated } from "react-spring";
 import { CardContent, Typography, Card } from "@material-ui/core";
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
