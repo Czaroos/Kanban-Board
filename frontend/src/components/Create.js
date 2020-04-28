@@ -147,6 +147,10 @@ class Create extends React.PureComponent {
         placeholder = "Add a swimlane...";
         break;
 
+      case "isUser":
+        placeholder = "Add a user...";
+        break;
+
       default:
         placeholder = "Add a task...";
     }
@@ -164,6 +168,8 @@ class Create extends React.PureComponent {
               ? this.handleAddColumn
               : type === "isSwimlane"
               ? this.handleAddSwimlane
+              : type === "isUser"
+              ? this.handleAddUser
               : this.handleAddTask
           }
         >
@@ -171,6 +177,8 @@ class Create extends React.PureComponent {
             ? "Add a column"
             : type === "isSwimlane"
             ? "Add a swimlane"
+            : type === "isUser"
+            ? "Add a user"
             : "Add a task"}
         </Button>
       </Form>
@@ -180,6 +188,8 @@ class Create extends React.PureComponent {
           ? "Add a column"
           : type === "isSwimlane"
           ? "Add a swimlane"
+          : type === "isUser"
+          ? "Add a user"
           : "Add a task"}
       </OpenForm>
     );

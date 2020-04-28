@@ -204,6 +204,7 @@ const Task = React.memo(
                             index={index}
                             key={user._id}
                             color={user.color}
+                            isDragDisabled={true}
                           />
                         ))}
                         {provided.placeholder}

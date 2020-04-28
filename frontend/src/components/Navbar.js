@@ -3,15 +3,14 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import User from "./User";
 import { Droppable } from "react-beautiful-dnd";
+import Create from './Create';
 import * as _ from "lodash";
 
 const Container = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   padding-left: 20px;
   margin-bottom: 20px;
-  width: 20%;
 `;
 
 // when creating a user remember to always create it 'userLimit' times
@@ -32,6 +31,7 @@ const Navbar = ({ users }) => {
             />
           ))}
           {provided.placeholder}
+        <Create type="isUser"/>
         </Container>
       )}
     </Droppable>

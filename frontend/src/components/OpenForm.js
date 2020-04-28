@@ -13,6 +13,7 @@ padding-left: 10px;
 opacity: 0.8;
 color: white;
 background-color: inherit;
+margin-left: 6px;
 
 &:hover {
   background-color: rgba(0,0,0,0.2);

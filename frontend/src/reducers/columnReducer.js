@@ -126,7 +126,7 @@ const columnReducer = (state = initialState, action) => {
         });
         return newState;
       }
-      
+
       // destination: same column
       if (droppableIdStart === droppableIdEnd) {
         const column = state.find((column) => droppableIdStart === column.id);
