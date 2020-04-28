@@ -301,6 +301,7 @@ const Column = ({
                   columnID={task.columnID}
                   userID={task.userID}
                   priority={task.priority}
+                  users={task.users}
                 />
               ))}
               {provided.placeholder}

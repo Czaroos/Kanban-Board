@@ -1,5 +1,6 @@
 export * from './columnActions';
 export * from './taskActions';
+export * from './userActions';
 
 export const CONSTANTS = {
     ADD_TASK: "ADD_TASK",
@@ -9,5 +10,7 @@ export const CONSTANTS = {
     DELETE_TASK: "DELETE_TASK",
     EDIT_COLUMN: "EDIT_COLUMN",
     DELETE_COLUMN: "DELETE_COLUMN",
-    FETCH_COLUMNS: "FETCH_COLUMNS"
+    FETCH_COLUMNS: "FETCH_COLUMNS",
+    FETCH_USERS: "FETCH_USERS",
+    ADD_USER: "ADD_USER"
 };

@@ -12,6 +12,7 @@ const columnReducer = (state = initialState, action) => {
             content: task.content,
             columnID: task.columnId,
             priority: task.priority,
+            users: task.users,
           };
         });
         return {
@@ -57,6 +58,7 @@ const columnReducer = (state = initialState, action) => {
         id: task._id,
         content: task.content,
         columnID: task.columnId,
+        users: [],
       };
 
       const addTaskState = state.map((col) => {
@@ -79,6 +81,8 @@ const columnReducer = (state = initialState, action) => {
         droppableIndexStart,
         droppableIndexEnd,
         type,
+        draggableId,
+        users,
       } = action.payload;
       const newState = [...state];
 
@@ -105,6 +109,24 @@ const columnReducer = (state = initialState, action) => {
         return sortedSwapState;
       }
 
+      if (type === "user") {
+        const user = users.find((user) => user._id === draggableId);
+        newState.map((column) => {
+          column.tasks.map((task) => {
+            if (task.id === droppableIdEnd) {
+              if (task.users.find((alreadyAddedUser) => alreadyAddedUser.name === user.name)) {
+                return task;
+              } else {
+                task.users.push(user);
+                return task;
+              }
+            } else return task;
+          });
+          return column;
+        });
+        return newState;
+      }
+      
       // destination: same column
       if (droppableIdStart === droppableIdEnd) {
         const column = state.find((column) => droppableIdStart === column.id);

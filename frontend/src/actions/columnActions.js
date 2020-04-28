@@ -28,15 +28,17 @@ export function addColumn(column) {
   }
 }
 
-export const sort = (
+export function sort(
     droppableIdStart,
     droppableIdEnd,
     droppableIndexStart,
     droppableIndexEnd,
     draggableId,
     type
-) => {
-    return {
+) {
+    return (dispatch, getState) => {
+      const { users, columns } = getState();
+      dispatch({
         type: CONSTANTS.DRAG_HAPPENED,
         payload: {
             droppableIdStart,
@@ -44,8 +46,11 @@ export const sort = (
             droppableIndexStart,
             droppableIndexEnd,
             draggableId,
-            type
+            type,
+            users,
+            columns
         }
+      })
     }
 }
 

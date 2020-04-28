@@ -5,7 +5,9 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { sort } from "../actions";
 import styled from "styled-components";
 import { fetchColumns, dragStateSave } from "../actions/columnActions";
+import { fetchUsers } from "../actions/userActions";
 import Swimlane from "./Swimlane";
+import Navbar from './Navbar';
 var randomColor = require("randomcolor");
 
 const ColumnsContainerColumn = styled.div`
@@ -21,6 +23,7 @@ const FirstRow = styled.div`
 class App extends PureComponent {
   componentDidMount() {
     this.props.fetchColumns();
+    this.props.fetchUsers();
   }
 
   onDragEnd = (result) => {
@@ -83,9 +86,10 @@ class App extends PureComponent {
 
   //todo: kolor zapisuje sie do bazy ????
   render() {
-    const { columns } = this.props;
+    const { columns, users } = this.props;
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
+        <Navbar users={users}/>
         <FirstRow key={0}>
           <Swimlane indexY={0} key={0} color={randomColor()} />
           {columns.length > 0 ? (
@@ -133,8 +137,9 @@ class App extends PureComponent {
 
 const mapStateToProps = (state) => ({
   columns: state.columns,
+  users: state.users
 });
 
-const mapDispatchToProps = { fetchColumns, sort, dragStateSave };
+const mapDispatchToProps = { fetchColumns, sort, dragStateSave, fetchUsers };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

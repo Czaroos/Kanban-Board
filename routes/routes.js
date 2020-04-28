@@ -1,19 +1,20 @@
 const router = require("express").Router();
-const Column = require("../models/models");
+const model = require("../models/models");
 const mongoose = require("mongoose");
+var randomColor = require("randomcolor");
 
 // ------------------------------- / -------------------------------
 
 // Get columns
 router.route("/all").get((req, res) => {
-  Column.find()
+  model.Column.find()
     .then((columns) => res.json(columns))
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
 // Save columns
 router.route("/all").post((req, res) => {
-  Column.deleteMany({})
+  model.Column.deleteMany({})
     .then(
       () =>
         (newState = req.body.map((column) => {
@@ -23,16 +24,17 @@ router.route("/all").post((req, res) => {
               content: task.content,
               priority: task.priority,
               columnId: task.columnID,
+              users: task.users
             });
           });
-          newColumn = new Column({
+          newColumn = new model.Column({
             _id: column.id,
             title: column.title,
             limit: column.limit,
             tasks: tasks,
             index: column.index,
             indexX: column.indexX,
-            indexY: column.indexY
+            indexY: column.indexY,
           });
           newColumn.save().then({});
           return newColumn;
@@ -45,15 +47,15 @@ router.route("/all").post((req, res) => {
 
 //Add column
 router.route("/columns/add").post((req, res) => {
-  Column.countDocuments({}).then((count) => {
-    newColumn = new Column({
+  model.Column.countDocuments({}).then((count) => {
+    newColumn = new model.Column({
       _id: mongoose.Types.ObjectId(),
       title: req.body.title,
       limit: req.body.limit,
       tasks: [],
       index: count,
       indexX: req.body.indexX,
-      indexY: req.body.indexY
+      indexY: req.body.indexY,
     });
     newColumn
       .save()
@@ -64,22 +66,23 @@ router.route("/columns/add").post((req, res) => {
 
 //Delete column by ID
 router.route("/columns/:id").delete((req, res) => {
-  Column.findByIdAndDelete(req.params.id)
+  model.Column.findByIdAndDelete(req.params.id)
     .then(() => res.json(req.params.id))
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
 // Update column by ID
-router.route('/columns/:id').put((req, res) => {
-  Column.findById(req.params.id)
-    .then(col => {
-        col.title = req.body.title;
-        col.limit = req.body.limit;
-        col.save()
-        .then(col => res.json(col))
-        .catch(err => res.status(400).json('Error: ' + err));
+router.route("/columns/:id").put((req, res) => {
+  model.Column.findById(req.params.id)
+    .then((col) => {
+      col.title = req.body.title;
+      col.limit = req.body.limit;
+      col
+        .save()
+        .then((col) => res.json(col))
+        .catch((err) => res.status(400).json("Error: " + err));
     })
-    .catch(err => res.status(400).json('Error: ' + err));
+    .catch((err) => res.status(400).json("Error: " + err));
 });
 
 // ------------------------------- /TASKS -------------------------------
@@ -89,11 +92,11 @@ router.route("/tasks/add").post((req, res) => {
   task = {
     content: req.body.content,
     columnId: req.body.columnID,
-    userId: req.body.userID,
+    users: [],
     priority: req.body.priority,
   };
 
-  Column.findById(req.body.columnID)
+  model.Column.findById(req.body.columnID)
     .then((col) => {
       col.tasks.push(task);
       col.limit--;
@@ -109,7 +112,7 @@ router.route("/tasks/delete/:id").post((req, res) => {
     columnID: req.body.columnID,
   };
 
-  Column.findById(req.body.columnID)
+  model.Column.findById(req.body.columnID)
     .then((col) => {
       col.tasks.id(req.params.id).remove();
       col.limit++;
@@ -119,22 +122,47 @@ router.route("/tasks/delete/:id").post((req, res) => {
 });
 
 // Update task by ID
-router.route('/tasks/:id').put((req, res) => {
+router.route("/tasks/:id").put((req, res) => {
   changedTask = {
     _id: req.params.id,
     content: req.body.content,
     userId: req.body.userID,
     priority: req.body.priority,
-    columnId: req.body.columnID
-  }
+    columnId: req.body.columnID,
+  };
 
-  Column.findById(req.body.columnID)
-    .then(col => {
-      col.tasks.id(req.params.id).set(changedTask)
-      return col.save()
+  model.Column.findById(req.body.columnID)
+    .then((col) => {
+      col.tasks.id(req.params.id).set(changedTask);
+      return col.save();
     })
     .then(() => res.json(changedTask))
-    .catch(err => res.status(400).json('Error: ' + err));
+    .catch((err) => res.status(400).json("Error: " + err));
 });
+
+// ------------------------------- /USERS -------------------------------
+
+router.route("/users").get((req, res) => {
+  model.User.find()
+    .then((users) => res.json(users))
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+
+router.route("/users/add").post((req, res) => {
+    newUser = new model.User({
+      _id: mongoose.Types.ObjectId(),
+      name: req.body.name,
+      color: randomColor()
+    });
+    newUser
+      .save()
+      .then((newUser) => res.json(newUser))
+      .catch((err) => res.status(400).json("Error: " + err));
+});
+
+// router.route("/drop").post((req, res) => {
+//   model.User.deleteMany()
+//   .then(() => res.json("deleted"))
+// })
 
 module.exports = router;
