@@ -28,7 +28,7 @@ class App extends PureComponent {
 
   onDragEnd = (result) => {
     const { destination, source, draggableId, type } = result;
-    const { columns } = this.props;
+    const { columns } = this.props
 
     if (!destination) {
       return;

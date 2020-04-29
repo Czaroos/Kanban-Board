@@ -35,6 +35,10 @@ const userReducer = (state = initialState, action) => {
       else return newState;
     }
 
+    case CONSTANTS.DELETE_USER: {
+      return state.filter(user => user._id !== action.payload);
+    }
+
 
     default:
       return state;

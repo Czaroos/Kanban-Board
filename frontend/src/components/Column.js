@@ -12,6 +12,16 @@ import AllInclusiveIcon from "@material-ui/icons/AllInclusive";
 import LimitError from "./LimitError";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+import Tooltip from "@material-ui/core/Tooltip";
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+
+const InfoIcon = styled(InfoOutlinedIcon)`
+  margin-left: 10px;
+  opacity: 0.5;
+  &:hover {
+    opacity: 0.8;
+  }
+`;
 
 const ColumnContainer = styled.div`
   color: white;
@@ -85,6 +95,7 @@ const DeleteButton = styled(Icon)`
 
 const ColumnTitle = styled.h3`
   cursor: text;
+  flex-grow: 2;
   text-transform: uppercase;
   &:hover {
     opacity: 0.5;
@@ -114,6 +125,7 @@ const Column = ({
   indexY,
   dispatch,
   columns,
+  info = "Task w tej kolumnie uznaje się za ukończony gdy:",
 }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingLimit, setIsEditingLimit] = useState(false);
@@ -178,7 +190,7 @@ const Column = ({
         tasks,
         index,
         indexX,
-        indexY
+        indexY,
       };
       dispatch(editColumn(column));
     }
@@ -190,7 +202,7 @@ const Column = ({
     );
     swimlanesOfColumn.forEach((column) => {
       dispatch(deleteColumn(column.id));
-      dispatch(fetchColumns())
+      dispatch(fetchColumns());
     });
   };
 
@@ -200,7 +212,7 @@ const Column = ({
     );
     columnsOfSwimlane.forEach((column) => {
       dispatch(deleteColumn(column.id));
-      dispatch(fetchColumns())
+      dispatch(fetchColumns());
     });
   };
 
@@ -275,16 +287,29 @@ const Column = ({
             </ColumnTitle>
           )}
 
-          {(indexY > 0 && indexX > 0) || (indexX === 0 && indexY === 0) ? null : indexY === 0 ? (
+          {indexY === 0 && indexX > 0 ? (
+            <Tooltip title={info} interactive arrow>
+              <InfoIcon />
+            </Tooltip>
+          ) : null}
+
+          {(indexY > 0 && indexX > 0) ||
+          (indexX === 0 && indexY === 0) ? null : indexY === 0 ? (
             <DeleteButton onClick={submitColumnDelete}>delete</DeleteButton>
           ) : (
             <DeleteButton onClick={submitSwimlaneDelete}>delete</DeleteButton>
           )}
 
           {indexY === 0 || indexX === 0 ? null : isVisible ? (
-            <VisibilityIcon style={{cursor: "pointer"}} onClick={handleIsVisible} />
+            <VisibilityIcon
+              style={{ cursor: "pointer" }}
+              onClick={handleIsVisible}
+            />
           ) : (
-            <VisibilityOffIcon style={{cursor: "pointer"}} onClick={handleIsVisible} />
+            <VisibilityOffIcon
+              style={{ cursor: "pointer" }}
+              onClick={handleIsVisible}
+            />
           )}
         </TitleContainer>
       )}

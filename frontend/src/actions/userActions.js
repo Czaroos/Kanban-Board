@@ -31,3 +31,16 @@ export function addUser(user) {
       );
   };
 }
+
+export function deleteUser(id) {
+  return (dispatch) => {
+    fetch('/users/' + id, {
+      method: 'DELETE'
+    })
+      .then(res => res.json())
+      .then(_id => dispatch({
+        type: CONSTANTS.DELETE_USER,
+        payload: _id
+      }));
+  }
+}

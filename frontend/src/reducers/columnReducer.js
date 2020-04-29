@@ -7,12 +7,19 @@ const columnReducer = (state = initialState, action) => {
     case CONSTANTS.FETCH_COLUMNS:
       let initialState = action.payload.map((column) => {
         let tasks = column.tasks.map((task) => {
+          let users = task.users.map(user => {
+            return  {
+              _id: user._id,
+              name: user.name,
+              color: user.color,
+            }
+          })
           return {
             id: task._id,
             content: task.content,
             columnID: task.columnId,
             priority: task.priority,
-            users: task.users,
+            users: users,
           };
         });
         return {
@@ -212,6 +219,20 @@ const columnReducer = (state = initialState, action) => {
         col.index = index;
         return col;
       });
+    }
+
+    case CONSTANTS.DELETE_USER: {
+      const deleteUserState = [...state]
+      deleteUserState.map(column => {
+        column.tasks.map(task => {
+          task.users = task.users.filter(user => user._id !== action.payload)
+          console.log(task)
+          return task;
+        })
+        return column;
+      })
+      console.log(deleteUserState)
+      return deleteUserState;
     }
 
     default:

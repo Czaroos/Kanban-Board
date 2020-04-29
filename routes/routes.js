@@ -19,12 +19,19 @@ router.route("/all").post((req, res) => {
       () =>
         (newState = req.body.map((column) => {
           let tasks = column.tasks.map((task) => {
+            let users = task.users.map(user => {
+              return (newUser = {
+                _id: user._id,
+                name: user.name,
+                color: user.color,
+              })
+            })
             return (newTask = {
               _id: task.id,
               content: task.content,
               priority: task.priority,
               columnId: task.columnID,
-              users: task.users
+              users: users
             });
           });
           newColumn = new model.Column({
@@ -35,6 +42,7 @@ router.route("/all").post((req, res) => {
             index: column.index,
             indexX: column.indexX,
             indexY: column.indexY,
+            info: column.info
           });
           newColumn.save().then({});
           return newColumn;
@@ -56,6 +64,7 @@ router.route("/columns/add").post((req, res) => {
       index: count,
       indexX: req.body.indexX,
       indexY: req.body.indexY,
+      info: req.body.info
     });
     newColumn
       .save()
@@ -77,6 +86,7 @@ router.route("/columns/:id").put((req, res) => {
     .then((col) => {
       col.title = req.body.title;
       col.limit = req.body.limit;
+      col.info = req.body.info;
       col
         .save()
         .then((col) => res.json(col))
@@ -152,12 +162,18 @@ router.route("/users/add").post((req, res) => {
     newUser = new model.User({
       _id: mongoose.Types.ObjectId(),
       name: req.body.name,
-      color: randomColor()
+      color: randomColor({luminosity: 'dark'})
     });
     newUser
       .save()
       .then((newUser) => res.json(newUser))
       .catch((err) => res.status(400).json("Error: " + err));
+});
+
+router.route("/users/:id").delete((req, res) => {
+  model.User.findByIdAndDelete(req.params.id)
+    .then(() => res.json(req.params.id))
+    .catch((err) => res.status(400).json("Error: " + err));
 });
 
 // router.route("/drop").post((req, res) => {

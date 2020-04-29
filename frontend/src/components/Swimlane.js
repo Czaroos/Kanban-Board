@@ -37,6 +37,7 @@ const Swimlane = ({ columns, indexY, color }) => {
             limit={column.limit}
             indexX={column.indexX}
             indexY={column.indexY}
+            info={column.info}
           />
         </div>
       ))}
@@ -61,6 +62,7 @@ const Swimlane = ({ columns, indexY, color }) => {
                   limit={column.limit}
                   indexX={column.indexX}
                   indexY={column.indexY}
+                  info={column.info}
                 />
               </div>
             ) : null
