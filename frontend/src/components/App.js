@@ -4,8 +4,7 @@ import Create from "./Create";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { sort } from "../actions";
 import styled from "styled-components";
-import { fetchColumns, dragStateSave } from "../actions/columnActions";
-import { fetchUsers } from "../actions/userActions";
+import { fetchColumns, dragStateSave, dragStateSaveUsers, fetchUsers } from "../actions/";
 import Swimlane from "./Swimlane";
 import Navbar from './Navbar';
 var randomColor = require("randomcolor");
@@ -44,6 +43,7 @@ class App extends PureComponent {
     );
 
     this.props.dragStateSave(columns);
+    // this.props.dragStateSaveUsers(users);
   };
 
   getIndecesY = () => {
@@ -140,6 +140,6 @@ const mapStateToProps = (state) => ({
   users: state.users
 });
 
-const mapDispatchToProps = { fetchColumns, sort, dragStateSave, fetchUsers };
+const mapDispatchToProps = { fetchColumns, sort, dragStateSave, fetchUsers, dragStateSaveUsers };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

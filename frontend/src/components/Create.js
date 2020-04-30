@@ -2,15 +2,66 @@ import React from "react";
 import Icon from "@material-ui/core/Icon";
 import Button from "./Button";
 import { connect } from "react-redux";
-import { addColumn, addTask, fetchColumns } from "../actions";
-import Form from "./Form";
+import {
+  addColumn,
+  addTask,
+  fetchColumns,
+  addUser,
+  fetchUsers,
+} from "../actions";
 import OpenForm from "./OpenForm";
+import styled from "styled-components";
+import TextareaAutosize from "@material-ui/core/TextareaAutosize";
+import CloseSharpIcon from "@material-ui/icons/CloseSharp";
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const ContainerRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+`;
+
+const StyledTextArea = styled(TextareaAutosize)`
+  border-radius: 3px;
+  color: #eee;
+  resize: none;
+  overflow: hidden;
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(1, 11, 15);
+  margin: 0px 15px 10px 0px;
+  padding: 6px;
+
+  ::placeholder {
+    color: #eee;
+    font-size: 0.7rem;
+  }
+`;
+
+const CloseIcon = styled(CloseSharpIcon)`
+  && {
+    cursor: pointer;
+    font-size: 2rem;
+    align-self: stretch;
+    margin-left: 20px;
+    margin-top: 3px;
+    opacity: 0.8;
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+`;
 
 class Create extends React.PureComponent {
   state = {
     formOpen: false,
     content: "",
-    // columnLimitInput: ""
+    content2: "",
+    content3: "",
   };
 
   openForm = () => {
@@ -38,6 +89,7 @@ class Create extends React.PureComponent {
     if (content) {
       this.setState({
         content: "",
+        formOpen: false,
         // columnLimitInput: ""
       });
 
@@ -96,6 +148,7 @@ class Create extends React.PureComponent {
     if (content) {
       this.setState({
         content: "",
+        formOpen: false
       });
 
       if (content.trim().length !== 0) {
@@ -105,6 +158,30 @@ class Create extends React.PureComponent {
         };
 
         this.props.addTask(newTask);
+      }
+    }
+  };
+
+  handleAddUser = () => {
+    const { content, content2 } = this.state;
+
+    if (content && content2) {
+      this.setState({
+        content: "",
+        content2: "",
+        formOpen: false,
+      });
+
+      const wipLimit = Number(content2);
+      if (content.trim().length !== 0 || content2.trim().length !== 0) {
+        const newUser = {
+          name: content,
+        };
+
+        for (let i = 1; i <= wipLimit; i++) {
+          this.props.addUser(newUser);
+          this.props.fetchUsers();
+        }
       }
     }
   };
@@ -133,55 +210,115 @@ class Create extends React.PureComponent {
     );
   };
 
+  renderSwitch = (type) => {
+    switch (type) {
+      case "isColumn": {
+        return (
+          <Container>
+            <StyledTextArea
+              style={{ width: "300px" }}
+              rowsMin={1}
+              autoFocus
+              placeholder="Set title..."
+              value={this.content}
+              onChange={(e) =>
+                this.setState({
+                  content: e.target.value,
+                })
+              }
+            />
+            <StyledTextArea
+              style={{ width: "300px" }}
+              rowsMin={1}
+              placeholder="Set info..."
+              value={this.content2}
+              onChange={(e) =>
+                this.setState({
+                  content2: e.target.value,
+                })
+              }
+            />
+            <ContainerRow>
+              <StyledTextArea
+                style={{ width: "90px" }}
+                rowsMin={1}
+                placeholder="Set limit..."
+                value={this.content3}
+                onChange={(e) =>
+                  this.setState({
+                    content3: e.target.value,
+                  })
+                }
+              />
+              <Button onClick={this.handleAddColumn}>Add a column</Button>
+              <CloseIcon onClick={this.closeForm} />
+            </ContainerRow>
+          </Container>
+        );
+      }
+
+      case "isUser": {
+        return (
+          <ContainerRow>
+            <StyledTextArea
+              style={{ width: "200px", marginLeft: "10px" }}
+              rowsMin={1}
+              autoFocus
+              placeholder="Set name..."
+              value={this.content}
+              onChange={(e) =>
+                this.setState({
+                  content: e.target.value,
+                })
+              }
+            />
+            <StyledTextArea
+              style={{ width: "90px" }}
+              rowsMin={1}
+              placeholder="Set limit..."
+              value={this.content2}
+              onChange={(e) =>
+                this.setState({
+                  content2: e.target.value,
+                })
+              }
+            />
+            <Button onClick={this.handleAddUser}>Add a user</Button>
+            <CloseIcon onClick={this.closeForm} />
+          </ContainerRow>
+        );
+      }
+
+      default: {
+        return (
+          <Container>
+            <StyledTextArea
+              style={{ width: "277px" }}
+              rowsMin={1}
+              autoFocus
+              placeholder="Set content..."
+              value={this.content}
+              onChange={(e) =>
+                this.setState({
+                  content: e.target.value,
+                })
+              }
+            />
+            <ContainerRow>
+              <Button onClick={this.handleAddTask}>Add a task</Button>
+              <CloseIcon onClick={this.closeForm} />
+            </ContainerRow>
+          </Container>
+        );
+      }
+    }
+  };
+
   render() {
-    const { content } = this.state;
     const { type } = this.props;
 
-    let placeholder = "";
-    switch (type) {
-      case "isColumn":
-        placeholder = "Add a column...";
-        break;
-
-      case "isSwimlane":
-        placeholder = "Add a swimlane...";
-        break;
-
-      case "isUser":
-        placeholder = "Add a user...";
-        break;
-
-      default:
-        placeholder = "Add a task...";
-    }
-
     return this.state.formOpen ? (
-      <Form
-        content={content}
-        placeholder={placeholder}
-        onChange={this.handleInputChange}
-        closeForm={this.closeForm}
-      >
-        <Button
-          onClick={
-            type === "isColumn"
-              ? this.handleAddColumn
-              : type === "isSwimlane"
-              ? this.handleAddSwimlane
-              : type === "isUser"
-              ? this.handleAddUser
-              : this.handleAddTask
-          }
-        >
-          {type === "isColumn"
-            ? "Add a column"
-            : type === "isSwimlane"
-            ? "Add a swimlane"
-            : type === "isUser"
-            ? "Add a user"
-            : "Add a task"}
-        </Button>
-      </Form>
+      <div>{this.renderSwitch(type)}</div>
     ) : (
       <OpenForm onClick={this.openForm}>
         {type === "isColumn"
@@ -200,6 +337,8 @@ const mapDispatchToProps = {
   addTask,
   addColumn,
   fetchColumns,
+  fetchUsers,
+  addUser,
 };
 
 export default connect(null, mapDispatchToProps)(Create);

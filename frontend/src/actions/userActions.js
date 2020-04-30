@@ -44,3 +44,20 @@ export function deleteUser(id) {
       }));
   }
 }
+
+export function dragStateSaveUsers(users) {
+  return (dispatch) => {
+    fetch('/users/all', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(users)
+    })
+      .then(res => res.json())
+      .then(newUsers => dispatch({
+        type: CONSTANTS.FETCH_USERS,
+        payload: newUsers
+      }));
+  }
+}

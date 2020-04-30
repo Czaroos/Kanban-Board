@@ -176,6 +176,22 @@ router.route("/users/:id").delete((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
+router.route("/users/all").post((req, res) => {
+  model.User.deleteMany({})
+  .then(
+    () =>
+      (newState = req.body.map(user => {
+        newUser = new model.User({
+          _id: user._id,
+          name: user.name,
+          color: user.color
+        })
+        newUser.save().then({});
+        return newUser;
+      })))
+      .then(() => res.json(newState));
+})
+
 // router.route("/drop").post((req, res) => {
 //   model.User.deleteMany()
 //   .then(() => res.json("deleted"))

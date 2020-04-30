@@ -187,6 +187,7 @@ const Column = ({
         id,
         title: title,
         limit: validatedColumnLimit,
+        info,
         tasks,
         index,
         indexX,

@@ -75,6 +75,7 @@ const DeleteButton = styled(Icon)`
 const Users = styled.div`
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   width: 90%;
   height: 30px;
 `;

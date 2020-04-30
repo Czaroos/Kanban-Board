@@ -8,7 +8,7 @@ align-items: center;
 cursor: pointer;
 border-radius: 3px;
 height: 36px;
-width: 290px;
+width: 277px;
 padding-left: 10px;
 opacity: 0.8;
 color: white;
