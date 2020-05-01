@@ -89,7 +89,6 @@ class Create extends React.PureComponent {
     const isNumber = /[0-9]/.test(content3)
     const isNotEmptyString = !(/^\s*$/.test(content3))
 
-    console.log(isNumber)
     if (content) {
       this.setState({
         content: "",
@@ -176,6 +175,8 @@ class Create extends React.PureComponent {
   handleAddUser = () => {
     const { content, content2 } = this.state;
 
+    const isNumber = /[0-9]/.test(content2)
+
     if (content && content2) {
       this.setState({
         content: "",
@@ -183,7 +184,7 @@ class Create extends React.PureComponent {
         formOpen: false,
       });
 
-      const wipLimit = Number(content2);
+      const wipLimit = isNumber && content < 99 ? content2 : 99;
       if (content.trim().length !== 0 || content2.trim().length !== 0) {
         const newUser = {
           name: content,
