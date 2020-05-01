@@ -21,6 +21,7 @@ const columnSchema = Schema({
   indexY: { type: Number, default: 0 },
   title: String,
   limit: { type: Number, default: -99999 },
+  info: String,
   tasks: [taskSchema]
 });
 

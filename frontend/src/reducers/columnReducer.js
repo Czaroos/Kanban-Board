@@ -30,6 +30,7 @@ const columnReducer = (state = initialState, action) => {
           index: column.index,
           indexX: column.indexX,
           indexY: column.indexY,
+          info: column.info
         };
       });
 
@@ -55,6 +56,7 @@ const columnReducer = (state = initialState, action) => {
         index: action.payload.index,
         indexX: action.payload.indexX,
         indexY: action.payload.indexY,
+        info: action.payload.info
       };
       return [...state, newColumn];
 

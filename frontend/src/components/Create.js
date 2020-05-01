@@ -83,14 +83,19 @@ class Create extends React.PureComponent {
   };
 
   handleAddColumn = () => {
-    const { content } = this.state;
+    const { content, content2, content3 } = this.state;
     const { indexX, swimlanesNames, noColumns } = this.props;
 
+    const isNumber = /[0-9]/.test(content3)
+    const isNotEmptyString = !(/^\s*$/.test(content3))
+
+    console.log(isNumber)
     if (content) {
       this.setState({
         content: "",
+        content2: "",
+        content3: "",
         formOpen: false,
-        // columnLimitInput: ""
       });
 
       if (content.trim().length !== 0) {
@@ -98,7 +103,8 @@ class Create extends React.PureComponent {
           title: content,
           indexY: 0,
           indexX: indexX,
-          // limit: Number(columnLimitInput.replace(/\s/g, ""))
+          info: content2,
+          limit: isNumber && isNotEmptyString ? content3 : -99999
         };
         this.props.addColumn(newColumn);
 
@@ -108,6 +114,8 @@ class Create extends React.PureComponent {
               title: swimlane,
               indexY: index + 1,
               indexX: indexX,
+              info: content2,
+              limit: isNumber && isNotEmptyString ? content3 : -99999
             };
             this.props.addColumn(newColumn);
             this.props.fetchColumns();
@@ -119,20 +127,23 @@ class Create extends React.PureComponent {
 
   handleAddSwimlane = () => {
     const { content } = this.state;
-    const { indexX, indexY } = this.props;
+    const { indexX, indexY, columns } = this.props;
 
     if (content) {
       this.setState({
         content: "",
-        // columnLimitInput: ""
+        formOpen: false
       });
 
       if (content.trim().length !== 0) {
-        for (var i = 0; i < indexX; i++) {
+        for (let i = 0; i < indexX; i++) {
+          let previousColumn = columns.find(column => column.indexX === i && column.indexY === indexY - 1)
+
           const newColumn = {
             title: content,
             indexY: indexY,
             indexX: i,
+            limit: previousColumn.limit
           };
           this.props.addColumn(newColumn);
           this.props.fetchColumns();
@@ -289,6 +300,29 @@ class Create extends React.PureComponent {
         );
       }
 
+      case "isSwimlane": {
+        return (
+          <Container>
+            <ContainerRow>
+            <StyledTextArea
+              style={{ width: "300px" }}
+              rowsMin={1}
+              autoFocus
+              placeholder="Set title..."
+              value={this.content}
+              onChange={(e) =>
+                this.setState({
+                  content: e.target.value,
+                })
+              }
+            />
+              <Button onClick={this.handleAddSwimlane}>Add a swimlane</Button>
+              <CloseIcon onClick={this.closeForm} />
+            </ContainerRow>
+          </Container>
+        );
+      }
+
       default: {
         return (
           <Container>
@@ -333,6 +367,10 @@ class Create extends React.PureComponent {
   }
 }
 
+const mapStateToProps = state => ({
+  columns: state.columns
+})
+
 const mapDispatchToProps = {
   addTask,
   addColumn,
@@ -341,4 +379,4 @@ const mapDispatchToProps = {
   addUser,
 };
 
-export default connect(null, mapDispatchToProps)(Create);
+export default connect(mapStateToProps, mapDispatchToProps)(Create);
