@@ -184,7 +184,7 @@ class Create extends React.PureComponent {
         formOpen: false,
       });
 
-      const wipLimit = isNumber && content < 99 ? content2 : 99;
+      const wipLimit = isNumber && content2 < 99 ? content2 : 99;
       if (content.trim().length !== 0 || content2.trim().length !== 0) {
         const newUser = {
           name: content,
