@@ -18,6 +18,10 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
+import { SketchPicker } from "react-color";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
 
 var randomColor = require("randomcolor");
 
@@ -84,6 +88,21 @@ class Create extends React.PureComponent {
     content2: "",
     content3: "",
     radioValue: "normal",
+    modalOpened: false,
+    color: {
+      r: "241",
+      g: "112",
+      b: "19",
+      a: "1",
+    },
+  };
+
+  handleClose = () => {
+    this.setState({ modalOpened: false });
+  };
+
+  handleChange = (color) => {
+    this.setState({ color: color.rgb });
   };
 
   openForm = () => {
@@ -196,8 +215,8 @@ class Create extends React.PureComponent {
 
   handleAddTask = () => {
     const { columnID } = this.props;
-    const { content, radioValue } = this.state;
-    console.log(radioValue)
+    const { content, radioValue, color } = this.state;
+    console.log(radioValue);
 
     if (content) {
       this.setState({
@@ -211,6 +230,7 @@ class Create extends React.PureComponent {
           content,
           columnID,
           priority: radioValue,
+          background: color
         };
 
         this.props.addTask(newTask);
@@ -419,11 +439,59 @@ class Create extends React.PureComponent {
       default: {
         return (
           <Container>
-            <CloseIcon
-              onClick={this.closeForm}
-              style={{ margin: "0px 0px 0px 270px" }}
-            />
-
+            <ContainerRowJustified>
+              <div>
+                <div
+                  style={{
+                    padding: "5px",
+                    background: "inherit",
+                    borderRadius: "1px",
+                    boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
+                    display: "inline-block",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    this.setState({
+                      modalOpened: true,
+                    });
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "36px",
+                      height: "14px",
+                      borderRadius: "2px",
+                      background: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`,
+                    }}
+                  />
+                </div>
+                <Modal
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  open={this.state.modalOpened}
+                  onClose={this.handleClose}
+                  closeAfterTransition
+                  BackdropComponent={Backdrop}
+                  BackdropProps={{
+                    timeout: 500,
+                  }}
+                >
+                  <Fade in={this.state.modalOpened}>
+                    <SketchPicker
+                      color={this.state.color}
+                      onChange={this.handleChange}
+                    />
+                  </Fade>
+                </Modal>
+              </div>
+              <CloseIcon
+                onClick={this.closeForm}
+                style={{ margin: "0px 0px 5px 220px" }}
+              />
+            </ContainerRowJustified>
             <StyledTextArea
               style={{ width: "285px" }}
               rowsMin={1}

@@ -245,9 +245,6 @@ const Task = ({
                     />
                   )}
                   <BlockIcon />
-                  {priority === "veryhigh" ? (
-                    <HighPriorityIcon fontSize="small" />
-                  ) : null}
                   <LockOpenIcon
                     fontSize="small"
                     onClick={() => setIsLocked(false)}
