@@ -45,19 +45,15 @@ export function deleteUser(id) {
   }
 }
 
-export function dragStateSaveUsers(users) {
+export function deleteUserByName(name) {
   return (dispatch) => {
-    fetch('/users/all', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(users)
+    fetch('/users/deleteByName/' + name, {
+      method: 'DELETE'
     })
-      .then(res => res.json())
-      .then(newUsers => dispatch({
-        type: CONSTANTS.FETCH_USERS,
-        payload: newUsers
-      }));
+    .then(res => res.json())
+    .then(name => dispatch({
+      type: CONSTANTS.DELETE_USER_BY_NAME,
+      payload: name
+    }))
   }
 }

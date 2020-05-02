@@ -4,25 +4,27 @@ const initialState = [];
 
 const columnReducer = (state = initialState, action) => {
   switch (action.type) {
-    case CONSTANTS.FETCH_COLUMNS:
-      let initialState = action.payload.map((column) => {
+    case CONSTANTS.FETCH_COLUMNS: {
+      const initialState = action.payload.map((column) => {
         let tasks = column.tasks.map((task) => {
-          let users = task.users.map(user => {
-            return  {
+          let users = task.users.map((user) => {
+            let newUser = {
               _id: user._id,
               name: user.name,
               color: user.color,
-            }
-          })
-          return {
+            };
+            return newUser;
+          });
+          let newTask = {
             id: task._id,
             content: task.content,
-            columnID: task.columnId,
             priority: task.priority,
+            columnID: task.columnId,
             users: users,
           };
+          return newTask;
         });
-        return {
+        let newColumn = {
           id: column._id,
           title: column.title,
           limit: column.limit,
@@ -30,8 +32,9 @@ const columnReducer = (state = initialState, action) => {
           index: column.index,
           indexX: column.indexX,
           indexY: column.indexY,
-          info: column.info
+          info: column.info,
         };
+        return newColumn;
       });
 
       const indecesY = new Set();
@@ -46,6 +49,7 @@ const columnReducer = (state = initialState, action) => {
       }
 
       return sortedInitialState;
+    }
 
     case CONSTANTS.ADD_COLUMN:
       const newColumn = {
@@ -56,7 +60,7 @@ const columnReducer = (state = initialState, action) => {
         index: action.payload.index,
         indexX: action.payload.indexX,
         indexY: action.payload.indexY,
-        info: action.payload.info
+        info: action.payload.info,
       };
       return [...state, newColumn];
 
@@ -118,22 +122,30 @@ const columnReducer = (state = initialState, action) => {
         return sortedSwapState;
       }
 
+      if (type === "user" && droppableIdStart === droppableIdEnd) {
+        return newState;
+      }
+
       if (type === "user") {
         const user = users.find((user) => user._id === draggableId);
-        newState.map((column) => {
-          column.tasks.map((task) => {
+        const updatedState = newState.map((column) => {
+          let tasks = column.tasks.map((task) => {
             if (task.id === droppableIdEnd) {
-              if (task.users.find((alreadyAddedUser) => alreadyAddedUser.name === user.name)) {
-                return task;
-              } else {
-                task.users.push(user);
-                return task;
-              }
+              const userAlreadyAdded = task.users.find(userAlreadyAdded => userAlreadyAdded.name === user.name);
+              if (!userAlreadyAdded)
+                return {
+                  ...task,
+                  users: [...task.users, user],
+                };
+              else return task;
             } else return task;
           });
-          return column;
+          return {
+            ...column,
+            tasks: tasks,
+          };
         });
-        return newState;
+        return updatedState;
       }
 
       // destination: same column
@@ -224,17 +236,13 @@ const columnReducer = (state = initialState, action) => {
     }
 
     case CONSTANTS.DELETE_USER: {
-      const deleteUserState = [...state]
-      deleteUserState.map(column => {
-        column.tasks.map(task => {
-          task.users = task.users.filter(user => user._id !== action.payload)
-          console.log(task)
+      return state.map((column) => {
+        column.tasks.map((task) => {
+          task.users = task.users.filter((user) => user._id !== action.payload);
           return task;
-        })
+        });
         return column;
-      })
-      console.log(deleteUserState)
-      return deleteUserState;
+      });
     }
 
     default:

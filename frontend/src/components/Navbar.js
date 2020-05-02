@@ -28,6 +28,7 @@ const Navbar = ({ users }) => {
               index={index}
               key={user._id}
               color={user.color}
+              droppableId="users"
             />
           ))}
           {provided.placeholder}

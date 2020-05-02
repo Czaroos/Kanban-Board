@@ -1,17 +1,18 @@
-export * from './columnActions';
-export * from './taskActions';
-export * from './userActions';
+export * from "./columnActions";
+export * from "./taskActions";
+export * from "./userActions";
 
 export const CONSTANTS = {
-    ADD_TASK: "ADD_TASK",
-    ADD_COLUMN: "ADD_COLUMN",
-    DRAG_HAPPENED: "DRAG_HAPPENED",
-    EDIT_TASK: "EDIT_TASK",
-    DELETE_TASK: "DELETE_TASK",
-    EDIT_COLUMN: "EDIT_COLUMN",
-    DELETE_COLUMN: "DELETE_COLUMN",
-    FETCH_COLUMNS: "FETCH_COLUMNS",
-    FETCH_USERS: "FETCH_USERS",
-    ADD_USER: "ADD_USER",
-    DELETE_USER: "DELETE_USER"
+  ADD_TASK: "ADD_TASK",
+  ADD_COLUMN: "ADD_COLUMN",
+  DRAG_HAPPENED: "DRAG_HAPPENED",
+  EDIT_TASK: "EDIT_TASK",
+  DELETE_TASK: "DELETE_TASK",
+  EDIT_COLUMN: "EDIT_COLUMN",
+  DELETE_COLUMN: "DELETE_COLUMN",
+  FETCH_COLUMNS: "FETCH_COLUMNS",
+  FETCH_USERS: "FETCH_USERS",
+  ADD_USER: "ADD_USER",
+  DELETE_USER: "DELETE_USER",
+  DELETE_USER_BY_NAME: "DELETE_USER_BY_NAME",
 };

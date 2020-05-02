@@ -6,7 +6,7 @@ import styled from "styled-components";
 import CloseIcon from '@material-ui/icons/Close';
 import { confirmAlert } from "react-confirm-alert";
 import "./styles/react-confirm-alert.css";
-import { deleteUser } from '../actions/userActions';
+import { deleteUser, deleteUserByName } from '../actions/userActions';
 import { dragStateSave } from "../actions";
 
 const UserBox = styled.div`
@@ -42,9 +42,9 @@ const SmallCloseIcon = styled(CloseIcon)`
   }
 `;
 
-const User = ({ _id, name, index, color, isDragDisabled, dispatch, columns}) => {
+const User = ({ _id, name, index, color, isDragDisabled, dispatch, columns, droppableId}) => {
 
-  const handleDeleteUser = () => {
+  const handleDeleteUserByID = () => {
     dispatch(deleteUser(_id));
     const deleteUserState = columns;
     deleteUserState.map(column => {
@@ -54,19 +54,21 @@ const User = ({ _id, name, index, color, isDragDisabled, dispatch, columns}) => 
       })
       return column;
     })
-    dispatch(dragStateSave(deleteUserState))
+    dispatch(dragStateSave())
   }
 
+  const handleDeleteUserByName = () => {
+    dispatch(deleteUserByName(name));
+  }
   
-  
-  const submitDeleteUser = () => {
+  const submitDeleteUserByID = () => {
     confirmAlert({
       title: "Alert!",
-      message: "Are you sure you want to delete this user ?",
+      message: "Are you sure you want to remove " + name + " from this task?",
       buttons: [
         {
           label: "Yes",
-          onClick: () => handleDeleteUser(),
+          onClick: () => handleDeleteUserByID(),
         },
         {
           label: "No",
@@ -78,10 +80,31 @@ const User = ({ _id, name, index, color, isDragDisabled, dispatch, columns}) => 
       closeOnEscape: true,
       closeOnClickOutside: true,
     });
-
   };
+
+  const submitDeleteUserByName = () => {
+    confirmAlert({
+      title: "Alert!",
+      message: "Are you sure you want to delete " + name + " user?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => handleDeleteUserByName(),
+        },
+        {
+          label: "No",
+          onClick: () => {
+            return null;
+          },
+        },
+      ],
+      closeOnEscape: true,
+      closeOnClickOutside: true,
+    });
+  };
+
   return (
-    <Draggable draggableId={_id} index={index} type="user" isDragDisabled={isDragDisabled}>
+    <Draggable draggableId={_id} droppableId={droppableId} index={index} type="user" isDragDisabled={isDragDisabled}>
       {(provided) => (
         <div
           {...provided.draggableProps}
@@ -89,7 +112,7 @@ const User = ({ _id, name, index, color, isDragDisabled, dispatch, columns}) => 
           ref={provided.innerRef}
         >
             <UserBox>
-            <SmallCloseIcon onClick={submitDeleteUser}/>
+            <SmallCloseIcon onClick={droppableId === "users" ? submitDeleteUserByName : submitDeleteUserByID}/>
           <SmallAvatar style={{ backgroundColor: color }} title={name}>
             {name[0].toUpperCase()}
           </SmallAvatar>
