@@ -11,7 +11,7 @@ const taskSchema = Schema({
   content: String,
   columnId: { type: Schema.Types.ObjectId, ref: 'Column' },
   users: [userSchema],
-  priority: { type: String, enum: ['medium', 'high', 'very high'], default: 'medium'}
+  priority: { type: String, enum: ['normal', 'high', 'very high'], default: 'normal'}
 });
 
 const columnSchema = Schema({

@@ -265,11 +265,6 @@ const Column = ({
     });
   };
 
-  const handleIsVisible = () => {
-    if (isVisible) setIsVisible(false);
-    if (!isVisible) setIsVisible(true);
-  };
-
   return (
     <div>
     <Line style={{ backgroundColor: color }} />
@@ -312,12 +307,12 @@ const Column = ({
           {indexY === 0 || indexX === 0 ? null : isVisible ? (
             <VisibilityIcon
               style={{ cursor: "pointer" }}
-              onClick={handleIsVisible}
+              onClick={() => setIsVisible(false)}
             />
           ) : (
             <VisibilityOffIcon
               style={{ cursor: "pointer" }}
-              onClick={handleIsVisible}
+              onClick={() => setIsVisible(true)}
             />
           )}
         </TitleContainer>

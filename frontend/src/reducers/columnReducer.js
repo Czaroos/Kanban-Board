@@ -74,6 +74,7 @@ const columnReducer = (state = initialState, action) => {
         content: task.content,
         columnID: task.columnId,
         users: [],
+        priority: task.priority
       };
 
       const addTaskState = state.map((col) => {

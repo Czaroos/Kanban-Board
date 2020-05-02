@@ -8,6 +8,7 @@ import { confirmAlert } from "react-confirm-alert";
 import "./styles/react-confirm-alert.css";
 import { deleteUser, deleteUserByName } from '../actions/userActions';
 import { dragStateSave } from "../actions";
+import Tooltip from '@material-ui/core/Tooltip';
 
 const UserBox = styled.div`
     position: relative;
@@ -113,9 +114,11 @@ const User = ({ _id, name, index, color, isDragDisabled, dispatch, columns, drop
         >
             <UserBox>
             <SmallCloseIcon onClick={droppableId === "users" ? submitDeleteUserByName : submitDeleteUserByID}/>
-          <SmallAvatar style={{ backgroundColor: color }} title={name}>
+            <Tooltip title={name} arrow>
+          <SmallAvatar style={{ backgroundColor: color }}>
             {name[0].toUpperCase()}
           </SmallAvatar>
+          </Tooltip>
           </UserBox>
         </div>
       )}

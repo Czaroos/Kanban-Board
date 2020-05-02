@@ -12,6 +12,9 @@ import { useSpring, animated } from "react-spring";
 import { Typography, Card } from "@material-ui/core";
 import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
 import User from "./User";
+import BlockOutlinedIcon from "@material-ui/icons/BlockOutlined";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import LockOpenOutlinedIcon from "@material-ui/icons/LockOpenOutlined";
 
 const TaskContainer = styled.div`
   margin: 0 0 8px 0;
@@ -20,11 +23,55 @@ const TaskContainer = styled.div`
   word-wrap: break-word;
 `;
 
+const LockOpenIcon = styled(LockOpenOutlinedIcon)`
+  && {
+    position: absolute;
+    display: none;
+    right: 2px;
+    bottom: 25px;
+    opacity: 0.5;
+    ${TaskContainer}:hover & {
+      display: block;
+      cursor: pointer;
+    }
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+`;
+
+const BlockIcon = styled(BlockOutlinedIcon)`
+  && {
+    font-size: 5.1rem;
+    opacity: 0.8;
+    position: absolute;
+    right: 115px;
+    top: -3px;
+  }
+`;
+
+const LockIcon = styled(LockOutlinedIcon)`
+  && {
+    position: absolute;
+    display: none;
+    right: 2px;
+    bottom: 25px;
+    opacity: 0.5;
+    ${TaskContainer}:hover & {
+      display: block;
+      cursor: pointer;
+    }
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+`;
+
 const EditButton = styled(Icon)`
   position: absolute;
   display: none;
-  right: 5px;
-  top: 5px;
+  right: 1px;
+  top: 2px;
   opacity: 0.5;
   ${TaskContainer}:hover & {
     display: block;
@@ -60,8 +107,8 @@ const StyledTask = styled(Card)`
 const DeleteButton = styled(Icon)`
   position: absolute;
   display: none;
-  right: 5px;
-  bottom: 5px;
+  right: 2px;
+  bottom: 1px;
   opacity: 0.5;
   ${TaskContainer}:hover & {
     display: block;
@@ -77,15 +124,15 @@ const Users = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   width: 90%;
-  height: 30px;
+  min-height: 32px;
+  margin-top: 2px;
 `;
 
 const HighPriorityIcon = styled(PriorityHighIcon)`
   position: absolute;
-  right: 5px;
-  top: 5px;
-  color: red;
-
+  right: -2px;
+  top: 3px;
+  opacity: 0.9;
   ${TaskContainer}:hover & {
     opacity: 0;
   }
@@ -103,6 +150,7 @@ const Task = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [taskContent, setTaskContent] = useState(content);
+  const [isLocked, setIsLocked] = useState(false);
 
   const props = useSpring({
     opacity: 1,
@@ -169,51 +217,147 @@ const Task = ({
   const renderTask = () => {
     return (
       <animated.div style={props}>
-        <Draggable draggableId={id} index={index}>
-          {(provided) => (
-            <TaskContainer
-              {...provided.draggableProps}
-              {...provided.dragHandleProps}
-              ref={provided.innerRef}
-              onDoubleClick={() => setIsEditing(true)}
-            >
-              <StyledTask>
-                {priority === "high" ? (
-                  <HighPriorityIcon fontSize="small" />
-                ) : null}
-                <EditButton
-                  fontSize="small"
-                  onMouseDown={() => setIsEditing(true)}
+        {isLocked ? (
+          <Draggable draggableId={id} index={index} isDragDisabled={true}>
+            {(provided) => (
+              <TaskContainer
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                ref={provided.innerRef}
+                onDoubleClick={() => setIsEditing(true)}
+              >
+                <StyledTask
+                  style={{
+                    opacity: 0.3,
+                    borderTop: "2px solid red",
+                    cursor: "auto",
+                  }}
                 >
-                  edit
-                </EditButton>
-                <DeleteButton fontSize="small" onMouseDown={submitTaskDelete}>
-                  delete
-                </DeleteButton>
-                <Typography>{content}</Typography>
-                <Droppable droppableId={id} direction="horizontal" type="user">
-                  {(provided) => (
-                    <Users {...provided.droppableProps} ref={provided.innerRef}>
-                      {users.map((user, index) => (
-                        <User
-                          _id={user._id}
-                          name={user.name}
-                          userLimit={user.userLimit}
-                          index={index}
-                          key={user._id}
-                          color={user.color}
-                          isDragDisabled={true}
-                          droppableId={id}
-                        />
-                      ))}
-                      {provided.placeholder}
-                    </Users>
+                   {priority === "normal" ? (
+                    <HighPriorityIcon style={{ fontSize: "1.4rem" }} />
+                  ) : priority === "high" ? (
+                    <HighPriorityIcon
+                      style={{ color: "orange", fontSize: "1.7rem" }}
+                    />
+                  ) : (
+                    <HighPriorityIcon
+                      style={{ color: "red", fontSize: "2rem"}}
+                    />
                   )}
-                </Droppable>
-              </StyledTask>
-            </TaskContainer>
-          )}
-        </Draggable>
+                  <BlockIcon />
+                  {priority === "veryhigh" ? (
+                    <HighPriorityIcon fontSize="small" />
+                  ) : null}
+                  <LockOpenIcon
+                    fontSize="small"
+                    onClick={() => setIsLocked(false)}
+                  />
+                  <EditButton
+                    fontSize="small"
+                    onMouseDown={() => setIsEditing(true)}
+                  >
+                    edit
+                  </EditButton>
+                  <DeleteButton fontSize="small" onMouseDown={submitTaskDelete}>
+                    delete
+                  </DeleteButton>
+                  <Typography>{content}</Typography>
+                  <Droppable
+                    droppableId={id}
+                    direction="horizontal"
+                    type="user"
+                  >
+                    {(provided) => (
+                      <Users
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                      >
+                        {users.map((user, index) => (
+                          <User
+                            _id={user._id}
+                            name={user.name}
+                            userLimit={user.userLimit}
+                            index={index}
+                            key={user._id}
+                            color={user.color}
+                            isDragDisabled={true}
+                            droppableId={id}
+                          />
+                        ))}
+                        {provided.placeholder}
+                      </Users>
+                    )}
+                  </Droppable>
+                </StyledTask>
+              </TaskContainer>
+            )}
+          </Draggable>
+        ) : (
+          <Draggable draggableId={id} index={index}>
+            {(provided) => (
+              <TaskContainer
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                ref={provided.innerRef}
+                onDoubleClick={() => setIsEditing(true)}
+              >
+                <StyledTask>
+                  {priority === "normal" ? (
+                    <HighPriorityIcon style={{ fontSize: "1.4rem" }} />
+                  ) : priority === "high" ? (
+                    <HighPriorityIcon
+                      style={{ color: "orange", fontSize: "1.7rem" }}
+                    />
+                  ) : (
+                    <HighPriorityIcon
+                      style={{ color: "red", fontSize: "2rem" }}
+                    />
+                  )}
+                  <LockIcon
+                    fontSize="small"
+                    onClick={() => setIsLocked(true)}
+                  />
+                  <EditButton
+                    fontSize="small"
+                    onMouseDown={() => setIsEditing(true)}
+                  >
+                    edit
+                  </EditButton>
+                  <DeleteButton fontSize="small" onMouseDown={submitTaskDelete}>
+                    delete
+                  </DeleteButton>
+                  <Typography>{content}</Typography>
+                  <Droppable
+                    droppableId={id}
+                    direction="horizontal"
+                    type="user"
+                  >
+                    {(provided) => (
+                      <Users
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                      >
+                        {users.map((user, index) => (
+                          <User
+                            _id={user._id}
+                            name={user.name}
+                            userLimit={user.userLimit}
+                            index={index}
+                            key={user._id}
+                            color={user.color}
+                            isDragDisabled={true}
+                            droppableId={id}
+                          />
+                        ))}
+                        {provided.placeholder}
+                      </Users>
+                    )}
+                  </Droppable>
+                </StyledTask>
+              </TaskContainer>
+            )}
+          </Draggable>
+        )}
       </animated.div>
     );
   };

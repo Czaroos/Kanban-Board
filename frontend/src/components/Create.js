@@ -13,7 +13,20 @@ import OpenForm from "./OpenForm";
 import styled from "styled-components";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import CloseSharpIcon from "@material-ui/icons/CloseSharp";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
+
 var randomColor = require("randomcolor");
+
+const RadioOption = styled(FormControlLabel)`
+  && {
+    padding: 0px;
+    margin: 0px;
+  }
+`;
 
 const Container = styled.div`
   display: flex;
@@ -24,6 +37,13 @@ const ContainerRow = styled.div`
   display: flex;
   flex-direction: row;
   align-items: baseline;
+`;
+
+const ContainerRowJustified = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
 `;
 
 const StyledTextArea = styled(TextareaAutosize)`
@@ -63,6 +83,7 @@ class Create extends React.PureComponent {
     content: "",
     content2: "",
     content3: "",
+    radioValue: "normal",
   };
 
   openForm = () => {
@@ -71,7 +92,7 @@ class Create extends React.PureComponent {
     });
   };
 
-  closeForm = (e) => {
+  closeForm = () => {
     this.setState({
       formOpen: false,
     });
@@ -86,7 +107,7 @@ class Create extends React.PureComponent {
   handleAddColumn = () => {
     const { content, content2, content3 } = this.state;
     const { indexX, swimlanesNames, noColumns, columns } = this.props;
-    var color = randomColor({ luminosity: "light" })
+    var color = randomColor({ luminosity: "light" });
 
     const isNumber = /[0-9]/.test(content3);
     const isNotEmptyString = !/^\s*$/.test(content3);
@@ -103,7 +124,7 @@ class Create extends React.PureComponent {
         let previousColumnX = columns.find(
           (column) => column.indexX === indexX - 1 && column.indexY === 0
         );
-        console.log(previousColumnX)
+        console.log(previousColumnX);
 
         const newColumn = {
           title: content,
@@ -113,14 +134,15 @@ class Create extends React.PureComponent {
             ? content2
             : "Task w tej kolumnie uznaje się za ukończony gdy:",
           limit: isNumber && isNotEmptyString ? content3 : -99999,
-          color: previousColumnX ? previousColumnX.color : color
+          color: previousColumnX ? previousColumnX.color : color,
         };
         this.props.addColumn(newColumn);
 
         if (!noColumns) {
           swimlanesNames.forEach((swimlane, index) => {
             let previousColumnX = columns.find(
-              (column) => column.indexX === indexX - 1 && column.indexY === index + 1 
+              (column) =>
+                column.indexX === indexX - 1 && column.indexY === index + 1
             );
 
             const newColumn = {
@@ -131,7 +153,7 @@ class Create extends React.PureComponent {
                 ? content2
                 : "Task w tej kolumnie uznaje się za ukończony gdy:",
               limit: isNumber && isNotEmptyString ? content3 : -99999,
-              color: previousColumnX ? previousColumnX.color : color
+              color: previousColumnX ? previousColumnX.color : color,
             };
             this.props.addColumn(newColumn);
             this.props.fetchColumns();
@@ -144,7 +166,7 @@ class Create extends React.PureComponent {
   handleAddSwimlane = () => {
     const { content } = this.state;
     const { indexX, indexY, columns } = this.props;
-    var color = randomColor({ luminosity: "light" })
+    var color = randomColor({ luminosity: "light" });
 
     if (content) {
       this.setState({
@@ -163,7 +185,7 @@ class Create extends React.PureComponent {
             indexY: indexY,
             indexX: i,
             limit: previousColumnY.limit,
-            color: color
+            color: color,
           };
           this.props.addColumn(newColumn);
           this.props.fetchColumns();
@@ -174,11 +196,13 @@ class Create extends React.PureComponent {
 
   handleAddTask = () => {
     const { columnID } = this.props;
-    const { content } = this.state;
+    const { content, radioValue } = this.state;
+    console.log(radioValue)
 
     if (content) {
       this.setState({
         content: "",
+        radioValue: "",
         formOpen: false,
       });
 
@@ -186,6 +210,7 @@ class Create extends React.PureComponent {
         const newTask = {
           content,
           columnID,
+          priority: radioValue,
         };
 
         this.props.addTask(newTask);
@@ -195,7 +220,7 @@ class Create extends React.PureComponent {
 
   handleAddUser = async () => {
     const { content, content2 } = this.state;
-    var color = randomColor({ luminosity: "dark" })
+    var color = randomColor({ luminosity: "dark" });
 
     const isNumber = /[0-9]/.test(content2);
 
@@ -210,7 +235,7 @@ class Create extends React.PureComponent {
       if (content.trim().length !== 0 || content2.trim().length !== 0) {
         const newUser = {
           name: content,
-          color: color
+          color: color,
         };
 
         for (let i = 1; i <= wipLimit; i++) {
@@ -244,6 +269,50 @@ class Create extends React.PureComponent {
       </OpenForm>
     );
   };
+
+  RadioButtons() {
+    const handleChange = (event) =>
+      this.setState({
+        radioValue: event.target.value,
+      });
+
+    return (
+      <FormControl component="fieldset">
+        <RadioGroup
+          row
+          aria-label="priority"
+          name="priority"
+          onChange={handleChange}
+          defaultValue="normal"
+        >
+          <RadioOption
+            value="normal"
+            control={<Radio style={{ color: "white" }} size="small" />}
+            label={<PriorityHighIcon style={{ fontSize: "1.4rem" }} />}
+            labelPlacement="top"
+          />
+          <RadioOption
+            value="high"
+            control={<Radio style={{ color: "orange" }} size="small" />}
+            label={
+              <PriorityHighIcon
+                style={{ color: "orange", fontSize: "1.7rem" }}
+              />
+            }
+            labelPlacement="top"
+          />
+          <RadioOption
+            value="very high"
+            control={<Radio style={{ color: "red" }} size="small" />}
+            label={
+              <PriorityHighIcon style={{ color: "red", fontSize: "2rem" }} />
+            }
+            labelPlacement="top"
+          />
+        </RadioGroup>
+      </FormControl>
+    );
+  }
 
   renderSwitch = (type) => {
     switch (type) {
@@ -350,8 +419,13 @@ class Create extends React.PureComponent {
       default: {
         return (
           <Container>
+            <CloseIcon
+              onClick={this.closeForm}
+              style={{ margin: "0px 0px 0px 270px" }}
+            />
+
             <StyledTextArea
-              style={{ width: "277px" }}
+              style={{ width: "285px" }}
               rowsMin={1}
               autoFocus
               placeholder="Set content..."
@@ -362,10 +436,10 @@ class Create extends React.PureComponent {
                 })
               }
             />
-            <ContainerRow>
+            <ContainerRowJustified>
+              {this.RadioButtons()}
               <Button onClick={this.handleAddTask}>Add a task</Button>
-              <CloseIcon onClick={this.closeForm} />
-            </ContainerRow>
+            </ContainerRowJustified>
           </Container>
         );
       }
