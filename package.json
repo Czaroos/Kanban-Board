@@ -14,7 +14,8 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "mongoose": "^5.9.7"
+    "mongoose": "^5.9.7",
+    "randomcolor": "^0.5.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
