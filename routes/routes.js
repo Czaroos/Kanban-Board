@@ -19,19 +19,19 @@ router.route("/all").post((req, res) => {
       () =>
         (newState = req.body.map((column) => {
           let tasks = column.tasks.map((task) => {
-            let users = task.users.map(user => {
+            let users = task.users.map((user) => {
               return (newUser = {
                 _id: user._id,
                 name: user.name,
                 color: user.color,
-              })
-            })
+              });
+            });
             return (newTask = {
               _id: task.id,
               content: task.content,
               priority: task.priority,
               columnId: task.columnID,
-              users: users
+              users: users,
             });
           });
           newColumn = new model.Column({
@@ -42,7 +42,7 @@ router.route("/all").post((req, res) => {
             index: column.index,
             indexX: column.indexX,
             indexY: column.indexY,
-            info: column.info
+            info: column.info,
           });
           newColumn.save().then({});
           return newColumn;
@@ -64,7 +64,7 @@ router.route("/columns/add").post((req, res) => {
       index: count,
       indexX: req.body.indexX,
       indexY: req.body.indexY,
-      info: req.body.info
+      info: req.body.info,
     });
     newColumn
       .save()
@@ -152,49 +152,38 @@ router.route("/tasks/:id").put((req, res) => {
 
 // ------------------------------- /USERS -------------------------------
 
+// Fetch users
 router.route("/users").get((req, res) => {
   model.User.find()
     .then((users) => res.json(users))
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
+// Add new user
 router.route("/users/add").post((req, res) => {
-    newUser = new model.User({
-      _id: mongoose.Types.ObjectId(),
-      name: req.body.name,
-      color: randomColor({luminosity: 'dark'})
-    });
-    newUser
-      .save()
-      .then((newUser) => res.json(newUser))
-      .catch((err) => res.status(400).json("Error: " + err));
+  newUser = new model.User({
+    _id: mongoose.Types.ObjectId(),
+    name: req.body.name,
+    color: randomColor({ luminosity: "dark" }),
+  });
+  newUser
+    .save()
+    .then((newUser) => res.json(newUser))
+    .catch((err) => res.status(400).json("Error: " + err));
 });
 
+// Delete user by ID
 router.route("/users/:id").delete((req, res) => {
   model.User.findByIdAndDelete(req.params.id)
     .then(() => res.json(req.params.id))
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
-router.route("/users/all").post((req, res) => {
-  model.User.deleteMany({})
-  .then(
-    () =>
-      (newState = req.body.map(user => {
-        newUser = new model.User({
-          _id: user._id,
-          name: user.name,
-          color: user.color
-        })
-        newUser.save().then({});
-        return newUser;
-      })))
-      .then(() => res.json(newState));
-})
-
-// router.route("/drop").post((req, res) => {
-//   model.User.deleteMany()
-//   .then(() => res.json("deleted"))
-// })
+// Delete user by name
+router.route("/users/deleteByName/:name").delete((req, res) => {
+  model.User.deleteMany({name: req.params.name})
+    .then(() => res.json(req.params.name))
+    .catch((err) => res.status(400).json("Error: " + err));
+});
 
 module.exports = router;

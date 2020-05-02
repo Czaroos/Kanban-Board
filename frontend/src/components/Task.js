@@ -91,136 +91,133 @@ const HighPriorityIcon = styled(PriorityHighIcon)`
   }
 `;
 
-const Task = React.memo(
-  ({ content, id, columnID, userID, priority, index, dispatch, users }) => {
-    const [isEditing, setIsEditing] = useState(false);
-    const [taskContent, setTaskContent] = useState(content);
+const Task = ({
+  content,
+  id,
+  columnID,
+  userID,
+  priority,
+  index,
+  dispatch,
+  users,
+}) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [taskContent, setTaskContent] = useState(content);
 
-    const props = useSpring({
-      opacity: 1,
-      from: { opacity: 0 },
-      config: { duration: 400 },
+  const props = useSpring({
+    opacity: 1,
+    from: { opacity: 0 },
+    config: { duration: 400 },
+  });
+
+  const closeForm = (e) => {
+    setIsEditing(false);
+  };
+
+  const handleChange = (e) => {
+    setTaskContent(e.target.value);
+  };
+
+  const saveTask = (e) => {
+    e.preventDefault();
+    if (taskContent.trim().length !== 0) {
+      const task = {
+        id,
+        content: taskContent,
+        columnID,
+        userID,
+        priority,
+      };
+      dispatch(editTask(task));
+    }
+    setIsEditing(false);
+  };
+
+  const handleDeleteTask = () => {
+    dispatch(deleteTask({ id, columnID }));
+  };
+
+  const submitTaskDelete = () => {
+    confirmAlert({
+      title: "Alert!",
+      message: "Are you sure you want to delete this task ?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => handleDeleteTask(),
+        },
+        {
+          label: "No",
+          onClick: () => {
+            return null;
+          },
+        },
+      ],
+      closeOnEscape: true,
+      closeOnClickOutside: true,
     });
+  };
 
-    const closeForm = (e) => {
-      setIsEditing(false);
-    };
+  const renderEditForm = () => {
+    return (
+      <Form content={taskContent} onChange={handleChange} closeForm={closeForm}>
+        <Button onClick={saveTask}>Save</Button>
+      </Form>
+    );
+  };
 
-    const handleChange = (e) => {
-      setTaskContent(e.target.value);
-    };
-
-    const saveTask = (e) => {
-      e.preventDefault();
-      if (taskContent.trim().length !== 0) {
-        const task = {
-          id,
-          content: taskContent,
-          columnID,
-          userID,
-          priority,
-        };
-        dispatch(editTask(task));
-      }
-      setIsEditing(false);
-    };
-
-    const handleDeleteTask = () => {
-      dispatch(deleteTask({ id, columnID }));
-    };
-
-    const submitTaskDelete = () => {
-      confirmAlert({
-        title: "Alert!",
-        message: "Are you sure you want to delete this task ?",
-        buttons: [
-          {
-            label: "Yes",
-            onClick: () => handleDeleteTask(),
-          },
-          {
-            label: "No",
-            onClick: () => {
-              return null;
-            },
-          },
-        ],
-        closeOnEscape: true,
-        closeOnClickOutside: true,
-      });
-    };
-
-    const renderEditForm = () => {
-      return (
-        <Form
-          content={taskContent}
-          onChange={handleChange}
-          closeForm={closeForm}
-        >
-          <Button onClick={saveTask}>Save</Button>
-        </Form>
-      );
-    };
-
-    const renderTask = () => {
-      return (
-        <animated.div style={props}>
-          <Draggable draggableId={id} index={index}>
-            {(provided) => (
-              <TaskContainer
-                {...provided.draggableProps}
-                {...provided.dragHandleProps}
-                ref={provided.innerRef}
-                onDoubleClick={() => setIsEditing(true)}
-              >
-                <StyledTask>
-                  {priority === "high" ? (
-                    <HighPriorityIcon fontSize="small" />
-                  ) : null}
-                  <EditButton
-                    fontSize="small"
-                    onMouseDown={() => setIsEditing(true)}
-                  >
-                    edit
-                  </EditButton>
-                  <DeleteButton fontSize="small" onMouseDown={submitTaskDelete}>
-                    delete
-                  </DeleteButton>
-                  <Typography>{content}</Typography>
-                  <Droppable
-                    droppableId={id}
-                    direction="horizontal"
-                    type="user"
-                  >
-                    {(provided) => (
-                      <Users
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                      >
-                        {users.map((user, index) => (
-                          <User
-                            _id={user._id}
-                            name={user.name}
-                            userLimit={user.userLimit}
-                            index={index}
-                            key={user._id}
-                            color={user.color}
-                            isDragDisabled={true}
-                          />
-                        ))}
-                        {provided.placeholder}
-                      </Users>
-                    )}
-                  </Droppable>
-                </StyledTask>
-              </TaskContainer>
-            )}
-          </Draggable>
-        </animated.div>
-      );
-    };
-    return isEditing ? renderEditForm() : renderTask();
-  }
-);
+  const renderTask = () => {
+    return (
+      <animated.div style={props}>
+        <Draggable draggableId={id} index={index}>
+          {(provided) => (
+            <TaskContainer
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              ref={provided.innerRef}
+              onDoubleClick={() => setIsEditing(true)}
+            >
+              <StyledTask>
+                {priority === "high" ? (
+                  <HighPriorityIcon fontSize="small" />
+                ) : null}
+                <EditButton
+                  fontSize="small"
+                  onMouseDown={() => setIsEditing(true)}
+                >
+                  edit
+                </EditButton>
+                <DeleteButton fontSize="small" onMouseDown={submitTaskDelete}>
+                  delete
+                </DeleteButton>
+                <Typography>{content}</Typography>
+                <Droppable droppableId={id} direction="horizontal" type="user">
+                  {(provided) => (
+                    <Users {...provided.droppableProps} ref={provided.innerRef}>
+                      {users.map((user, index) => (
+                        <User
+                          _id={user._id}
+                          name={user.name}
+                          userLimit={user.userLimit}
+                          index={index}
+                          key={user._id}
+                          color={user.color}
+                          isDragDisabled={true}
+                          droppableId={id}
+                        />
+                      ))}
+                      {provided.placeholder}
+                    </Users>
+                  )}
+                </Droppable>
+              </StyledTask>
+            </TaskContainer>
+          )}
+        </Draggable>
+      </animated.div>
+    );
+  };
+  return isEditing ? renderEditForm() : renderTask();
+};
 
 export default connect()(Task);

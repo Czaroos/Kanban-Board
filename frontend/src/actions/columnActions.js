@@ -54,14 +54,14 @@ export function sort(
     }
 }
 
-export function dragStateSave(columns) {
-  return (dispatch) => {
+export function dragStateSave() {
+  return (dispatch, getState) => {
     fetch('/all', {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
       },
-      body: JSON.stringify(columns)
+      body: JSON.stringify(getState().columns)
     })
       .then(res => res.json())
       .then(newState => dispatch({
