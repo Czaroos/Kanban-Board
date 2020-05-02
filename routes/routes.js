@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const model = require("../models/models");
 const mongoose = require("mongoose");
-var randomColor = require("randomcolor");
 
 // ------------------------------- / -------------------------------
 
@@ -43,6 +42,7 @@ router.route("/all").post((req, res) => {
             indexX: column.indexX,
             indexY: column.indexY,
             info: column.info,
+            color: column.color,
           });
           newColumn.save().then({});
           return newColumn;
@@ -65,6 +65,7 @@ router.route("/columns/add").post((req, res) => {
       indexX: req.body.indexX,
       indexY: req.body.indexY,
       info: req.body.info,
+      color: req.body.color,
     });
     newColumn
       .save()
@@ -164,7 +165,7 @@ router.route("/users/add").post((req, res) => {
   newUser = new model.User({
     _id: mongoose.Types.ObjectId(),
     name: req.body.name,
-    color: randomColor({ luminosity: "dark" }),
+    color: req.body.color,
   });
   newUser
     .save()
@@ -181,7 +182,7 @@ router.route("/users/:id").delete((req, res) => {
 
 // Delete user by name
 router.route("/users/deleteByName/:name").delete((req, res) => {
-  model.User.deleteMany({name: req.params.name})
+  model.User.deleteMany({ name: req.params.name })
     .then(() => res.json(req.params.name))
     .catch((err) => res.status(400).json("Error: " + err));
 });

@@ -11,12 +11,7 @@ const ColumnsContainerRow = styled.div`
   margin-bottom: 30px;
 `;
 
-const Line = styled.div`
-  width: 96%;
-  height: 1px;
-`;
-
-const Swimlane = ({ columns, indexY, color }) => {
+const Swimlane = ({ columns, indexY }) => {
   const filteredColumns = columns.filter((column) => column.indexY === indexY);
   const sortedColumns = filteredColumns.sort((colA, colB) => {
     if (colA.indexX > colB.indexX) return 1;
@@ -26,8 +21,6 @@ const Swimlane = ({ columns, indexY, color }) => {
   return indexY === 0 ? (
     <ColumnsContainerRow>
       {sortedColumns.map((column, index) => (
-        <div key={index}>
-          <Line style={{ backgroundColor: color }} />
           <Column
             id={column.id}
             key={column.id}
@@ -38,8 +31,8 @@ const Swimlane = ({ columns, indexY, color }) => {
             indexX={column.indexX}
             indexY={column.indexY}
             info={column.info}
+            color={column.color}
           />
-        </div>
       ))}
     </ColumnsContainerRow>
   ) : (
@@ -52,7 +45,6 @@ const Swimlane = ({ columns, indexY, color }) => {
           {sortedColumns.map((column, index) =>
             column.indexY > 0 ? (
               <div {...provided.dragHandleProps} key={index}>
-                <Line style={{ backgroundColor: color }} />
                 <Column
                   id={column.id}
                   key={column.id}
@@ -63,6 +55,7 @@ const Swimlane = ({ columns, indexY, color }) => {
                   indexX={column.indexX}
                   indexY={column.indexY}
                   info={column.info}
+                  color={column.color}
                 />
               </div>
             ) : null

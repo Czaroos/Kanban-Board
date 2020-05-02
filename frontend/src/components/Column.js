@@ -115,6 +115,11 @@ const Limit = styled.h3`
   }
 `;
 
+const Line = styled.div`
+  width: 96%;
+  height: 1px;
+`;
+
 const Column = ({
   title,
   tasks,
@@ -125,7 +130,8 @@ const Column = ({
   indexY,
   dispatch,
   columns,
-  info = "Task w tej kolumnie uznaje się za ukończony gdy:",
+  info,
+  color
 }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingLimit, setIsEditingLimit] = useState(false);
@@ -265,6 +271,8 @@ const Column = ({
   };
 
   return (
+    <div>
+    <Line style={{ backgroundColor: color }} />
     <ColumnContainer>
       {isEditingTitle || isEditingLimit ? (
         renderEditInput()
@@ -337,6 +345,7 @@ const Column = ({
         </Droppable>
       ) : null}
     </ColumnContainer>
+    </div>
   );
 };
 

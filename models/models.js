@@ -22,6 +22,7 @@ const columnSchema = Schema({
   title: String,
   limit: { type: Number, default: -99999 },
   info: String,
+  color: String,
   tasks: [taskSchema]
 });
 

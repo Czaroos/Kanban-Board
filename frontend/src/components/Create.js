@@ -13,6 +13,7 @@ import OpenForm from "./OpenForm";
 import styled from "styled-components";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import CloseSharpIcon from "@material-ui/icons/CloseSharp";
+var randomColor = require("randomcolor");
 
 const Container = styled.div`
   display: flex;
@@ -84,10 +85,11 @@ class Create extends React.PureComponent {
 
   handleAddColumn = () => {
     const { content, content2, content3 } = this.state;
-    const { indexX, swimlanesNames, noColumns } = this.props;
+    const { indexX, swimlanesNames, noColumns, columns } = this.props;
+    var color = randomColor({ luminosity: "light" })
 
-    const isNumber = /[0-9]/.test(content3)
-    const isNotEmptyString = !(/^\s*$/.test(content3))
+    const isNumber = /[0-9]/.test(content3);
+    const isNotEmptyString = !/^\s*$/.test(content3);
 
     if (content) {
       this.setState({
@@ -98,23 +100,38 @@ class Create extends React.PureComponent {
       });
 
       if (content.trim().length !== 0) {
+        let previousColumnX = columns.find(
+          (column) => column.indexX === indexX - 1 && column.indexY === 0
+        );
+        console.log(previousColumnX)
+
         const newColumn = {
           title: content,
           indexY: 0,
           indexX: indexX,
-          info: content2,
-          limit: isNumber && isNotEmptyString ? content3 : -99999
+          info: !/^\s*$/.test(content2)
+            ? content2
+            : "Task w tej kolumnie uznaje się za ukończony gdy:",
+          limit: isNumber && isNotEmptyString ? content3 : -99999,
+          color: previousColumnX ? previousColumnX.color : color
         };
         this.props.addColumn(newColumn);
 
         if (!noColumns) {
           swimlanesNames.forEach((swimlane, index) => {
+            let previousColumnX = columns.find(
+              (column) => column.indexX === indexX - 1 && column.indexY === index + 1 
+            );
+
             const newColumn = {
               title: swimlane,
               indexY: index + 1,
               indexX: indexX,
-              info: content2,
-              limit: isNumber && isNotEmptyString ? content3 : -99999
+              info: /^\s*$/.test(content2)
+                ? content2
+                : "Task w tej kolumnie uznaje się za ukończony gdy:",
+              limit: isNumber && isNotEmptyString ? content3 : -99999,
+              color: previousColumnX ? previousColumnX.color : color
             };
             this.props.addColumn(newColumn);
             this.props.fetchColumns();
@@ -127,22 +144,26 @@ class Create extends React.PureComponent {
   handleAddSwimlane = () => {
     const { content } = this.state;
     const { indexX, indexY, columns } = this.props;
+    var color = randomColor({ luminosity: "light" })
 
     if (content) {
       this.setState({
         content: "",
-        formOpen: false
+        formOpen: false,
       });
 
       if (content.trim().length !== 0) {
         for (let i = 0; i < indexX; i++) {
-          let previousColumn = columns.find(column => column.indexX === i && column.indexY === indexY - 1)
+          let previousColumnY = columns.find(
+            (column) => column.indexX === i && column.indexY === indexY - 1
+          );
 
           const newColumn = {
             title: content,
             indexY: indexY,
             indexX: i,
-            limit: previousColumn.limit
+            limit: previousColumnY.limit,
+            color: color
           };
           this.props.addColumn(newColumn);
           this.props.fetchColumns();
@@ -158,7 +179,7 @@ class Create extends React.PureComponent {
     if (content) {
       this.setState({
         content: "",
-        formOpen: false
+        formOpen: false,
       });
 
       if (content.trim().length !== 0) {
@@ -172,10 +193,11 @@ class Create extends React.PureComponent {
     }
   };
 
-  handleAddUser = () => {
+  handleAddUser = async () => {
     const { content, content2 } = this.state;
+    var color = randomColor({ luminosity: "dark" })
 
-    const isNumber = /[0-9]/.test(content2)
+    const isNumber = /[0-9]/.test(content2);
 
     if (content && content2) {
       this.setState({
@@ -188,12 +210,13 @@ class Create extends React.PureComponent {
       if (content.trim().length !== 0 || content2.trim().length !== 0) {
         const newUser = {
           name: content,
+          color: color
         };
 
         for (let i = 1; i <= wipLimit; i++) {
-          this.props.addUser(newUser);
-          this.props.fetchUsers();
+          await this.props.addUser(newUser);
         }
+        this.props.fetchUsers();
       }
     }
   };
@@ -305,18 +328,18 @@ class Create extends React.PureComponent {
         return (
           <Container>
             <ContainerRow>
-            <StyledTextArea
-              style={{ width: "300px" }}
-              rowsMin={1}
-              autoFocus
-              placeholder="Set title..."
-              value={this.content}
-              onChange={(e) =>
-                this.setState({
-                  content: e.target.value,
-                })
-              }
-            />
+              <StyledTextArea
+                style={{ width: "300px" }}
+                rowsMin={1}
+                autoFocus
+                placeholder="Set title..."
+                value={this.content}
+                onChange={(e) =>
+                  this.setState({
+                    content: e.target.value,
+                  })
+                }
+              />
               <Button onClick={this.handleAddSwimlane}>Add a swimlane</Button>
               <CloseIcon onClick={this.closeForm} />
             </ContainerRow>
@@ -368,9 +391,9 @@ class Create extends React.PureComponent {
   }
 }
 
-const mapStateToProps = state => ({
-  columns: state.columns
-})
+const mapStateToProps = (state) => ({
+  columns: state.columns,
+});
 
 const mapDispatchToProps = {
   addTask,
