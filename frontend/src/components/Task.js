@@ -158,7 +158,7 @@ const Task = ({
     config: { duration: 400 },
   });
 
-  const closeForm = (e) => {
+  const closeForm = () => {
     setIsEditing(false);
   };
 
