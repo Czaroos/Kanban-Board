@@ -11,7 +11,7 @@ const StyledButton = styled(ButtonOld)`
 
 const Button = ({ children, onClick }) => {
     return (
-        <StyledButton variant="contained"
+        <StyledButton data-testid="button" variant="contained"
         onMouseDown={onClick}>{children}</StyledButton>
     );
 };

@@ -53,6 +53,7 @@
     "@babel/core": "^7.9.6",
     "@babel/preset-flow": "^7.9.0",
     "jest": "^25.5.4",
+    "jest-dom": "^4.0.0",
     "react-test-render": "^1.1.2"
   },
   "jest": {
