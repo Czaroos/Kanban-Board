@@ -331,6 +331,9 @@ const Column = ({
                   userID={task.userID}
                   priority={task.priority}
                   users={task.users}
+                  progress={task.progress}
+                  color={task.color}
+                  isLocked={task.isLocked}
                 />
               ))}
               {provided.placeholder}

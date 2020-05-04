@@ -2,17 +2,17 @@ const router = require("express").Router();
 const model = require("../models/models");
 const mongoose = require("mongoose");
 
-// ------------------------------- / -------------------------------
+// ------------------------------- /COLUMNS -------------------------------
 
 // Get columns
-router.route("/all").get((req, res) => {
+router.route("/columns").get((req, res) => {
   model.Column.find()
     .then((columns) => res.json(columns))
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
 // Save columns
-router.route("/all").post((req, res) => {
+router.route("/columns").post((req, res) => {
   model.Column.deleteMany({})
     .then(
       () =>
@@ -31,6 +31,9 @@ router.route("/all").post((req, res) => {
               priority: task.priority,
               columnId: task.columnID,
               users: users,
+              progress: task.progress,
+              color: task.color,
+              isLocked: task.isLocked
             });
           });
           newColumn = new model.Column({
@@ -50,8 +53,6 @@ router.route("/all").post((req, res) => {
     )
     .then(() => res.json(newState));
 });
-
-// ------------------------------- /COLUMNS -------------------------------
 
 //Add column
 router.route("/columns/add").post((req, res) => {
@@ -105,6 +106,7 @@ router.route("/tasks/add").post((req, res) => {
     columnId: req.body.columnID,
     users: [],
     priority: req.body.priority,
+    color: req.body.color
   };
 
   model.Column.findById(req.body.columnID)
@@ -140,6 +142,9 @@ router.route("/tasks/:id").put((req, res) => {
     userId: req.body.userID,
     priority: req.body.priority,
     columnId: req.body.columnID,
+    color: req.body.color,
+    progress: req.body.progress,
+    isLocked: req.body.isLocked
   };
 
   model.Column.findById(req.body.columnID)
@@ -153,11 +158,29 @@ router.route("/tasks/:id").put((req, res) => {
 
 // ------------------------------- /USERS -------------------------------
 
-// Fetch users
+// Get users
 router.route("/users").get((req, res) => {
   model.User.find()
     .then((users) => res.json(users))
     .catch((err) => res.status(400).json("Error: " + err));
+});
+
+// Save users
+router.route("/users").post((req, res) => {
+  model.User.deleteMany({})
+    .then(
+      () =>
+        (newState = req.body.map((user) => {
+          newUser = new model.User({
+            _id: user._id,
+            name: user.name,
+            color: user.color,
+          })
+          newUser.save().then({});
+          return newUser;
+        }))
+    )
+    .then(() => res.json(newState));
 });
 
 // Add new user

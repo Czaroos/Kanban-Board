@@ -11,7 +11,10 @@ const taskSchema = Schema({
   content: String,
   columnId: { type: Schema.Types.ObjectId, ref: 'Column' },
   users: [userSchema],
-  priority: { type: String, enum: ['normal', 'high', 'very high'], default: 'normal'}
+  priority: { type: String, enum: ['normal', 'high', 'very high'], default: 'normal'},
+  progress: { type: Number, default: 0},
+  color: Object,
+  isLocked: { type: Boolean, default: false}
 });
 
 const columnSchema = Schema({

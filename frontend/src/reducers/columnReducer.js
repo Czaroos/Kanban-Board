@@ -21,6 +21,9 @@ const columnReducer = (state = initialState, action) => {
             priority: task.priority,
             columnID: task.columnId,
             users: users,
+            color: task.color,
+            progress: task.progress,
+            isLocked: task.isLocked,
           };
           return newTask;
         });
@@ -33,7 +36,7 @@ const columnReducer = (state = initialState, action) => {
           indexX: column.indexX,
           indexY: column.indexY,
           info: column.info,
-          color: column.color
+          color: column.color,
         };
         return newColumn;
       });
@@ -62,7 +65,7 @@ const columnReducer = (state = initialState, action) => {
         indexX: action.payload.indexX,
         indexY: action.payload.indexY,
         info: action.payload.info,
-        color: action.payload.color
+        color: action.payload.color,
       };
       return [...state, newColumn];
 
@@ -74,7 +77,8 @@ const columnReducer = (state = initialState, action) => {
         content: task.content,
         columnID: task.columnId,
         users: [],
-        priority: task.priority
+        priority: task.priority,
+        color: task.color,
       };
 
       const addTaskState = state.map((col) => {
@@ -134,7 +138,9 @@ const columnReducer = (state = initialState, action) => {
         const updatedState = newState.map((column) => {
           let tasks = column.tasks.map((task) => {
             if (task.id === droppableIdEnd) {
-              const userAlreadyAdded = task.users.find(userAlreadyAdded => userAlreadyAdded.name === user.name);
+              const userAlreadyAdded = task.users.find(
+                (userAlreadyAdded) => userAlreadyAdded.name === user.name
+              );
               if (!userAlreadyAdded)
                 return {
                   ...task,
@@ -184,7 +190,16 @@ const columnReducer = (state = initialState, action) => {
       return newState;
 
     case CONSTANTS.EDIT_TASK: {
-      const { _id, content, userId, priority, columnId } = action.payload;
+      const {
+        _id,
+        content,
+        userId,
+        priority,
+        columnId,
+        progress,
+        color,
+        isLocked,
+      } = action.payload;
       return state.map((column) => {
         if (column.id === columnId) {
           const newTasks = column.tasks.map((task) => {
@@ -192,6 +207,9 @@ const columnReducer = (state = initialState, action) => {
               task.content = content;
               task.priority = priority;
               task.userID = userId;
+              task.progress = progress;
+              task.color = color;
+              task.isLocked = isLocked;
               return task;
             } else return task;
           });
@@ -214,11 +232,12 @@ const columnReducer = (state = initialState, action) => {
     }
 
     case CONSTANTS.EDIT_COLUMN: {
-      const { _id, title, limit } = action.payload;
+      const { _id, title, limit, info } = action.payload;
       return state.map((column) => {
         if (column.id === _id) {
           column.title = title;
           column.limit = limit;
+          column.info = info;
           return column;
         } else {
           return column;

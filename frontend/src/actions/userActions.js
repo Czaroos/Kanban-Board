@@ -57,3 +57,20 @@ export function deleteUserByName(name) {
     }))
   }
 }
+
+export function dragStateSaveUsers() {
+  return (dispatch, getState) => {
+    fetch('/users', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(getState().users)
+    })
+      .then(res => res.json())
+      .then(newState => dispatch({
+        type: CONSTANTS.FETCH_USERS,
+        payload: newState
+      }));
+  }
+}

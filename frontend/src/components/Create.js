@@ -90,9 +90,9 @@ class Create extends React.PureComponent {
     radioValue: "normal",
     modalOpened: false,
     color: {
-      r: "241",
-      g: "112",
-      b: "19",
+      r: "99",
+      g: "118",
+      b: "127",
       a: "1",
     },
   };
@@ -143,7 +143,6 @@ class Create extends React.PureComponent {
         let previousColumnX = columns.find(
           (column) => column.indexX === indexX - 1 && column.indexY === 0
         );
-        console.log(previousColumnX);
 
         const newColumn = {
           title: content,
@@ -216,12 +215,10 @@ class Create extends React.PureComponent {
   handleAddTask = () => {
     const { columnID } = this.props;
     const { content, radioValue, color } = this.state;
-    console.log(radioValue);
 
     if (content) {
       this.setState({
         content: "",
-        radioValue: "",
         formOpen: false,
       });
 
@@ -230,7 +227,7 @@ class Create extends React.PureComponent {
           content,
           columnID,
           priority: radioValue,
-          background: color
+          color: color,
         };
 
         this.props.addTask(newTask);
@@ -443,9 +440,11 @@ class Create extends React.PureComponent {
               <div>
                 <div
                   style={{
-                    padding: "5px",
-                    background: "inherit",
-                    borderRadius: "1px",
+                    width: "36px",
+                    height: "14px",
+                    background: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`,
+                    border: "1px solid white",
+                    borderRadius: "2px",
                     boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
                     display: "inline-block",
                     cursor: "pointer",
@@ -455,16 +454,7 @@ class Create extends React.PureComponent {
                       modalOpened: true,
                     });
                   }}
-                >
-                  <div
-                    style={{
-                      width: "36px",
-                      height: "14px",
-                      borderRadius: "2px",
-                      background: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`,
-                    }}
-                  />
-                </div>
+                ></div>
                 <Modal
                   style={{
                     display: "flex",
@@ -480,10 +470,12 @@ class Create extends React.PureComponent {
                   }}
                 >
                   <Fade in={this.state.modalOpened}>
-                    <SketchPicker
-                      color={this.state.color}
-                      onChange={this.handleChange}
-                    />
+                    <div>
+                      <SketchPicker
+                        color={this.state.color}
+                        onChange={this.handleChange}
+                      />
+                    </div>
                   </Fade>
                 </Modal>
               </div>

@@ -15,9 +15,9 @@ import User from "./User";
 import BlockOutlinedIcon from "@material-ui/icons/BlockOutlined";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import LockOpenOutlinedIcon from "@material-ui/icons/LockOpenOutlined";
+import ProgressBar from "./ProgressBar";
 
 const TaskContainer = styled.div`
-  margin: 0 0 8px 0;
   position: relative;
   max-width: 100%;
   word-wrap: break-word;
@@ -28,7 +28,7 @@ const LockOpenIcon = styled(LockOpenOutlinedIcon)`
     position: absolute;
     display: none;
     right: 2px;
-    bottom: 25px;
+    bottom: 50px;
     opacity: 0.5;
     ${TaskContainer}:hover & {
       display: block;
@@ -42,11 +42,11 @@ const LockOpenIcon = styled(LockOpenOutlinedIcon)`
 
 const BlockIcon = styled(BlockOutlinedIcon)`
   && {
-    font-size: 5.1rem;
+    font-size: 5rem;
     opacity: 0.8;
     position: absolute;
     right: 115px;
-    top: -3px;
+    top: -4px;
   }
 `;
 
@@ -55,7 +55,7 @@ const LockIcon = styled(LockOutlinedIcon)`
     position: absolute;
     display: none;
     right: 2px;
-    bottom: 25px;
+    bottom: 50px;
     opacity: 0.5;
     ${TaskContainer}:hover & {
       display: block;
@@ -108,7 +108,7 @@ const DeleteButton = styled(Icon)`
   position: absolute;
   display: none;
   right: 2px;
-  bottom: 1px;
+  bottom: 26px;
   opacity: 0.5;
   ${TaskContainer}:hover & {
     display: block;
@@ -147,10 +147,14 @@ const Task = ({
   index,
   dispatch,
   users,
+  progress,
+  color,
+  isLocked,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [taskContent, setTaskContent] = useState(content);
-  const [isLocked, setIsLocked] = useState(false);
+  const [isLockedBool, setIsLocked] = useState(isLocked);
+  const [progressValue, setProgress] = useState(progress);
 
   const props = useSpring({
     opacity: 1,
@@ -175,6 +179,9 @@ const Task = ({
         columnID,
         userID,
         priority,
+        progress,
+        color,
+        isLocked,
       };
       dispatch(editTask(task));
     }
@@ -217,7 +224,7 @@ const Task = ({
   const renderTask = () => {
     return (
       <animated.div style={props}>
-        {isLocked ? (
+        {isLockedBool ? (
           <Draggable draggableId={id} index={index} isDragDisabled={true}>
             {(provided) => (
               <TaskContainer
@@ -231,9 +238,10 @@ const Task = ({
                     opacity: 0.3,
                     borderTop: "2px solid red",
                     cursor: "auto",
+                    backgroundColor: `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`,
                   }}
                 >
-                   {priority === "normal" ? (
+                  {priority === "normal" ? (
                     <HighPriorityIcon style={{ fontSize: "1.4rem" }} />
                   ) : priority === "high" ? (
                     <HighPriorityIcon
@@ -241,13 +249,27 @@ const Task = ({
                     />
                   ) : (
                     <HighPriorityIcon
-                      style={{ color: "red", fontSize: "2rem"}}
+                      style={{ color: "red", fontSize: "2rem" }}
                     />
                   )}
                   <BlockIcon />
                   <LockOpenIcon
                     fontSize="small"
-                    onClick={() => setIsLocked(false)}
+                    onClick={() => {
+                      setIsLocked(false);
+                      dispatch(
+                        editTask({
+                          id,
+                          content,
+                          columnID,
+                          userID,
+                          priority,
+                          progress,
+                          color,
+                          isLocked: false,
+                        })
+                      );
+                    }}
                   />
                   <EditButton
                     fontSize="small"
@@ -286,6 +308,25 @@ const Task = ({
                     )}
                   </Droppable>
                 </StyledTask>
+                <ProgressBar
+                  disabled={true}
+                  defaultValue={progress}
+                  value={progressValue}
+                  onChange={(e, newValue) => {
+                    setProgress(newValue);
+                    dispatch(
+                      editTask({
+                        id,
+                        content,
+                        columnID,
+                        userID,
+                        priority,
+                        progress: newValue,
+                        color,
+                      })
+                    );
+                  }}
+                />
               </TaskContainer>
             )}
           </Draggable>
@@ -298,7 +339,11 @@ const Task = ({
                 ref={provided.innerRef}
                 onDoubleClick={() => setIsEditing(true)}
               >
-                <StyledTask>
+                <StyledTask
+                  style={{
+                    backgroundColor: `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`,
+                  }}
+                >
                   {priority === "normal" ? (
                     <HighPriorityIcon style={{ fontSize: "1.4rem" }} />
                   ) : priority === "high" ? (
@@ -312,7 +357,21 @@ const Task = ({
                   )}
                   <LockIcon
                     fontSize="small"
-                    onClick={() => setIsLocked(true)}
+                    onClick={() => {
+                      setIsLocked(true);
+                      dispatch(
+                        editTask({
+                          id,
+                          content,
+                          columnID,
+                          userID,
+                          priority,
+                          progress,
+                          color,
+                          isLocked: true,
+                        })
+                      );
+                    }}
                   />
                   <EditButton
                     fontSize="small"
@@ -351,6 +410,24 @@ const Task = ({
                     )}
                   </Droppable>
                 </StyledTask>
+                <ProgressBar
+                  defaultValue={progress}
+                  value={progressValue}
+                  onChange={(e, newValue) => {
+                    setProgress(newValue);
+                    dispatch(
+                      editTask({
+                        id,
+                        content,
+                        columnID,
+                        userID,
+                        priority,
+                        progress: newValue,
+                        color,
+                      })
+                    );
+                  }}
+                />
               </TaskContainer>
             )}
           </Draggable>
