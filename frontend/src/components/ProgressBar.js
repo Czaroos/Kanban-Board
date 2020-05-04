@@ -4,12 +4,10 @@ import { withStyles } from "@material-ui/core/styles";
 
 const ProgressSlider = withStyles({
   root: {
-    width: 290,
+    width: 293,
     height: 8,
     color: "#304149",
     marginBottom: 8,
-    marginLeft: 2,
-    marginRight: 2,
     padding: 2,
     opacity: 0.9,
   },
