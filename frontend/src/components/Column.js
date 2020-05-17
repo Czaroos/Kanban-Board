@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Task from "./Task";
-import Create from "./Create";
+import TaskForm from "./TaskForm";
 import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { connect } from "react-redux";
@@ -337,7 +337,7 @@ const Column = ({
                 />
               ))}
               {provided.placeholder}
-              <Create columnID={id} />
+              <TaskForm columnID={id} />
             </div>
           )}
         </Droppable>

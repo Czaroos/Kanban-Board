@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import Icon from "@material-ui/core/Icon";
-import Form from "./Form";
 import { editTask, deleteTask } from "../actions";
 import { connect } from "react-redux";
-import Button from "./Button";
 import { confirmAlert } from "react-confirm-alert";
 import "./styles/react-confirm-alert.css";
 import { useSpring, animated } from "react-spring";
@@ -16,6 +14,7 @@ import BlockOutlinedIcon from "@material-ui/icons/BlockOutlined";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import LockOpenOutlinedIcon from "@material-ui/icons/LockOpenOutlined";
 import ProgressBar from "./ProgressBar";
+import TaskForm from "./TaskForm";
 
 const TaskContainer = styled.div`
   position: relative;
@@ -142,7 +141,6 @@ const Task = ({
   content,
   id,
   columnID,
-  userID,
   priority,
   index,
   dispatch,
@@ -152,7 +150,6 @@ const Task = ({
   isLocked,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [taskContent, setTaskContent] = useState(content);
   const [isLockedBool, setIsLocked] = useState(isLocked);
   const [progressValue, setProgress] = useState(progress);
 
@@ -163,28 +160,6 @@ const Task = ({
   });
 
   const closeForm = () => {
-    setIsEditing(false);
-  };
-
-  const handleChange = (e) => {
-    setTaskContent(e.target.value);
-  };
-
-  const saveTask = (e) => {
-    e.preventDefault();
-    if (taskContent.trim().length !== 0) {
-      const task = {
-        id,
-        content: taskContent,
-        columnID,
-        userID,
-        priority,
-        progress,
-        color,
-        isLocked,
-      };
-      dispatch(editTask(task));
-    }
     setIsEditing(false);
   };
 
@@ -215,9 +190,17 @@ const Task = ({
 
   const renderEditForm = () => {
     return (
-      <Form content={taskContent} onChange={handleChange} closeForm={closeForm}>
-        <Button onClick={saveTask}>Save</Button>
-      </Form>
+      <TaskForm
+        taskID={id}
+        isEditing={true}
+        taskPriority={priority}
+        taskColor={color}
+        taskContent={content}
+        taskUsers={users}
+        isLocked={isLocked}
+        columnID={columnID}
+        closeForm={closeForm}
+      />
     );
   };
 
@@ -262,7 +245,7 @@ const Task = ({
                           id,
                           content,
                           columnID,
-                          userID,
+                          users,
                           priority,
                           progress,
                           color,
@@ -319,7 +302,7 @@ const Task = ({
                         id,
                         content,
                         columnID,
-                        userID,
+                        users,
                         priority,
                         progress: newValue,
                         color,
@@ -364,7 +347,7 @@ const Task = ({
                           id,
                           content,
                           columnID,
-                          userID,
+                          users,
                           priority,
                           progress,
                           color,
@@ -420,7 +403,7 @@ const Task = ({
                         id,
                         content,
                         columnID,
-                        userID,
+                        users,
                         priority,
                         progress: newValue,
                         color,

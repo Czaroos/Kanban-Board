@@ -139,7 +139,6 @@ router.route("/tasks/:id").put((req, res) => {
   changedTask = {
     _id: req.params.id,
     content: req.body.content,
-    userId: req.body.userID,
     priority: req.body.priority,
     columnId: req.body.columnID,
     color: req.body.color,

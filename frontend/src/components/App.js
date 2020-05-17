@@ -19,6 +19,7 @@ const FirstRow = styled.div`
   flex-direction: row;
 `;
 
+
 class App extends PureComponent {
   componentDidMount() {
     this.props.fetchColumns();
@@ -83,7 +84,6 @@ class App extends PureComponent {
     return swimlaneNames.sort((a, b) => (a.indexY > b.indexY ? 1 : 0));
   };
 
-  //todo: kolor zapisuje sie do bazy ????
   render() {
     const { columns, users } = this.props;
     return (

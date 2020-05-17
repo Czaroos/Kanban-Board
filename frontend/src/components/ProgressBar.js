@@ -10,6 +10,9 @@ const ProgressSlider = withStyles({
     marginBottom: 8,
     padding: 2,
     opacity: 0.9,
+    "&:hover": {
+      opacity: 1
+    },
   },
   thumb: {
     height: 8,
