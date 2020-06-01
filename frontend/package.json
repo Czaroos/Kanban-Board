@@ -33,7 +33,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "jest",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress": "cypress open"
   },
   "proxy": "http://localhost:5000",
   "eslintConfig": {
@@ -52,10 +53,14 @@
     ]
   },
   "devDependencies": {
+    "@4tw/cypress-drag-drop": "^1.3.1",
     "@babel/core": "^7.9.6",
     "@babel/preset-flow": "^7.9.0",
+    "cypress": "^4.5.0",
+    "enzyme-to-json": "^3.4.4",
     "jest-dom": "^4.0.0",
-    "react-test-render": "^1.1.2"
+    "react-test-render": "^1.1.2",
+    "redux-mock-store": "^1.5.4"
   },
   "jest": {
     "verbose": true,

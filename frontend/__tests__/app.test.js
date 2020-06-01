@@ -1,17 +1,13 @@
-import React from 'react';
-import Column from './../src/components/Column'
-import ReactDOM from 'react-dom'
-
-import { shallow } from "enzyme";
+import React  from 'react';
+import { shallow, mount } from "enzyme";
+import App from './../src/components/App'
 import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
-import toJSON from 'enzyme-to-json';
-import { render, cleanup } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect';
-
+import { cleanup } from '@testing-library/react';
+import Navbar from '../src/components/Navbar';
 
 const mockStore = configureMockStore();
-const store = mockStore({
+const fullStore = mockStore({
     columns: [
       {
         id: '5eb0442737ea5c2d3c1d5d2f',
@@ -154,24 +150,43 @@ const store = mockStore({
         color: '#0c9b2d'
       }]
   });
+const emptyStore = mockStore({
+    columns: [],
+    users: [],
+})
+afterEach(cleanup)
 
-afterEach(cleanup);
-
-it("render without crashing", ()=>{
+it("render without crashing with full store", ()=>{
     expect(
         shallow(
-            <Provider store={store}>
-                <Column></Column>
+            <Provider store={fullStore}>
+                <App></App>
             </Provider>
         )
     )
 })
-
-it("matches snapshot", () => {
- const wrapper =   shallow(
-    <Provider store={store}>
-        <Column></Column>
-    </Provider>
-);
-expect(toJSON(wrapper)).toMatchSnapshot();
+it("render without crashing with empty store", ()=>{
+    const wrap = shallow(
+      <Provider store={emptyStore}>
+          <App></App>
+      </Provider>
+    )
+    expect(
+      wrap.containsMatchingElement(
+        <Navbar users={""}></Navbar>
+      )
+    ).toBeFalsy()
 })
+it("render without crashing with empty store", ()=>{
+  const wrap = shallow(
+    <Provider store={emptyStore}>
+        <App></App>
+    </Provider>
+  )
+  expect(
+    wrap.containsMatchingElement(
+      <App></App>
+    )
+  ).toBeTruthy()
+})
+
