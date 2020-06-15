@@ -135,8 +135,6 @@ class TaskForm extends React.PureComponent {
     const { taskID, columnID, taskUsers, isLocked } = this.props;
     const { content, priorityRadioValue, color } = this.state;
 
-    console.log(content, priorityRadioValue, color)
-
       if (content.trim().length !== 0) {
         const editedTask = {
           id: taskID,

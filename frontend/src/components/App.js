@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import Create from "./Create";
+import ColumnForm from "./ColumnForm";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { sort } from "../actions";
 import styled from "styled-components";
@@ -92,13 +93,12 @@ class App extends PureComponent {
         <FirstRow key={0}>
           <Swimlane indexY={0} key={0} color={randomColor()} />
           {columns.length > 0 ? (
-            <Create
-              type={"isColumn"}
+            <ColumnForm
               indexX={this.getHighestIndexX()}
               swimlanesNames={this.getSwimlanesNames()}
             />
           ) : (
-            <Create type={"isColumn"} indexX={0} noColumns />
+            <ColumnForm indexX={0} noColumns />
           )}
         </FirstRow>
         <Droppable droppableId="swimlanes" type="swimlane">

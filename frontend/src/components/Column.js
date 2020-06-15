@@ -18,6 +18,7 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 const InfoIcon = styled(InfoOutlinedIcon)`
   margin-left: 10px;
   opacity: 0.5;
+  cursor: text;
   &:hover {
     opacity: 0.8;
   }
@@ -59,6 +60,19 @@ const StyledInputTitle = styled.input`
   margin-left: 23px;
   font-size: 1.4rem;
   text-align: center;
+  padding: 5px;
+  color: white;
+`;
+
+const StyledInputInfo = styled.input`
+  width: 80%;
+  background-color: inherit;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid #03a8f45e;
+  margin-bottom: 5px;
+  margin-right: 23px;
+  font-size: 0.8rem;
   padding: 5px;
   color: white;
 `;
@@ -131,19 +145,28 @@ const Column = ({
   dispatch,
   columns,
   info,
-  color
+  color,
 }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingLimit, setIsEditingLimit] = useState(false);
+  const [isEditingInfo, setIsEditingInfo] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
-  const renderEditInput = (value) => {
+  const renderEditInput = () => {
     return isEditingTitle ? (
       <form onSubmit={handleFinishEditing}>
         <StyledInputTitle
-          type="text"
           onChange={handleChange}
-          value={value}
+          autoFocus
+          placeholder={title}
+          onFocus={handleFocus}
+          onBlur={closeForm}
+        />
+      </form>
+    ) : isEditingLimit ? (
+      <form onSubmit={handleFinishEditing}>
+        <StyledInputLimit
+          onChange={handleChange}
           autoFocus
           onFocus={handleFocus}
           onBlur={closeForm}
@@ -151,11 +174,11 @@ const Column = ({
       </form>
     ) : (
       <form onSubmit={handleFinishEditing}>
-        <StyledInputLimit
-          type="text"
+        <StyledInputInfo
+          style={{ width: "285px" }}
           onChange={handleChange}
-          value={value}
           autoFocus
+          placeholder={info}
           onFocus={handleFocus}
           onBlur={closeForm}
         />
@@ -166,6 +189,7 @@ const Column = ({
   const closeForm = () => {
     setIsEditingTitle(false);
     setIsEditingLimit(false);
+    setIsEditingInfo(false);
   };
 
   const handleFocus = (e) => {
@@ -176,6 +200,7 @@ const Column = ({
     e.preventDefault();
     if (isEditingTitle) title = e.target.value;
     if (isEditingLimit) limit = e.target.value;
+    if (isEditingInfo) info = e.target.value;
   };
 
   const handleFinishEditing = () => {
@@ -187,13 +212,14 @@ const Column = ({
 
     setIsEditingTitle(false);
     setIsEditingLimit(false);
+    setIsEditingInfo(false);
 
     if (title.trim().length !== 0) {
       const column = {
         id,
         title: title,
         limit: validatedColumnLimit,
-        info,
+        info: info,
         tasks,
         index,
         indexX,
@@ -267,82 +293,81 @@ const Column = ({
 
   return (
     <div>
-    <Line style={{ backgroundColor: color }} />
-    <ColumnContainer>
-      {isEditingTitle || isEditingLimit ? (
-        renderEditInput()
-      ) : (
-        <TitleContainer>
-          {indexY === 0 || indexX === 0 ? null : (
-            <Limit onClick={() => setIsEditingLimit(true)}>
-              {limit <= -9999 ? (
-                <AllInclusiveIcon />
-              ) : limit <= 0 ? (
-                <LimitError />
-              ) : (
-                limit
-              )}
-            </Limit>
-          )}
+      <Line style={{ backgroundColor: color }} />
+      <ColumnContainer>
+        {isEditingTitle || isEditingLimit || isEditingInfo ? (
+          renderEditInput()
+        ) : (
+          <TitleContainer>
+            {indexY === 0 || indexX === 0 ? null : (
+              <Limit onClick={() => setIsEditingLimit(true)}>
+                {limit <= -9999 ? (
+                  <AllInclusiveIcon />
+                ) : limit <= 0 ? (
+                  <LimitError />
+                ) : (
+                  limit
+                )}
+              </Limit>
+            )}
 
-          {indexY > 0 && indexX > 0 ? null : (
-            <ColumnTitle onClick={() => setIsEditingTitle(true)}>
-              {title}
-            </ColumnTitle>
-          )}
+            {indexY > 0 && indexX > 0 ? null : (
+              <ColumnTitle onClick={() => setIsEditingTitle(true)}>
+                {title}
+              </ColumnTitle>
+            )}
 
-          {indexY === 0 && indexX > 0 ? (
-            <Tooltip title={info} interactive arrow>
-              <InfoIcon />
-            </Tooltip>
-          ) : null}
+            {indexY === 0 && indexX > 0 ? (
+              <Tooltip title={info} interactive arrow>
+                <InfoIcon onClick={() => setIsEditingInfo(true)} />
+              </Tooltip>
+            ) : null}
 
-          {(indexY > 0 && indexX > 0) ||
-          (indexX === 0 && indexY === 0) ? null : indexY === 0 ? (
-            <DeleteButton onClick={submitColumnDelete}>delete</DeleteButton>
-          ) : (
-            <DeleteButton onClick={submitSwimlaneDelete}>delete</DeleteButton>
-          )}
+            {(indexY > 0 && indexX > 0) ||
+            (indexX === 0 && indexY === 0) ? null : indexY === 0 ? (
+              <DeleteButton onClick={submitColumnDelete}>delete</DeleteButton>
+            ) : (
+              <DeleteButton onClick={submitSwimlaneDelete}>delete</DeleteButton>
+            )}
 
-          {indexY === 0 || indexX === 0 ? null : isVisible ? (
-            <VisibilityIcon
-              style={{ cursor: "pointer" }}
-              onClick={() => setIsVisible(false)}
-            />
-          ) : (
-            <VisibilityOffIcon
-              style={{ cursor: "pointer" }}
-              onClick={() => setIsVisible(true)}
-            />
-          )}
-        </TitleContainer>
-      )}
-      {indexY === 0 || indexX === 0 ? null : isVisible ? (
-        <Droppable droppableId={id}>
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
-              {tasks.map((task, index) => (
-                <Task
-                  id={task.id}
-                  index={index}
-                  key={task.id}
-                  content={task.content}
-                  columnID={task.columnID}
-                  userID={task.userID}
-                  priority={task.priority}
-                  users={task.users}
-                  progress={task.progress}
-                  color={task.color}
-                  isLocked={task.isLocked}
-                />
-              ))}
-              {provided.placeholder}
-              <TaskForm columnID={id} />
-            </div>
-          )}
-        </Droppable>
-      ) : null}
-    </ColumnContainer>
+            {indexY === 0 || indexX === 0 ? null : isVisible ? (
+              <VisibilityIcon
+                style={{ cursor: "pointer" }}
+                onClick={() => setIsVisible(false)}
+              />
+            ) : (
+              <VisibilityOffIcon
+                style={{ cursor: "pointer" }}
+                onClick={() => setIsVisible(true)}
+              />
+            )}
+          </TitleContainer>
+        )}
+        {indexY === 0 || indexX === 0 ? null : isVisible ? (
+          <Droppable droppableId={id}>
+            {(provided) => (
+              <div {...provided.droppableProps} ref={provided.innerRef}>
+                {tasks.map((task, index) => (
+                  <Task
+                    id={task.id}
+                    index={index}
+                    key={task.id}
+                    content={task.content}
+                    columnID={task.columnID}
+                    priority={task.priority}
+                    users={task.users}
+                    progress={task.progress}
+                    color={task.color}
+                    isLocked={task.isLocked}
+                  />
+                ))}
+                {provided.placeholder}
+                <TaskForm columnID={id} />
+              </div>
+            )}
+          </Droppable>
+        ) : null}
+      </ColumnContainer>
     </div>
   );
 };
