@@ -43,7 +43,7 @@ const SmallCloseIcon = styled(CloseIcon)`
   }
 `;
 
-const User = ({ _id, name, index, color, isDragDisabled, dispatch, columns, droppableId}) => {
+const User = ({ _id, name, index, color, isDragDisabled, dispatch, columns, droppableId, users}) => {
 
   const handleDeleteUserByID = () => {
     dispatch(deleteUser(_id));
@@ -104,6 +104,10 @@ const User = ({ _id, name, index, color, isDragDisabled, dispatch, columns, drop
     });
   };
 
+  const countUsersLeft = () => {
+    return ' +' + users.filter(user => user.name === name).length
+  }
+
   return (
     <Draggable draggableId={_id} droppableId={droppableId} index={index} type="user" isDragDisabled={isDragDisabled}>
       {(provided) => (
@@ -114,7 +118,7 @@ const User = ({ _id, name, index, color, isDragDisabled, dispatch, columns, drop
         >
             <UserBox>
             <SmallCloseIcon onClick={droppableId === "users" ? submitDeleteUserByName : submitDeleteUserByID}/>
-            <Tooltip title={name} arrow>
+            <Tooltip title={name + countUsersLeft()} arrow>
           <SmallAvatar style={{ backgroundColor: color }}>
             {name[0].toUpperCase()}
           </SmallAvatar>
@@ -127,7 +131,8 @@ const User = ({ _id, name, index, color, isDragDisabled, dispatch, columns, drop
 };
 
 const mapStateToProps = state => ({
-  columns: state.columns
+  columns: state.columns,
+  users: state.users
 })
 
 export default connect(mapStateToProps)(User);

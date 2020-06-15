@@ -154,20 +154,17 @@ class ColumnForm extends React.PureComponent {
           style={{ width: "300px" }}
           autoFocus
           placeholder="Set title..."
-          value={this.state.title}
           onChange={(e) => this.handleTitleChange(e)}
         />
         <StyledTextArea
           style={{ width: "300px" }}
           placeholder="Set info..."
-          value={this.state.info}
           onChange={(e) => this.handleInfoChange(e)}
         />
         <ContainerRow>
           <StyledTextArea
             style={{ width: "90px" }}
             placeholder="Set limit..."
-            value={this.state.limit}
             onChange={(e) => this.handleLimitChange(e)}
           />
           <Button onClick={this.handleAddColumn}>Add a column</Button>
