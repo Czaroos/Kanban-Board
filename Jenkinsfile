@@ -10,9 +10,13 @@ pipeline {
             steps {
                 echo 'Backend build'
                 sh 'cd backend && npm install'
-                sh 'pwd'
                 echo 'Frontend build'
                 sh 'cd frontend && npm install'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'cd frontend && npm test ./__tests__'
             }
         }
     }
