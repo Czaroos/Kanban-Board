@@ -29,7 +29,8 @@ pipeline {
             }
         }
         stage('Deploy Frontend'){
-            agent any {
+            agent any 
+            steps {
                 sh 'docker login --username $DOCKER_USR --password $DOCKER_PSW'
                 echo 'Docker build & publish frontend'
                 sh 'cd frontend && docker build -t michalzdev/kanbak_production_frontend:latest .'
