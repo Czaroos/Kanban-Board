@@ -20,7 +20,7 @@ pipeline {
             }
         }
         stage('Deploy') {
-            agent { any }
+            agent any 
             steps {
                 sh 'docker login --username $DOCKER_USR --password $DOCKER_PSW'
                 echo 'Docker build & publish backend'
