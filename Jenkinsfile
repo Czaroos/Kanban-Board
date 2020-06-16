@@ -12,7 +12,7 @@ pipeline {
                 sh 'cd backend && npm install'
                 sh 'pwd'
                 echo 'Frontend build'
-                sh 'cd fronend && npm install'
+                sh 'cd frontend && npm install'
             }
         }
     }
