@@ -2,14 +2,10 @@ pipeline {
     environment {
       DOCKER = credentials('docker-hub')
     }
-    agent {
-        docker {
-            image 'node:12'
-            args '-p 5000:5000'
-        }
-    }
+    agent none
     stages {
         stage('Build') {
+            agent { docker 'node:12'}
             steps {
                 echo 'Backend build'
                 sh 'cd backend && npm install'
@@ -18,11 +14,13 @@ pipeline {
             }
         }
         stage('Test') {
+            agent { docker 'node:12'}
             steps {
                 sh 'cd frontend && npm test ./__tests__'
             }
         }
         stage('Deploy') {
+            agent { any }
             steps {
                 sh 'docker login --username $DOCKER_USR --password $DOCKER_PSW'
                 echo 'Docker build & publish backend'
