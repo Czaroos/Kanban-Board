@@ -4,16 +4,12 @@ services:
     image: michalzdev/kanbak_production_backend:latest
     ports:
       - "5000:5000"
-    volumes:
-      - ./backend:/usr/src/app/backend
     container_name: kanbak_production_backend
   frontend:
     stdin_open: true
     image: michalzdev/kanbak_production_frontend:latest
     ports:
       - "3000:3000"
-    volumes:
-      - ./frontend:/usr/src/app/frontend
     container_name: kanbak_production_frontend
     depends_on:
       - backend
