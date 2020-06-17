@@ -1,4 +1,4 @@
-version: "3"
+version: "2"
 services:
   backend:
     image: michalzdev/kanbak_production_backend:latest
