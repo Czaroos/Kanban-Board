@@ -24,6 +24,7 @@ pipeline {
             agent any 
             steps {
                 sh 'docker login --username $DOCKER_USR --password $DOCKER_PSW'
+                sh 'docker system prune -af'
                 echo 'Docker build & publish backend'
                 sh 'cd backend && docker build -t michalzdev/kanbak_production_backend:latest .'
                 sh 'docker push michalzdev/kanbak_production_backend:latest'
@@ -33,6 +34,7 @@ pipeline {
             agent any 
             steps {
                 sh 'docker login --username $DOCKER_USR --password $DOCKER_PSW'
+                sh 'docker system prune -af'
                 echo 'Docker build & publish frontend'
                 sh 'cd frontend && docker build -t michalzdev/kanbak_production_frontend:latest .'
                 sh 'docker push michalzdev/kanbak_production_frontend:latest'
@@ -41,7 +43,8 @@ pipeline {
         stage('Deploy'){
             agent any
             steps {
-                sh 'bash ./deploy.sh'
+                sh 'export COMPOSE_TLS_VERSION=TLSv1_2 && bash ./deploy.sh'
+                sh 'docker ps'
             }
         }
     }
