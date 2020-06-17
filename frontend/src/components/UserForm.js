@@ -81,8 +81,10 @@ class UserForm extends React.PureComponent {
     const { name, limit } = this.state;
     const { users } = this.props;
 
-    const alreadyAddedUser = users.find(user => name === user.name)
-    var color = alreadyAddedUser ? alreadyAddedUser.color : randomColor({ luminosity: "dark" });
+    const alreadyAddedUser = users.find((user) => name === user.name);
+    var color = alreadyAddedUser
+      ? alreadyAddedUser.color
+      : randomColor({ luminosity: "dark" });
 
     const isNumber = /[0-9]/.test(limit);
 
@@ -132,7 +134,7 @@ class UserForm extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => ({
-  users: state.users
+  users: state.users,
 });
 
 const mapDispatchToProps = {

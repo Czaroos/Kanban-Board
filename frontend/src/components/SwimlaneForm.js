@@ -75,7 +75,7 @@ class SwimlaneForm extends React.PureComponent {
     });
   };
 
-  handleAddSwimlane = () => {
+  handleAddSwimlane = async () => {
     const { title } = this.state;
     const { indexX, indexY, columns } = this.props;
     var color = randomColor({ luminosity: "light" });
@@ -100,7 +100,7 @@ class SwimlaneForm extends React.PureComponent {
             color: color,
           };
 
-          this.props.addColumn(newColumn);
+          await this.props.addColumn(newColumn);
           this.props.fetchColumns();
         }
       }

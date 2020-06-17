@@ -108,14 +108,40 @@ const columnReducer = (state = initialState, action) => {
 
       // dragging swimlanes around (index swap)
       if (type === "swimlane") {
+        let indecesToChange = droppableIndexStart - droppableIndexEnd; // negative number = decrement other columns // positive number = increment other columns
         newState.map((column) => {
           if (column.indexY === droppableIndexStart) {
             column.indexY = droppableIndexEnd;
             return column;
-          } else if (column.indexY === droppableIndexEnd) {
-            column.indexY = droppableIndexStart;
-            return column;
-          } else return column;
+          } else if (indecesToChange > 1) {
+            let indecesArray = [];
+            for (let i = droppableIndexStart - 1; i >= droppableIndexEnd; i--) {
+              indecesArray.push(i);
+            }
+            indecesArray.map((el) => {
+              if (column.indexY === el) {
+                column.indexY++;
+                return column;
+              } else return column;
+            });
+          } else if (indecesToChange < -1) {
+            let indecesArray = [];
+            for (let i = droppableIndexStart + 1; i <= droppableIndexEnd; i++) {
+              indecesArray.push(i);
+            }
+            indecesArray.map((el) => {
+              if (column.indexY === el) {
+                column.indexY--;
+                return column;
+              } else return column;
+            });
+          } else if (indecesToChange === -1 || indecesToChange === 1) {
+            if (column.indexY === droppableIndexEnd) {
+              column.indexY = droppableIndexStart;
+              return column;
+            } else return column;
+          }
+          return column;
         });
         const highestIndexY =
           newState.filter((column) => column.indexX === 0).length - 1;
