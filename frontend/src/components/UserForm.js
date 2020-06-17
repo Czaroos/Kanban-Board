@@ -121,7 +121,7 @@ class UserForm extends React.PureComponent {
         />
         <StyledTextArea
           style={{ width: "90px" }}
-          placeholder="Set limit (max 30)..."
+          placeholder="Set limit..."
           onChange={(e) => this.handleLimitChange(e)}
         />
         <Button onClick={this.handleAddUser}>Add a user</Button>
