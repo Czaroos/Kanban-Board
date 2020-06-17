@@ -1,13 +1,19 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
-import Create from "./Create";
+import SwimlaneForm from "./SwimlaneForm";
 import ColumnForm from "./ColumnForm";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { sort } from "../actions";
 import styled from "styled-components";
-import { fetchColumns, dragStateSave, fetchUsers, deleteUser, dragStateSaveUsers } from "../actions/";
+import {
+  fetchColumns,
+  dragStateSave,
+  fetchUsers,
+  deleteUser,
+  dragStateSaveUsers,
+} from "../actions/";
 import Swimlane from "./Swimlane";
-import Navbar from './Navbar';
+import Navbar from "./Navbar";
 var randomColor = require("randomcolor");
 
 const ColumnsContainerColumn = styled.div`
@@ -19,7 +25,6 @@ const FirstRow = styled.div`
   display: flex;
   flex-direction: row;
 `;
-
 
 class App extends PureComponent {
   componentDidMount() {
@@ -89,7 +94,7 @@ class App extends PureComponent {
     const { columns, users } = this.props;
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <Navbar users={users}/>
+        <Navbar users={users} />
         <FirstRow key={0}>
           <Swimlane indexY={0} key={0} color={randomColor()} />
           {columns.length > 0 ? (
@@ -119,8 +124,7 @@ class App extends PureComponent {
                 )}
                 {provided.placeholder}
                 {columns.length > 0 ? (
-                  <Create
-                    type={"isSwimlane"}
+                  <SwimlaneForm
                     indexY={this.getHighestIndexY()}
                     indexX={this.getHighestIndexX()}
                   />
@@ -136,9 +140,16 @@ class App extends PureComponent {
 
 const mapStateToProps = (state) => ({
   columns: state.columns,
-  users: state.users
+  users: state.users,
 });
 
-const mapDispatchToProps = { fetchColumns, sort, dragStateSave, fetchUsers, deleteUser, dragStateSaveUsers };
+const mapDispatchToProps = {
+  fetchColumns,
+  sort,
+  dragStateSave,
+  fetchUsers,
+  deleteUser,
+  dragStateSaveUsers,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

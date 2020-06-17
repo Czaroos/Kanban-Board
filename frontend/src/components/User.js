@@ -118,7 +118,7 @@ const User = ({ _id, name, index, color, isDragDisabled, dispatch, columns, drop
         >
             <UserBox>
             <SmallCloseIcon onClick={droppableId === "users" ? submitDeleteUserByName : submitDeleteUserByID}/>
-            <Tooltip title={name + countUsersLeft()} arrow>
+            <Tooltip title={droppableId === "users" ? name + countUsersLeft() : name} arrow>
           <SmallAvatar style={{ backgroundColor: color }}>
             {name[0].toUpperCase()}
           </SmallAvatar>
