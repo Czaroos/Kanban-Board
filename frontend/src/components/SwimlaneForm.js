@@ -122,7 +122,7 @@ class SwimlaneForm extends React.PureComponent {
         </ContainerRow>
       </Container>
     ) : (
-      <OpenForm onClick={() => this.handleOpenForm()}>Add a swimlane</OpenForm>
+      <OpenForm onClick={this.handleOpenForm}>Add a swimlane</OpenForm>
     );
   }
 }

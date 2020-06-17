@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import User from "./User";
 import { Droppable } from "react-beautiful-dnd";
-import Create from './Create';
+import UserForm from "./UserForm";
 import * as _ from "lodash";
 
 const Container = styled.div`
@@ -13,7 +13,6 @@ const Container = styled.div`
   margin-bottom: 20px;
 `;
 
-// when creating a user remember to always create it 'userLimit' times
 const Navbar = ({ users }) => {
   const uniqueUsers = _.uniqBy(users, "name");
 
@@ -32,7 +31,7 @@ const Navbar = ({ users }) => {
             />
           ))}
           {provided.placeholder}
-        <Create type="isUser"/>
+          <UserForm />
         </Container>
       )}
     </Droppable>
