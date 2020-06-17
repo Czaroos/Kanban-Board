@@ -1,4 +1,5 @@
 pipeline {
+
     environment {
       DOCKER = credentials('docker-hub')
     }
@@ -19,7 +20,7 @@ pipeline {
                 sh 'cd frontend && npm test ./__tests__'
             }
         }
-        stage('Deploy Backend') {
+        stage('Publish Backend') {
             agent any 
             steps {
                 sh 'docker login --username $DOCKER_USR --password $DOCKER_PSW'
@@ -28,13 +29,19 @@ pipeline {
                 sh 'docker push michalzdev/kanbak_production_backend:latest'
             }
         }
-        stage('Deploy Frontend'){
+        stage('Publish Frontend'){
             agent any 
             steps {
                 sh 'docker login --username $DOCKER_USR --password $DOCKER_PSW'
                 echo 'Docker build & publish frontend'
                 sh 'cd frontend && docker build -t michalzdev/kanbak_production_frontend:latest .'
                 sh 'docker push michalzdev/kanbak_production_frontend:latest'
+            }
+        }
+        stage('Deploy'){
+            agent any
+            steps {
+                sh 'docker-compose up'
             }
         }
     }
