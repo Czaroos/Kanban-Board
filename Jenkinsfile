@@ -41,7 +41,7 @@ pipeline {
         stage('Deploy'){
             agent any
             steps {
-                sh './deploy.sh'
+                sh 'sudo ./deploy.sh'
             }
         }
     }
