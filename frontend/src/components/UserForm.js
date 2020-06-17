@@ -79,7 +79,10 @@ class UserForm extends React.PureComponent {
 
   handleAddUser = async () => {
     const { name, limit } = this.state;
-    var color = randomColor({ luminosity: "dark" });
+    const { users } = this.props;
+
+    const alreadyAddedUser = users.find(user => name === user.name)
+    var color = alreadyAddedUser ? alreadyAddedUser.color : randomColor({ luminosity: "dark" });
 
     const isNumber = /[0-9]/.test(limit);
 
@@ -90,10 +93,10 @@ class UserForm extends React.PureComponent {
         formOpen: false,
       });
 
-      const wipLimit = isNumber && limit < 50 ? limit : 50;
+      const wipLimit = isNumber && limit < 30 && limit > 0 ? limit : 30;
       if (name.trim().length !== 0 || limit.trim().length !== 0) {
         const newUser = {
-          name: name,
+          name: name.toUpperCase(),
           color: color,
         };
 
@@ -116,7 +119,7 @@ class UserForm extends React.PureComponent {
         />
         <StyledTextArea
           style={{ width: "90px" }}
-          placeholder="Set limit..."
+          placeholder="Set limit (max 30)..."
           onChange={(e) => this.handleLimitChange(e)}
         />
         <Button onClick={this.handleAddUser}>Add a user</Button>
@@ -129,7 +132,7 @@ class UserForm extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => ({
-  columns: state.columns,
+  users: state.users
 });
 
 const mapDispatchToProps = {
