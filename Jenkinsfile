@@ -44,6 +44,7 @@ pipeline {
             agent any
             steps {
                 sh 'export COMPOSE_TLS_VERSION=TLSv1_2 && bash ./deploy.sh'
+                sh 'docker ps'
             }
         }
     }
