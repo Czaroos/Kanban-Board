@@ -6,6 +6,7 @@ services:
       - "5000:5000"
     volumes:
       - ./backend:/usr/src/app/backend
+      - /usr/src/app/backend/node_modules
   frontend:
     stdin_open: true
     build: ./frontend
@@ -13,5 +14,6 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/usr/src/app/frontend
+      - ./usr/src/app/frontend/node_modules
     depends_on:
       - backend

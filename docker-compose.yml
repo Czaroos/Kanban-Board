@@ -1,15 +1,27 @@
 version: "3"
 services:
   backend:
+    container_name: kanbak_production_backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     image: michalzdev/kanbak_production_backend:latest
     ports:
       - "5000:5000"
-    container_name: kanbak_production_backend
+    volumes:
+      - ./backend:/usr/src/app/backend
+      - /usr/app/backend/node_modules
   frontend:
     stdin_open: true
+    container_name: kanbak_production_frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     image: michalzdev/kanbak_production_frontend:latest
     ports:
       - "3000:3000"
-    container_name: kanbak_production_frontend
+    volumes:
+      - ./frontend:/usr/src/app/frontend
+      - /usr/app/frontend/node_modules
     depends_on:
       - backend
